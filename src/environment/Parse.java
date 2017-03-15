@@ -15,7 +15,7 @@ public class Parse {
 	public static String boardToString(Position board) {
 		String output = "";
 		for(int i=0; i<2; i++) {
-			output = output.concat(Long.toBinaryString(board.getPieces()[i]));
+			output = output.concat(Long.toBinaryString(board.getPieces(i)));
 			output = output.concat("\n");
 		}
 		return output;

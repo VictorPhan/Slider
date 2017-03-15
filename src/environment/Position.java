@@ -17,8 +17,8 @@ public class Position {
 		this.pieces = pieces;
 	}
 	
-	public long[] getPieces() {
-		return pieces;
+	public long getPieces(int type) {
+		return pieces[type];
 	}
 
 	public void setPieces(long[] pieces) {
