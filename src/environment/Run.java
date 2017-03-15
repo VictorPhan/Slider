@@ -1,5 +1,10 @@
 package environment;
 
+/**
+ * The main file for the AI agent
+ * @author TB VP
+ *
+ */
 public class Run {
 
 	public static void main(String[] args) {
