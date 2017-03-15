@@ -9,6 +9,7 @@ public class Position {
 	
 	public static final int V = 0;
 	public static final int H = 1;
+	public static final int B = 2;
 	public static int dimension;
 	private long [] pieces;
 	

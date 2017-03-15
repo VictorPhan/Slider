@@ -14,17 +14,30 @@ public class Parse {
 	 * @return
 	 */
 	public static Position parseBoard() {
+		/* The current position of the board */
 		Position board;
 		Scanner s = new Scanner(System.in);
 		String line = "";
+		/* Given (n) value */
 		int dimension;
 		long [] pieces;
 		
+		/* Processes the dimensions given (board) */
 		dimension = s.nextInt();
-		for(int i=0; i<dimension; i++) {
-			line = s.nextLine();
+		
+		/* 
+		 * Gets each line info on the board and makes 
+		 * a single String from that.
+		 */
+		for(int i = 0; i < dimension + 1; i++) {
+			line = s.nextLine() + line;
 		}
-		pieces = fromRawString(line.replaceAll("\\s+",""));
+		line = line.replaceAll("\\s+","");
+		
+		pieces = fromRawString(line);
+		for(long o : pieces){
+			System.out.println(o);
+		}
 		board = new Position(dimension, pieces);
 		s.close();
 		return board;
@@ -39,12 +52,16 @@ public class Parse {
 		String output = "";
 		String HPieces = bitBoardToString(board.getPieces()[Position.H]);
 		String VPieces = bitBoardToString(board.getPieces()[Position.V]);
+		String BPieces = bitBoardToString(board.getPieces()[Position.B]);
 		for(int i=0; i<Math.pow(Position.dimension, 2); i++) {
 			if(HPieces.charAt(i) == '1') {
 				output = output.concat("H");
 			}
 			else if(VPieces.charAt(i) == '1') {
 				output = output.concat("V");
+			}
+			else if(BPieces.charAt(i) == '1') {
+				output = output.concat("B");
 			}
 			else {
 				output = output.concat("+");
@@ -68,25 +85,35 @@ public class Parse {
 	 * @return
 	 */
 	private static long [] fromRawString(String line) {
-		long [] pieces = new long[2];
+		long [] pieces = new long[4];
 		String vPieces = "";
 		String hPieces = "";
+		String bPieces = "";
 		for(int i=0; i<line.length(); i++) {
 			if(line.charAt(i) == 'V') {
 				vPieces = vPieces.concat("1");
 				hPieces = hPieces.concat("0");
+				bPieces = bPieces.concat("0");
 			}
 			else if(line.charAt(i) == 'H') {
 				vPieces = vPieces.concat("0");
 				hPieces = hPieces.concat("1");
+				bPieces = bPieces.concat("0");
+			}
+			else if(line.charAt(i) == 'B') {
+				vPieces = vPieces.concat("0");
+				hPieces = hPieces.concat("0");
+				bPieces = bPieces.concat("1");
 			}
 			else {
 				vPieces = vPieces.concat("0");
 				hPieces = hPieces.concat("0");
+				bPieces = bPieces.concat("0");
 			}
 		}
 		pieces[Position.V] = new BigInteger(vPieces, 2).longValue();
 		pieces[Position.H] = new BigInteger(hPieces, 2).longValue();
+		pieces[Position.B] = new BigInteger(bPieces, 2).longValue();
 		return pieces;
 	}
 	
