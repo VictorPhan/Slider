@@ -31,15 +31,19 @@ public class Position {
 		this.pieces = pieces;
 	}
 	
-	public long[] getPieces() {
+	public long [] getPieces() {
 		return pieces;
+	}
+	
+	public long getPieces(int i) {
+		return pieces[i];
 	}
 
 	public void setPieces(long[] pieces) {
 		this.pieces = pieces;
 	}
 
-	public int getDimension() {
+	public static int getDimension() {
 		return dimension;
 	}
 	

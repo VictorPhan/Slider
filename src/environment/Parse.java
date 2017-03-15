@@ -35,9 +35,6 @@ public class Parse {
 		line = line.replaceAll("\\s+","");
 		
 		pieces = fromRawString(line);
-		for(long o : pieces){
-			System.out.println(o);
-		}
 		board = new Position(dimension, pieces);
 		s.close();
 		return board;
