@@ -124,8 +124,8 @@ public class Parse {
 		
 		for(int i=0; i<dimension; i++) {
 			output = output.concat("\n");
-			output = output.concat(reverseString(
-					bitBoard.substring(dimension*i, dimension*(i+1))));
+			output = output.concat(reverseString(spaceShuffle(
+					bitBoard.substring(dimension*i, dimension*(i+1)))));
 		}
 		return reverseString(output);
 	}
@@ -148,8 +148,8 @@ public class Parse {
 	
 	/**
 	 * Reverses string
-	 * @param s
-	 * @return
+	 * @param s the unreversed input
+	 * @return the reversed string
 	 */
 	private static String reverseString(String s) {
 		String output = "";
@@ -157,5 +157,18 @@ public class Parse {
 			output = output.concat(s.substring(i, i+1));
 		}
 		return output;
+	}
+	
+	/**
+	 * Adds spacing to the output (for neatness)
+	 * @param s The unspaced input board
+	 * @return the spaced output board
+	 */
+	private static String spaceShuffle(String s) {
+		String spacedOutput = "";
+		for(int i = 0; i < s.length(); i++){
+			spacedOutput += s.charAt(i) + " ";
+		}
+		return spacedOutput;
 	}
 }
