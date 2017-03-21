@@ -1,5 +1,7 @@
 package environment;
 
+import java.math.BigInteger;
+
 /**
  * The current position of the game space
  * @author TB VP
@@ -12,6 +14,7 @@ public class Position {
 	public static final int B = 2;
 	public static int dimension;
 	private long [] pieces;
+	private BigInteger[] bigPieces;
 	
 	/**
 	 * Constructor initializing dimension and initial position
@@ -25,18 +28,32 @@ public class Position {
 	
 	/**
 	 * Constructor for position
-	 * @param pieces
+	 * @param pieces 
 	 */
 	public Position(long [] pieces) {
 		this.pieces = pieces;
 	}
 	
-	public long [] getPieces() {
-		return pieces;
+	/**
+	 * Constructor for n > 8 case
+	 * @param dimension 
+	 * @param bigPieces
+	 */
+	public Position(int dimension, BigInteger[] bigPieces){
+		Position.dimension = dimension;
+		this.bigPieces = bigPieces;
 	}
 	
+	/**
+	 * @param i index postion of the piece
+	 * @return A specific piece by i
+	 */
 	public long getPieces(int i) {
 		return pieces[i];
+	}
+	
+	public long [] getPieces() {
+		return pieces;
 	}
 
 	public void setPieces(long[] pieces) {
@@ -47,4 +64,11 @@ public class Position {
 		return dimension;
 	}
 	
+	public BigInteger[] getBigPieces() {
+		return bigPieces;
+	}
+
+	public void setBigPieces(BigInteger[] bigPieces) {
+		this.bigPieces = bigPieces;
+	}
 }
