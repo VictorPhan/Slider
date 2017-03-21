@@ -19,9 +19,9 @@ public class Run {
 		Position init = Parse.parseBoard();
 		//System.out.println(Parse.boardToString(init));
 		//init.getPieces()[Position.V] = init.getPieces()[Position.V] >> Position.getDimension();
-		//System.out.println(Parse.boardToString(init));
-		System.out.println(Long.toBinaryString(~(init.getPieces(V) | init.getPieces(H))));
-		long temp = 0b0;
-		System.out.println(Long.toBinaryString(temp) + "\n" + Long.toBinaryString(~temp));
+		System.out.println(Parse.boardToString(init));
+		//System.out.println(Long.toBinaryString(~(init.getPieces(V) | init.getPieces(H))));
+		//long temp = 0b0;
+		//System.out.println(Long.toBinaryString(temp) + "\n" + Long.toBinaryString(~temp));
 	}
 }
