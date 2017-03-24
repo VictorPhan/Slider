@@ -21,8 +21,8 @@ public class MoveList implements Consts {
 	public long [] generateVMoves(long[] pieces) {
 		long[] vm = new long[3];
 		vm[V_U] = (pieces[V] >> Position.dimen) & ~occupied;
-		vm[V_L] = (pieces[V] << 1) & ~occupied;
-		vm[V_R] = (pieces[V] >> 1) & ~occupied;
+		vm[V_L] = (pieces[V] << 1) & ~occupied & ~Position.rightCol;
+		vm[V_R] = (pieces[V] >> 1) & ~occupied & ~Position.leftCol;
 		return vm;
 	}
 	
@@ -34,7 +34,7 @@ public class MoveList implements Consts {
 	 */
 	public long [] generateHMoves(long[] pieces) {
 		long[] hm = new long[3];
-		hm[H_R] = (pieces[H] >> 1) & ~occupied;
+		hm[H_R] = (pieces[H] >> 1) & ~occupied & ~Position.leftCol;
 		hm[H_U] = (pieces[H] >> Position.dimen) & ~occupied;
 		hm[H_D] = (pieces[H] << Position.dimen) & ~occupied;
 		return hm;
