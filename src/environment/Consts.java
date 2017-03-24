@@ -1,6 +1,9 @@
 package environment;
 
 public interface Consts {
+	public static final int moveListDimensionality = 4;
+	public static final int piecesDimensionality = 3;
+	
 	public static final int V = 0;
 	public static final int H = 1;
 	public static final int B = 2;

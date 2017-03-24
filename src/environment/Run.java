@@ -11,7 +11,8 @@ public class Run implements Consts {
 		
 		Position init = Parse.parseBoard();
 		System.out.println("");
-		System.out.println(Parse.bitBoardToBoardString(init.ml.hMoves[H_R]));
+		System.out.println(Parse.bitBoardToBoardString(init.ml.hMoves[H_O]));
+		System.out.println(Parse.bitBoardToBoardString(init.ml.vMoves[V_O]));
 		
 		/*// Part of testing
 		System.out.println(Parse.boardToString(init));

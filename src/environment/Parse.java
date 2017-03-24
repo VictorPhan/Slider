@@ -8,7 +8,7 @@ import java.util.Scanner;
  * @author TB VP
  *
  */
-public class Parse {
+public class Parse implements Consts {
 	/**
 	 * Reads input position and returns an initialized bitboard
 	 * @return
@@ -82,7 +82,7 @@ public class Parse {
 	 * @return
 	 */
 	private static long [] fromRawString(String line) {
-		long [] pieces = new long[4];
+		long [] pieces = new long[piecesDimensionality];
 		String vPieces = "";
 		String hPieces = "";
 		String bPieces = "";
