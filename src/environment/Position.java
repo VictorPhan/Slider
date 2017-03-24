@@ -17,6 +17,11 @@ public class Position implements Consts {
 	public static final int H = 1;
 	public static final int B = 2;
 	public static int dimension;
+<<<<<<< HEAD
+=======
+	private long [] pieces;
+	private BigInteger[] bigPieces;
+>>>>>>> 654abb74979b27a5fa196c88eff30b093d3c4232
 	
 	/**
 	 * Constructor initializing dimension and initial position
@@ -87,4 +92,15 @@ public class Position implements Consts {
 	public void setBigPieces(BigInteger[] bigPieces) {
 		this.bigPieces = bigPieces;
 	}
+<<<<<<< HEAD
+=======
+	
+	public BigInteger[] getBigPieces() {
+		return bigPieces;
+	}
+
+	public void setBigPieces(BigInteger[] bigPieces) {
+		this.bigPieces = bigPieces;
+	}
+>>>>>>> 654abb74979b27a5fa196c88eff30b093d3c4232
 }

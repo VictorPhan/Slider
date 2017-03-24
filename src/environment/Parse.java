@@ -20,7 +20,6 @@ public class Parse implements Consts {
 		String line = "";
 		/* Given (n) value */
 		int dimen;
-		
 		/* Processes the dimens given (board) */
 		dimen = s.nextInt();
 		
@@ -92,7 +91,6 @@ public class Parse implements Consts {
 	 * @param line
 	 * @return
 	 */
-	
 	public static BigInteger[] fromRawString2(String line) {
 		BigInteger[] bigPieces = new BigInteger[piecesDimensionality];
 		String vPieces = "";
