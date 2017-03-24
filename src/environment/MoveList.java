@@ -52,6 +52,22 @@ public class MoveList implements Consts {
 		return hm;
 	}
 	
+	public int nVMoves() {
+		int numMoves = 0;
+		for(int i=0; i<moveListDimensionality; i++) {
+			numMoves += Long.bitCount(vMoves[i]);
+		}
+		return numMoves;
+	}
+	
+	public int nHMoves() {
+		int numMoves = 0;
+		for(int i=0; i<moveListDimensionality; i++) {
+			numMoves += Long.bitCount(hMoves[i]);
+		}
+		return numMoves;
+	}
+	
 	/**
 	 * TODO: Generates leftCol, rightCol and topRow bitboards
 	 * @param dimen

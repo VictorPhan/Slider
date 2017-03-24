@@ -10,9 +10,8 @@ public class Run implements Consts {
 	public static void main(String[] args) {
 		
 		Position init = Parse.parseBoard();
-		System.out.println("");
-		System.out.println(Parse.bitBoardToBoardString(init.ml.hMoves[H_O]));
-		System.out.println(Parse.bitBoardToBoardString(init.ml.vMoves[V_O]));
+		System.out.println(init.ml.nHMoves());
+		System.out.println(init.ml.nHMoves());
 		
 		/*// Part of testing
 		System.out.println(Parse.boardToString(init));
