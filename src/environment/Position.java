@@ -5,22 +5,21 @@ package environment;
  * @author TB VP
  *
  */
-public class Position {
+public class Position implements Consts {
 	
-	public static final int V = 0;
-	public static final int H = 1;
-	public static final int B = 2;
-	public static int dimension;
-	private long [] pieces;
+	public static int dimen;
+	private long[] pieces = new long[piecesDimensionality];
+	MoveList ml;
 	
 	/**
 	 * Constructor initializing dimension and initial position
-	 * @param dimension
+	 * @param dimen
 	 * @param pieces
 	 */
-	public Position(int dimension, long [] pieces) {
-		Position.dimension = dimension;
+	public Position(int dimen, long [] pieces) {
+		Position.dimen = dimen;
 		this.pieces = pieces;
+		ml = new MoveList(dimen, pieces);
 	}
 	
 	/**
@@ -29,6 +28,7 @@ public class Position {
 	 */
 	public Position(long [] pieces) {
 		this.pieces = pieces;
+		ml = new MoveList(pieces);
 	}
 	
 	public long [] getPieces() {
@@ -43,8 +43,7 @@ public class Position {
 		this.pieces = pieces;
 	}
 
-	public static int getDimension() {
-		return dimension;
+	public static int getdimen() {
+		return dimen;
 	}
-	
 }
