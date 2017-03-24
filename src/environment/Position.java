@@ -8,7 +8,8 @@ package environment;
 public class Position implements Consts {
 	
 	public static int dimen;
-	private long [] pieces;
+	public static long leftCol, rightCol, topRow;
+	private long[] pieces;
 	MoveList ml;
 	
 	/**
@@ -18,10 +19,9 @@ public class Position implements Consts {
 	 */
 	public Position(int dimen, long [] pieces) {
 		Position.dimen = dimen;
+		generateUsefulBitboards(dimen);
 		this.pieces = pieces;
 		ml = new MoveList(pieces);
-		MoveList.vWipe = MoveList.createVWipe(dimen);
-		MoveList.hWipe = MoveList.createHWipe(dimen);
 	}
 	
 	/**
@@ -46,6 +46,14 @@ public class Position implements Consts {
 
 	public static int getdimen() {
 		return dimen;
+	}
+	
+	/**
+	 * TODO: Generates leftCol, rightCol and topRow bitboards
+	 * @param dimen
+	 */
+	private void generateUsefulBitboards(int dimen) {
+		
 	}
 	
 }
