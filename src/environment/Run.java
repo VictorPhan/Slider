@@ -5,11 +5,7 @@ package environment;
  * @author TB VP
  *
  */
-public class Run {
-	
-	public static final int V = 0;
-	public static final int H = 1;
-	public static final int B = 2;
+public class Run implements Consts {
 	
 	public static void main(String[] args) {
 		//long [] pieces = {0b011000000, 0b000100100, 0b000000001};
@@ -23,5 +19,6 @@ public class Run {
 		//System.out.println(Long.toBinaryString(~(init.getPieces(V) | init.getPieces(H))));
 		//long temp = 0b0;
 		//System.out.println(Long.toBinaryString(temp) + "\n" + Long.toBinaryString(~temp));
+		System.out.println(Parse.bitBoardToBoardString(init.ml.vMoves[V_R]));
 	}
 }

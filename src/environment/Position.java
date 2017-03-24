@@ -5,13 +5,18 @@ package environment;
  * @author TB VP
  *
  */
-public class Position {
+public class Position implements Consts {
 	
-	public static final int V = 0;
-	public static final int H = 1;
-	public static final int B = 2;
+	/**
+	 * Static variables
+	 */
 	public static int dimension;
+	
+	/**
+	 * Non-static variables
+	 */
 	private long [] pieces;
+	MoveList ml;
 	
 	/**
 	 * Constructor initializing dimension and initial position
@@ -21,6 +26,7 @@ public class Position {
 	public Position(int dimension, long [] pieces) {
 		Position.dimension = dimension;
 		this.pieces = pieces;
+		ml = new MoveList(pieces);
 	}
 	
 	/**
