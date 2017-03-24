@@ -49,6 +49,14 @@ public class Position implements Consts {
 	}
 	
 	/**
+	 * Constructor for after the first state
+	 * @param bigPieces
+	 */
+	public Position(BigInteger[] bigPieces){
+		this.bigPieces = bigPieces;
+	}
+	
+	/**
 	 * @param i index postion of the piece
 	 * @return A specific piece by i
 	 */
