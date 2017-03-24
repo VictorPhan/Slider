@@ -30,9 +30,9 @@ public class MoveList implements Consts {
 	 */
 	public long [] generateVMoves(long[] pieces) {
 		long[] vm = new long[moveListDimensionality];
-		vm[V_U] = ((pieces[V] >> Position.dimen) & ~occupied) << Position.dimen;
-		vm[V_L] = ((pieces[V] << 1) & ~occupied & ~rightCol) >> 1;
-		vm[V_R] = ((pieces[V] >> 1) & ~occupied & ~leftCol) << 1;
+		vm[V_U] = ((pieces[V] >>> Position.dimen) & ~occupied) << Position.dimen;
+		vm[V_L] = ((pieces[V] << 1) & ~occupied & ~rightCol) >>> 1;
+		vm[V_R] = ((pieces[V] >>> 1) & ~occupied & ~leftCol) << 1;
 		vm[V_O] = pieces[V] & topRow;
 		return vm;
 	}
@@ -45,9 +45,9 @@ public class MoveList implements Consts {
 	 */
 	public long [] generateHMoves(long[] pieces) {
 		long[] hm = new long[moveListDimensionality];
-		hm[H_R] = ((pieces[H] >> 1) & ~occupied & ~leftCol) << 1;
-		hm[H_U] = ((pieces[H] >> Position.dimen) & ~occupied) << Position.dimen;
-		hm[H_D] = ((pieces[H] << Position.dimen) & ~occupied) >> Position.dimen;
+		hm[H_R] = ((pieces[H] >>> 1) & ~occupied & ~leftCol) << 1;
+		hm[H_U] = ((pieces[H] >>> Position.dimen) & ~occupied) << Position.dimen;
+		hm[H_D] = ((pieces[H] << Position.dimen) & ~occupied) >>> Position.dimen;
 		hm[H_O] = pieces[H] & rightCol;
 		return hm;
 	}
