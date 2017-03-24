@@ -7,26 +7,21 @@ package environment;
  */
 public class Position implements Consts {
 	
-	/**
-	 * Static variables
-	 */
-	public static int dimension;
-	
-	/**
-	 * Non-static variables
-	 */
+	public static int dimen;
 	private long [] pieces;
 	MoveList ml;
 	
 	/**
 	 * Constructor initializing dimension and initial position
-	 * @param dimension
+	 * @param dimen
 	 * @param pieces
 	 */
-	public Position(int dimension, long [] pieces) {
-		Position.dimension = dimension;
+	public Position(int dimen, long [] pieces) {
+		Position.dimen = dimen;
 		this.pieces = pieces;
 		ml = new MoveList(pieces);
+		MoveList.vWipe = MoveList.createVWipe(dimen);
+		MoveList.hWipe = MoveList.createHWipe(dimen);
 	}
 	
 	/**
@@ -49,8 +44,8 @@ public class Position implements Consts {
 		this.pieces = pieces;
 	}
 
-	public static int getDimension() {
-		return dimension;
+	public static int getdimen() {
+		return dimen;
 	}
 	
 }

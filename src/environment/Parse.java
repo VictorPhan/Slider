@@ -19,23 +19,23 @@ public class Parse {
 		Scanner s = new Scanner(System.in);
 		String line = "";
 		/* Given (n) value */
-		int dimension;
+		int dimen;
 		long [] pieces;
 		
-		/* Processes the dimensions given (board) */
-		dimension = s.nextInt();
+		/* Processes the dimens given (board) */
+		dimen = s.nextInt();
 		
 		/* 
 		 * Gets each line info on the board and makes 
 		 * a single String from that.
 		 */
-		for(int i = 0; i < dimension + 1; i++) {
+		for(int i = 0; i < dimen + 1; i++) {
 			line = s.nextLine() + line;
 		}
 		line = line.replaceAll("\\s+","");
 		
 		pieces = fromRawString(line);
-		board = new Position(dimension, pieces);
+		board = new Position(dimen, pieces);
 		s.close();
 		return board;
 	}
@@ -50,7 +50,7 @@ public class Parse {
 		String HPieces = bitBoardToString(board.getPieces()[Position.H]);
 		String VPieces = bitBoardToString(board.getPieces()[Position.V]);
 		String BPieces = bitBoardToString(board.getPieces()[Position.B]);
-		for(int i=0; i<Math.pow(Position.dimension, 2); i++) {
+		for(int i=0; i<Math.pow(Position.dimen, 2); i++) {
 			if(HPieces.charAt(i) == '1') {
 				output = output.concat("H");
 			}
@@ -64,7 +64,7 @@ public class Parse {
 				output = output.concat("+");
 			}
 		}
-		return stringToBoardString(output, Position.dimension);
+		return stringToBoardString(output, Position.dimen);
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public class Parse {
 	 * @return
 	 */
 	public static String bitBoardToBoardString(long bitboard) {
-		return stringToBoardString(bitBoardToString(bitboard), Position.dimension);
+		return stringToBoardString(bitBoardToString(bitboard), Position.dimen);
 	}
 	
 	/**
@@ -119,13 +119,13 @@ public class Parse {
 	 * @param bitBoard
 	 * @return
 	 */
-	private static String stringToBoardString(String bitBoard, int dimension) {
+	private static String stringToBoardString(String bitBoard, int dimen) {
 		String output = "";
 		
-		for(int i=0; i<dimension; i++) {
+		for(int i=0; i<dimen; i++) {
 			output = output.concat("\n");
 			output = output.concat(reverseString(spaceShuffle(
-					bitBoard.substring(dimension*i, dimension*(i+1)))));
+					bitBoard.substring(dimen*i, dimen*(i+1)))));
 		}
 		return reverseString(output);
 	}
@@ -137,7 +137,7 @@ public class Parse {
 	 */
 	private static String bitBoardToString(long bitboard) {
 		String output = "";
-		int leadingZeros = (int) Math.pow(Position.dimension, 2) - 
+		int leadingZeros = (int) Math.pow(Position.dimen, 2) - 
 				Long.toBinaryString(bitboard).length();
 		for(int j=0; j<leadingZeros; j++) {
 			output = output.concat("0");
