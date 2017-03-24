@@ -45,11 +45,23 @@ public class Position {
 	}
 	
 	/**
+	 * Constructor for after the first state
+	 * @param bigPieces
+	 */
+	public Position(BigInteger[] bigPieces){
+		this.bigPieces = bigPieces;
+	}
+	
+	/**
 	 * @param i index postion of the piece
 	 * @return A specific piece by i
 	 */
 	public long getPieces(int i) {
 		return pieces[i];
+	}
+	
+	public BigInteger getBigPieces(int i) {
+		return bigPieces[i];
 	}
 	
 	public long [] getPieces() {
