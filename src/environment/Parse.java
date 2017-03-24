@@ -155,7 +155,7 @@ public class Parse implements Consts {
 				output = output.concat("+");
 			}
 		}
-		return stringToBoardString(output, Position.dimension);
+		return stringToBoardString(output, Position.dimen);
 	}
 	
 	/**
