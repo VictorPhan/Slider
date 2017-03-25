@@ -2,6 +2,7 @@ package environment;
 
 import java.math.BigInteger;
 import java.util.Scanner;
+import java.lang.Error;
 
 /**
  * Parses through the input data from run
@@ -71,10 +72,13 @@ public class Parse implements Consts {
 				hPieces = hPieces.concat("0");
 				bPieces = bPieces.concat("1");
 			}
-			else {
+			else if(line.charAt(i) == '+'){
 				vPieces = vPieces.concat("0");
 				hPieces = hPieces.concat("0");
 				bPieces = bPieces.concat("0");
+			}
+			else {
+				throw new Error("Only the characters 'B', 'H', 'V', '+' are accepted for board input.");
 			}
 		}
 		smallPieces[Position.V] = new BigInteger(vPieces, 2).longValue();
@@ -109,10 +113,13 @@ public class Parse implements Consts {
 				hPieces = hPieces.concat("0");
 				bPieces = bPieces.concat("1");
 			}
-			else {
+			else if(line.charAt(i) == '+'){
 				vPieces = vPieces.concat("0");
 				hPieces = hPieces.concat("0");
 				bPieces = bPieces.concat("0");
+			}
+			else {
+				throw new Error("Only the characters 'B', 'H', 'V', '+' are accepted for board input.");
 			}
 		}
 		bigPieces[Position.V] = new BigInteger(vPieces, 2);
