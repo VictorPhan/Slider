@@ -1,41 +1,17 @@
-# Proposed Implemented Agent A.I for Slider
+# Proposed AI Agent for Slider
 
 *Tin Bao, Victor Phan - The University of Melbourne*
 
-## Introduction
+## File Structure
+* Consts: contains all the necessary indexing constants for all the classes. May split this into separate enum classes.
+* MoveList: generates all the possible moves from a position. Instantiated by the Position class.
+* Parse: reads in the board from System.in and generates a Position. Contains other useful conversion functions.
+* Position: contains information about the current board position. A factor in board state (other factors are who's moving, who's won).
+* Run: the main file.
 
-​	Through testing of the game Slider and its rules, it was concluded that the game had distinct similarities to chess. Hence, inspiration and programming techniques were drawn from chess engines such as *BitBoard* and *StockFish*. By utilizing an unorthodox approach to the design problem, we hope to minimize time complexity and maximize efficiency and difficulty because the stored types will be very different to the standard.
+## Board Representation
+The **Bitboard** is chosen as the board representation of the game, owing to its advantage in efficiency in computing certain operations on the board which would otherwise take longer in certain Square Centric implementations such as Mailbox and 0x88.
+A *position* will contain multiple bitboards, one for each of the piece types—B, H or V. Each bitboard is an integer value represented as a binary in twos complement, the digits representing whether the particular piece type of the bitboard is occupying the square. There is a bijection mapping between the squares of the board (of cardinality n^2) and an integer with n^2 bits. This method is particularly advantageous in the n<=8 case where the bitboards can be stored in the long[] data type. For larger dimensions, BigInteger and its equivalent operations are chosen as the data type to store the bitboard.
 
-​	We will be utilizing an iterative approach to the design problem which mirrors what is required in the real workplace. By utilizing this approach, gradual improvements to the proposed design can be made and down-scoping can be done if the task is deemed too difficult. This is intended to further our skills and deepen the subconscious thinking of group project work. 
-
-## Algorithm of Choice
-
-​	The chosen algorithm will be *alpha-beta pruning*, which will utilize a lower and upper bound for the search. This will create a near optimal and complete solution to the search problem.
-
-**Pseudo-code**
-
-```
-function ALPHA-BETA-SEARCH(state) returns an action
-	v ← MAX-VALUE(state, -∞, +∞)
-	return the action in ACTIONS(state) with value v
-
-function MAX-VALUE(state, α, β) returns a utility value
-	if TERMINAL-TEST(state) then return UTILITY(state)
-	v ← -∞
-	for each a in ACTIONS(state) do
-		v ← MAX(v, MIN-VALUE(RESULT(s, a), α, β))
-		if v ≥ β then return v
-		α ← MAX(α, v)
-	return v
-	
-function MIN-VALUE(state, α, β) returns a utility value
-	if TERMINAL-TEST(state) then return UTILITY(state)
-	v ← +∞
-	for each a in ACTIONS(state) do
-		v ← MIN(v, MAX-VALUE(RESULT(s, a), α, β))
-		if v ≤ α then return v
-		β ← MIN(β, v)
-	return v
-
-```
-
+## Move Generation
+A position will contain a MoveList object which stores the bitboards for all the possible types of moves. Move generation becomes a menial task owing to the bitshifting algorithms in play. For instance, if we wanted to generate all the possible moves that V can make to the left, we can create it in one line of code!—`((pieces[V] << 1) & ~occupied & ~rightCol) >>> 1`. The code here takes the bitboard pieces[V], shifts the bits left by 1, causing all the pieces to move to the left, bitwise AND that with all the non-occupied squares, bitwise AND it further with all the non-right column squares to prevent warping around the board, and finally shifting the bits right by 1 to return to the piece positions. This gives us a bitboard with all the V pieces that can possibly move to the left. Likewise, similar methods are applied onto all other bitboards. For this particular example, the number of possible moves for V to the left is then `Long.bitCount(vMoves[V_L])`.
