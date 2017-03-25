@@ -14,13 +14,10 @@ public class Parse implements Consts {
 	 * @return
 	 */
 	public static Position parseBoard() {
-		/* The current position of the board */
 		Position board;
 		Scanner s = new Scanner(System.in);
 		String line = "";
-		/* Given (n) value */
 		int dimen;
-		/* Processes the dimens given (board) */
 		dimen = s.nextInt();
 		
 		/* 

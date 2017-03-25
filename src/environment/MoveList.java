@@ -46,7 +46,6 @@ public class MoveList implements Consts {
 	
 	/**
 	 * Generate all the possible moves for the V pieces.
-	 * TODO: wipe out the column edges. count moving off the board as a move
 	 * @param pieces
 	 * @return
 	 */
@@ -69,7 +68,6 @@ public class MoveList implements Consts {
 	
 	/**
 	 * Generate all the possible moves for the H pieces.
-	 * TODO: wipe out the row edges. count moving off the board as a move
 	 * @param pieces
 	 * @return
 	 */
@@ -119,7 +117,7 @@ public class MoveList implements Consts {
 	}
 	
 	/**
-	 * TODO: Generates leftCol, rightCol and topRow bitboards
+	 * Generates leftCol, rightCol and topRow bitboards
 	 * @param dimen
 	 */
 	private void generateUsefulBitboards(int dimen) {
@@ -134,7 +132,6 @@ public class MoveList implements Consts {
 			for(int i=0; i<dimen-1; i++) {
 				sLeftCol = sLeftCol.concat(sLeftCol);
 			}
-			leftCol = new BigInteger(sLeftCol, 2).longValue();
 			BleftCol = new BigInteger(sLeftCol, 2);
 		}
 		
@@ -150,7 +147,6 @@ public class MoveList implements Consts {
 			for(int i=0; i<dimen-1; i++) {
 				sRightCol = sRightCol.concat(sRightCol);
 			}
-			rightCol = new BigInteger(sRightCol, 2).longValue();
 			BrightCol = new BigInteger(sRightCol, 2);
 		}
 		
@@ -165,8 +161,13 @@ public class MoveList implements Consts {
 			for(int i=0; i<dimen; i++) {
 				sTopRow = sTopRow.concat("1");
 			}
-			topRow = new BigInteger(sTopRow, 2).longValue();
 			BtopRow = new BigInteger(sTopRow, 2);
+		}
+		
+		if(dimen <= BIG_INTEGER_CASE) {
+			leftCol = BleftCol.longValue();
+			rightCol = BrightCol.longValue();
+			topRow = BtopRow.longValue();
 		}
 	}
 	
