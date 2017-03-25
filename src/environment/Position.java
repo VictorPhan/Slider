@@ -10,12 +10,9 @@ import java.math.BigInteger;
 public class Position implements Consts {
 	
 	public static int dimen;
+	public MoveList ml;
 	private long[] pieces = new long[piecesDimensionality];
 	private BigInteger[] bigPieces = new BigInteger[piecesDimensionality];
-	MoveList ml;
-	public static final int V = 0;
-	public static final int H = 1;
-	public static final int B = 2;
 	
 	/**
 	 * Constructor initializing dimension and initial position
@@ -45,6 +42,7 @@ public class Position implements Consts {
 	public Position(int dimen, BigInteger[] bigPieces){
 		Position.dimen = dimen;
 		this.bigPieces = bigPieces;
+		ml = new MoveList(dimen, bigPieces);
 	}
 	
 	/**
@@ -53,6 +51,7 @@ public class Position implements Consts {
 	 */
 	public Position(BigInteger[] bigPieces){
 		this.bigPieces = bigPieces;
+		ml = new MoveList(bigPieces);
 	}
 	
 	/**

@@ -33,7 +33,7 @@ public class Parse implements Consts {
 		line = line.replaceAll("\\s+","");
 		
 		/* Checks the dimension of the board and decides type */
-		if(dimen > 8){
+		if(dimen > BIG_INTEGER_CASE){
 			BigInteger[] bigPieces;
 			bigPieces = fromRawString2(line);	
 			board = new Position(dimen, bigPieces);
@@ -132,7 +132,7 @@ public class Parse implements Consts {
 	public static String boardToString(Position board) {
 		String output = "";
 		String HPieces, VPieces, BPieces;
-		if(Position.getdimen() > 8){
+		if(Position.getdimen() > BIG_INTEGER_CASE){
 			HPieces = bitBoardToString(board.getBigPieces()[Position.H]);
 			VPieces = bitBoardToString(board.getBigPieces()[Position.V]);
 			BPieces = bitBoardToString(board.getBigPieces()[Position.B]);
