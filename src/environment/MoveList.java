@@ -14,15 +14,29 @@ import java.math.BigInteger;
  * @author TB VP
  *
  */
-public class MoveList implements Consts {
+public class MoveList {
+	
+	public static final int V = 0;
+	public static final int H = 1;
+	public static final int B = 2;
+	
+	public static final int VU = 0;
+	public static final int VL = 1;
+	public static final int VR = 2;
+	public static final int VO = 3;
+	
+	public static final int HR = 0;
+	public static final int HU = 1;
+	public static final int HD = 2;
+	public static final int HO = 3;
 	
 	public static long leftCol, rightCol, topRow;
 	public static BigInteger BleftCol, BrightCol, BtopRow;
-	long [] vMoves = new long[moveListDimensionality];
-	long [] hMoves = new long[moveListDimensionality];
+	long [] vMoves = new long[Run.MOVE_TYPES];
+	long [] hMoves = new long[Run.MOVE_TYPES];
 	long occupied;
-	BigInteger [] bigvMoves = new BigInteger[moveListDimensionality];
-	BigInteger [] bighMoves = new BigInteger[moveListDimensionality];
+	BigInteger [] bigvMoves = new BigInteger[Run.MOVE_TYPES];
+	BigInteger [] bighMoves = new BigInteger[Run.MOVE_TYPES];
 	BigInteger bigOccupied;
 	
 	public MoveList(int dimen, long[] pieces) {
@@ -57,19 +71,19 @@ public class MoveList implements Consts {
 	 * @return
 	 */
 	public long [] generateVMoves(long[] pieces) {
-		long[] vm = new long[moveListDimensionality];
-		vm[V_U] = ((pieces[V] >>> Position.dimen) & ~occupied) << Position.dimen;
-		vm[V_L] = ((pieces[V] << 1) & ~occupied & ~rightCol) >>> 1;
-		vm[V_R] = ((pieces[V] >>> 1) & ~occupied & ~leftCol) << 1;
-		vm[V_O] = pieces[V] & topRow;
+		long[] vm = new long[Run.MOVE_TYPES];
+		vm[VU] = ((pieces[V] >>> Position.dimen) & ~occupied) << Position.dimen;
+		vm[VL] = ((pieces[V] << 1) & ~occupied & ~rightCol) >>> 1;
+		vm[VR] = ((pieces[V] >>> 1) & ~occupied & ~leftCol) << 1;
+		vm[VO] = pieces[V] & topRow;
 		return vm;
 	}
 	public BigInteger [] generateVMoves(BigInteger[] pieces) {
-		BigInteger[] vm = new BigInteger[moveListDimensionality];
-		vm[V_U] = ((pieces[V].shiftRight(Position.dimen)).and(bigOccupied.not())).shiftLeft(Position.dimen);
-		vm[V_L] = (((pieces[V].shiftLeft(1)).and(bigOccupied.not())).and(BrightCol.not())).shiftRight(1);
-		vm[V_R] = (((pieces[V].shiftRight(1)).and(bigOccupied.not())).and(BleftCol.not())).shiftLeft(1);
-		vm[V_O] = pieces[V].and(BtopRow);
+		BigInteger[] vm = new BigInteger[Run.MOVE_TYPES];
+		vm[VU] = ((pieces[V].shiftRight(Position.dimen)).and(bigOccupied.not())).shiftLeft(Position.dimen);
+		vm[VL] = (((pieces[V].shiftLeft(1)).and(bigOccupied.not())).and(BrightCol.not())).shiftRight(1);
+		vm[VR] = (((pieces[V].shiftRight(1)).and(bigOccupied.not())).and(BleftCol.not())).shiftLeft(1);
+		vm[VO] = pieces[V].and(BtopRow);
 		return vm;
 	}
 	
@@ -79,30 +93,30 @@ public class MoveList implements Consts {
 	 * @return
 	 */
 	public long [] generateHMoves(long[] pieces) {
-		long[] hm = new long[moveListDimensionality];
-		hm[H_R] = ((pieces[H] >>> 1) & ~occupied & ~leftCol) << 1;
-		hm[H_U] = ((pieces[H] >>> Position.dimen) & ~occupied) << Position.dimen;
-		hm[H_D] = ((pieces[H] << Position.dimen) & ~occupied) >>> Position.dimen;
-		hm[H_O] = pieces[H] & rightCol;
+		long[] hm = new long[Run.MOVE_TYPES];
+		hm[HR] = ((pieces[H] >>> 1) & ~occupied & ~leftCol) << 1;
+		hm[HU] = ((pieces[H] >>> Position.dimen) & ~occupied) << Position.dimen;
+		hm[HD] = ((pieces[H] << Position.dimen) & ~occupied) >>> Position.dimen;
+		hm[HO] = pieces[H] & rightCol;
 		return hm;
 	}
 	public BigInteger [] generateHMoves(BigInteger[] pieces) {
-		BigInteger[] hm = new BigInteger[moveListDimensionality];
-		hm[H_R] = (((pieces[H].shiftRight(1)).and(bigOccupied.not())).and(BleftCol.not())).shiftLeft(1);
-		hm[H_U] = ((pieces[H].shiftRight(Position.dimen)).and(bigOccupied.not())).shiftLeft(Position.dimen);
-		hm[H_D] = ((pieces[H].shiftLeft(Position.dimen)).and(bigOccupied.not())).shiftRight(Position.dimen);
-		hm[H_O] = pieces[H].and(BrightCol);
+		BigInteger[] hm = new BigInteger[Run.MOVE_TYPES];
+		hm[HR] = (((pieces[H].shiftRight(1)).and(bigOccupied.not())).and(BleftCol.not())).shiftLeft(1);
+		hm[HU] = ((pieces[H].shiftRight(Position.dimen)).and(bigOccupied.not())).shiftLeft(Position.dimen);
+		hm[HD] = ((pieces[H].shiftLeft(Position.dimen)).and(bigOccupied.not())).shiftRight(Position.dimen);
+		hm[HO] = pieces[H].and(BrightCol);
 		return hm;
 	}
 	
 	public int nVMoves() {
 		int numMoves = 0;
-		if(Position.dimen > BIG_INTEGER_CASE){
-			for(int i = 0; i < moveListDimensionality; i++) {
+		if(Position.dimen > Run.BIG_INT_CASE){
+			for(int i = 0; i < Run.MOVE_TYPES; i++) {
 				numMoves += bigvMoves[i].bitCount();
 			}
 		} else {
-			for(int i = 0; i < moveListDimensionality; i++) {
+			for(int i = 0; i < Run.MOVE_TYPES; i++) {
 				numMoves += Long.bitCount(vMoves[i]);
 			}
 		}
@@ -111,12 +125,12 @@ public class MoveList implements Consts {
 	
 	public int nHMoves() {
 		int numMoves = 0;
-		if(Position.dimen > BIG_INTEGER_CASE){
-			for(int i = 0; i < moveListDimensionality; i++) {
+		if(Position.dimen > Run.BIG_INT_CASE){
+			for(int i = 0; i < Run.MOVE_TYPES; i++) {
 				numMoves += bighMoves[i].bitCount();
 			}
 		} else {
-			for(int i = 0; i < moveListDimensionality; i++) {
+			for(int i = 0; i < Run.MOVE_TYPES; i++) {
 				numMoves += Long.bitCount(hMoves[i]);
 			}
 		}
@@ -171,7 +185,7 @@ public class MoveList implements Consts {
 			BtopRow = new BigInteger(sTopRow, 2);
 		}
 		
-		if(dimen <= BIG_INTEGER_CASE) {
+		if(dimen <= Run.BIG_INT_CASE) {
 			leftCol = BleftCol.longValue();
 			rightCol = BrightCol.longValue();
 			topRow = BtopRow.longValue();

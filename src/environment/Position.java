@@ -14,12 +14,12 @@ import java.math.BigInteger;
  * @author TB VP
  *
  */
-public class Position implements Consts {
+public class Position {
 	
 	public static int dimen;
 	public MoveList ml;
-	private long[] pieces = new long[piecesDimensionality];
-	private BigInteger[] bigPieces = new BigInteger[piecesDimensionality];
+	private long[] pieces = new long[Run.PIECE_TYPES];
+	private BigInteger[] bigPieces = new BigInteger[Run.PIECE_TYPES];
 	
 	/**
 	 * Constructor initializing dimension and initial position
@@ -91,5 +91,9 @@ public class Position implements Consts {
 
 	public void setBigPieces(BigInteger[] bigPieces) {
 		this.bigPieces = bigPieces;
+	}
+	
+	public void draw() {
+		System.out.println(Parse.boardToString(this));
 	}
 }

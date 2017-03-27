@@ -16,12 +16,18 @@ import java.lang.Error;
  * @author TB VP
  *
  */
-public class Parse implements Consts {
+public class Parse {
+	
+	public static final int V = 0;
+	public static final int H = 1;
+	public static final int B = 2;
+	
 	/**
 	 * Reads input position and returns an initialized bitboard
 	 * @return
 	 */
 	public static Position parseBoard() {
+		
 		Position board;
 		Scanner s = new Scanner(System.in);
 		String line = "";
@@ -37,8 +43,10 @@ public class Parse implements Consts {
 		}
 		line = line.replaceAll("\\s+","");
 		
+		long startTime = System.nanoTime();
+		
 		/* Checks the dimension of the board and decides type */
-		if(dimen > BIG_INTEGER_CASE){
+		if(dimen > Run.BIG_INT_CASE){
 			BigInteger[] bigPieces;
 			bigPieces = fromRawString2(line);	
 			board = new Position(dimen, bigPieces);
@@ -49,6 +57,11 @@ public class Parse implements Consts {
 		}
 		
 		s.close();
+		
+		long endTime   = System.nanoTime();
+		long totalTime = (endTime - startTime)/1000000;
+		System.out.println("Runtime = " + totalTime + "ms");
+		
 		return board;
 	}
 	
@@ -59,7 +72,7 @@ public class Parse implements Consts {
 	 */
 	
 	public static long[] fromRawString(String line) {
-		long [] smallPieces = new long[piecesDimensionality];
+		long [] smallPieces = new long[Run.PIECE_TYPES];
 		String vPieces = "";
 		String hPieces = "";
 		String bPieces = "";
@@ -88,9 +101,9 @@ public class Parse implements Consts {
 				throw new Error("Only the characters 'B', 'H', 'V', '+' are accepted for board input.");
 			}
 		}
-		smallPieces[Position.V] = new BigInteger(vPieces, 2).longValue();
-		smallPieces[Position.H] = new BigInteger(hPieces, 2).longValue();
-		smallPieces[Position.B] = new BigInteger(bPieces, 2).longValue();
+		smallPieces[V] = new BigInteger(vPieces, 2).longValue();
+		smallPieces[H] = new BigInteger(hPieces, 2).longValue();
+		smallPieces[B] = new BigInteger(bPieces, 2).longValue();
 		return smallPieces;
 	}
 	
@@ -100,7 +113,7 @@ public class Parse implements Consts {
 	 * @return
 	 */
 	public static BigInteger[] fromRawString2(String line) {
-		BigInteger[] bigPieces = new BigInteger[piecesDimensionality];
+		BigInteger[] bigPieces = new BigInteger[Run.PIECE_TYPES];
 		String vPieces = "";
 		String hPieces = "";
 		String bPieces = "";
@@ -129,9 +142,9 @@ public class Parse implements Consts {
 				throw new Error("Only the characters 'B', 'H', 'V', '+' are accepted for board input.");
 			}
 		}
-		bigPieces[Position.V] = new BigInteger(vPieces, 2);
-		bigPieces[Position.H] = new BigInteger(hPieces, 2);
-		bigPieces[Position.B] = new BigInteger(bPieces, 2);
+		bigPieces[V] = new BigInteger(vPieces, 2);
+		bigPieces[H] = new BigInteger(hPieces, 2);
+		bigPieces[B] = new BigInteger(bPieces, 2);
 		return bigPieces;
 	}
 	
@@ -143,14 +156,14 @@ public class Parse implements Consts {
 	public static String boardToString(Position board) {
 		String output = "";
 		String HPieces, VPieces, BPieces;
-		if(Position.getdimen() > BIG_INTEGER_CASE){
-			HPieces = bitBoardToString(board.getBigPieces()[Position.H]);
-			VPieces = bitBoardToString(board.getBigPieces()[Position.V]);
-			BPieces = bitBoardToString(board.getBigPieces()[Position.B]);
+		if(Position.getdimen() > Run.BIG_INT_CASE){
+			HPieces = bitBoardToString(board.getBigPieces()[H]);
+			VPieces = bitBoardToString(board.getBigPieces()[V]);
+			BPieces = bitBoardToString(board.getBigPieces()[B]);
 		} else {
-			HPieces = bitBoardToString(board.getPieces()[Position.H]);
-			VPieces = bitBoardToString(board.getPieces()[Position.V]);
-			BPieces = bitBoardToString(board.getPieces()[Position.B]);
+			HPieces = bitBoardToString(board.getPieces()[H]);
+			VPieces = bitBoardToString(board.getPieces()[V]);
+			BPieces = bitBoardToString(board.getPieces()[B]);
 		}
 		for(int i=0; i<Math.pow(Position.dimen, 2); i++) {
 			if(HPieces.charAt(i) == '1') {
