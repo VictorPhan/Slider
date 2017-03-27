@@ -8,9 +8,10 @@ package environment;
 public class Run implements Consts {
 	
 	public static void main(String[] args) {
-		long startTime = System.nanoTime();
 		
+		long startTime = System.nanoTime();
 		Position init = Parse.parseBoard();
+		
 		System.out.println(init.ml.nHMoves());
 		System.out.println(init.ml.nVMoves());
 		
