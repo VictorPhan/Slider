@@ -1,10 +1,3 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
- *            COMP30024 Artificial Intelligence - Semester 1 2017            *
- *                      Project A - Slider Move Generation                   *
- *                                                                           *
- *          Submission by: Tin Bao <tinb> and Victor Phan <victorp1>         *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 package environment;
 
 import java.math.BigInteger;
@@ -32,7 +25,22 @@ public class Parse {
 		Scanner s = new Scanner(System.in);
 		String line = "";
 		int dimen;
+		char side;
+		Side sidePlaying;
+		
 		dimen = s.nextInt();
+		side = s.next().charAt(0);
+		
+		if(side == 'H') {
+			sidePlaying = Side.H;
+		}
+		else if(side == 'V') {
+			sidePlaying = Side.V;
+		}
+		else {
+			s.close();
+			throw new Error("Only the characters 'H' or 'V' are accepted as side playing input.");
+		}
 		
 		/* 
 		 * Gets each line info on the board and makes 
@@ -43,8 +51,6 @@ public class Parse {
 		}
 		line = line.replaceAll("\\s+","");
 		
-		long startTime = System.nanoTime();
-		
 		/* Checks the dimension of the board and decides type */
 		if(dimen > Run.BIG_INT_CASE){
 			BigInteger[] bigPieces;
@@ -53,15 +59,10 @@ public class Parse {
 		} else {
 			long[] pieces;
 			pieces = fromRawString(line);
-			board = new Position(dimen, pieces);
+			board = new Position(dimen, sidePlaying, pieces);
 		}
 		
 		s.close();
-		
-		long endTime   = System.nanoTime();
-		long totalTime = (endTime - startTime)/1000000;
-		System.out.println("Runtime = " + totalTime + "ms");
-		
 		return board;
 	}
 	

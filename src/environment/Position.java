@@ -1,10 +1,3 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
- *            COMP30024 Artificial Intelligence - Semester 1 2017            *
- *                      Project A - Slider Move Generation                   *
- *                                                                           *
- *          Submission by: Tin Bao <tinb> and Victor Phan <victorp1>         *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 package environment;
 
 import java.math.BigInteger;
@@ -16,6 +9,7 @@ import java.math.BigInteger;
  */
 public class Position {
 	
+	public Side sidePlaying;
 	public static int dimen;
 	public MoveList ml;
 	private long[] pieces = new long[Run.PIECE_TYPES];
@@ -26,19 +20,21 @@ public class Position {
 	 * @param dimen
 	 * @param pieces
 	 */
-	public Position(int dimen, long [] pieces) {
+	public Position(int dimen, Side sidePlaying, long [] pieces) {
 		Position.dimen = dimen;
 		this.pieces = pieces;
-		ml = new MoveList(dimen, pieces);
+		this.sidePlaying = sidePlaying;
+		ml = new MoveList(pieces, sidePlaying, dimen);
 	}
 	
 	/**
 	 * Constructor for position
 	 * @param pieces 
 	 */
-	public Position(long [] pieces) {
+	public Position(long [] pieces, Side sidePlaying) {
 		this.pieces = pieces;
-		ml = new MoveList(pieces);
+		this.sidePlaying = sidePlaying;
+		ml = new MoveList(pieces, sidePlaying);
 	}
 	
 	/**
@@ -49,7 +45,7 @@ public class Position {
 	public Position(int dimen, BigInteger[] bigPieces){
 		Position.dimen = dimen;
 		this.bigPieces = bigPieces;
-		ml = new MoveList(dimen, bigPieces);
+		ml = new MoveList(bigPieces, sidePlaying, dimen);
 	}
 	
 	/**
@@ -58,7 +54,7 @@ public class Position {
 	 */
 	public Position(BigInteger[] bigPieces){
 		this.bigPieces = bigPieces;
-		ml = new MoveList(bigPieces);
+		ml = new MoveList(bigPieces, sidePlaying);
 	}
 	
 	/**
