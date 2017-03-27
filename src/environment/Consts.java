@@ -1,3 +1,10 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+ *            COMP30024 Artificial Intelligence - Semester 1 2017            *
+ *                      Project A - Slider Move Generation                   *
+ *                                                                           *
+ *          Submission by: Tin Bao <tinb> and Victor Phan <victorp1>         *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 package environment;
 
 /**
