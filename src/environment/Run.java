@@ -14,10 +14,10 @@ public class Run {
 	public static void main(String[] args) {
 		Parse.initScan();
 		Position curr = Parse.parseBoard();
-		Player human = new Human();
+		Player p1 = new Human(Side.H);
 		curr.draw();
 		try {
-			curr = human.makeMove(curr);
+			curr = p1.makeMove(curr);
 		} catch (InvalidMoveException e) {
 			e.printStackTrace();
 		}

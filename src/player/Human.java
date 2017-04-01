@@ -7,6 +7,22 @@ import exceptions.InvalidMoveException;
 
 public class Human extends Player {
 	
+	Side color;
+	
+	public Human(Side color) {
+		this.color = color;
+		if(color == Side.H) {
+			int R = 0;
+			int U = 1;
+			int D = 2;
+		}
+		else if(color == Side.V) {
+			int U = 0;
+			int L = 1;
+			int R = 2;
+		}
+	}
+	
 	@Override
 	public Position makeMove(Position p) throws InvalidMoveException {
 		int[] frd = Parse.readMove();
