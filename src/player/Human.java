@@ -8,18 +8,19 @@ import exceptions.InvalidMoveException;
 public class Human extends Player {
 	
 	Side color;
+	int U = 0;
+	int R = 1;
+	int D = 2;
+	int L = 2;
+	char illegalMove;
 	
 	public Human(Side color) {
 		this.color = color;
 		if(color == Side.H) {
-			int R = 0;
-			int U = 1;
-			int D = 2;
+			illegalMove = 'L';
 		}
 		else if(color == Side.V) {
-			int U = 0;
-			int L = 1;
-			int R = 2;
+			illegalMove = 'D';
 		}
 	}
 	
@@ -28,9 +29,19 @@ public class Human extends Player {
 		int[] frd = Parse.readMove();
 		
 		/* Check for invalid side move */
-		if(	frd[2] == 'D' && p.sidePlaying == Side.V ||
-			frd[2] == 'L' && p.sidePlaying == Side.H) {
+		if(	frd[2] == illegalMove) {
 			throw new InvalidMoveException();
+		}
+		
+		switch(frd[2]) {
+		case 'R':
+			
+		case 'U':
+			
+		case 'D':
+			
+		case 'L':
+			
 		}
 		
 		return null;

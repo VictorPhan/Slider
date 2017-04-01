@@ -14,12 +14,12 @@ public class MoveList {
 	protected static final int B = 2;
 	
 	protected static final int VU = 0;
-	protected static final int VL = 1;
-	protected static final int VR = 2;
+	protected static final int VR = 1;
+	protected static final int VL = 2;
 	protected static final int VO = 3;
 	
-	protected static final int HR = 0;
-	protected static final int HU = 1;
+	protected static final int HU = 0;
+	protected static final int HR = 1;
 	protected static final int HD = 2;
 	protected static final int HO = 3;
 	
