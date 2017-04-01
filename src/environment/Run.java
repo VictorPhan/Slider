@@ -1,5 +1,6 @@
 package environment;
 
+import exceptions.InvalidMoveException;
 import player.Human;
 import player.Player;
 
@@ -15,7 +16,11 @@ public class Run {
 		Position curr = Parse.parseBoard();
 		Player human = new Human();
 		curr.draw();
-		curr = human.makeMove(curr);
+		try {
+			curr = human.makeMove(curr);
+		} catch (InvalidMoveException e) {
+			e.printStackTrace();
+		}
 		Parse.closeScan();
 	}
 }

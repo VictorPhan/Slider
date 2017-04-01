@@ -208,12 +208,13 @@ public class Parse {
 	 * @return
 	 */
 	
-	public static void readMove() {
+	public static int[] readMove() {
 		String move = s.next();
 		int file = (int) move.charAt(0) - 97;
 		int rank = Integer.parseInt(Character.toString(move.charAt(1))) - 1;
-		char direction = move.charAt(2);
-		System.out.println("File: " + file + "\nRank: " + rank + "\nDirection: " + direction);
+		int direction = (int) move.charAt(2);
+		int[] frd = {file, rank, direction};
+		return frd;
 	}
 	
 	private static String stringToBoardString(String bitBoard, int dimen) {
