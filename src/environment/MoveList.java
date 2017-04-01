@@ -23,12 +23,14 @@ public class MoveList {
 	protected static final int HD = 2;
 	protected static final int HO = 3;
 	
+	public static final int MOVE_TYPES = 4;
+	
 	protected static long leftCol, rightCol, topRow;
 	protected static BigInteger bigLeftCol, bigRightCol, bigTopRow;
 	
-	public long [] moves = new long[Run.MOVE_TYPES];
+	public long [] moves = new long[MOVE_TYPES];
 	public long occupied;
-	public BigInteger [] bigMoves = new BigInteger[Run.MOVE_TYPES];
+	public BigInteger [] bigMoves = new BigInteger[MOVE_TYPES];
 	public BigInteger bigOccupied;
 	
 	public MoveList(long[] pieces, Side sidePlaying, int dimen) {
@@ -79,7 +81,7 @@ public class MoveList {
 	 * @return
 	 */
 	public long [] generateVMoves(long[] pieces) {
-		long[] vm = new long[Run.MOVE_TYPES];
+		long[] vm = new long[MOVE_TYPES];
 		vm[VU] = ((pieces[V] >>> Position.dimen) & ~occupied) << Position.dimen;
 		vm[VL] = ((pieces[V] << 1) & ~occupied & ~rightCol) >>> 1;
 		vm[VR] = ((pieces[V] >>> 1) & ~occupied & ~leftCol) << 1;
@@ -87,7 +89,7 @@ public class MoveList {
 		return vm;
 	}
 	public BigInteger [] generateVMoves(BigInteger[] pieces) {
-		BigInteger[] vm = new BigInteger[Run.MOVE_TYPES];
+		BigInteger[] vm = new BigInteger[MOVE_TYPES];
 		vm[VU] = ((pieces[V].shiftRight(Position.dimen)).
 				and(bigOccupied.not())).shiftLeft(Position.dimen);
 		vm[VL] = (((pieces[V].shiftLeft(1)).and(bigOccupied.not())).
@@ -104,7 +106,7 @@ public class MoveList {
 	 * @return
 	 */
 	public long [] generateHMoves(long[] pieces) {
-		long[] hm = new long[Run.MOVE_TYPES];
+		long[] hm = new long[MOVE_TYPES];
 		hm[HR] = ((pieces[H] >>> 1) & ~occupied & ~leftCol) << 1;
 		hm[HU] = ((pieces[H] >>> Position.dimen) & ~occupied) << Position.dimen;
 		hm[HD] = ((pieces[H] << Position.dimen) & ~occupied) >>> Position.dimen;
@@ -112,7 +114,7 @@ public class MoveList {
 		return hm;
 	}
 	public BigInteger [] generateHMoves(BigInteger[] pieces) {
-		BigInteger[] hm = new BigInteger[Run.MOVE_TYPES];
+		BigInteger[] hm = new BigInteger[MOVE_TYPES];
 		hm[HR] = (((pieces[H].shiftRight(1)).and(bigOccupied.not())).
 				and(bigLeftCol.not())).shiftLeft(1);
 		hm[HU] = ((pieces[H].shiftRight(Position.dimen)).
@@ -171,7 +173,7 @@ public class MoveList {
 			bigTopRow = new BigInteger(sTopRow, 2);
 		}
 		
-		if(dimen <= Run.BIG_INT_CASE) {
+		if(dimen <= Position.BIG_INT_CASE) {
 			leftCol = bigLeftCol.longValue();
 			rightCol = bigRightCol.longValue();
 			topRow = bigTopRow.longValue();

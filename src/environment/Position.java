@@ -8,12 +8,13 @@ import java.math.BigInteger;
  *
  */
 public class Position {
-	
+	public static final int PIECE_TYPES = 3;
+	public static final int BIG_INT_CASE = 8;
 	public Side sidePlaying;
 	public static int dimen;
 	public MoveList ml;
-	private long[] pieces = new long[Run.PIECE_TYPES];
-	private BigInteger[] bigPieces = new BigInteger[Run.PIECE_TYPES];
+	private long[] pieces = new long[PIECE_TYPES];
+	private BigInteger[] bigPieces = new BigInteger[PIECE_TYPES];
 	
 	/**
 	 * Constructor initializing dimension and initial position

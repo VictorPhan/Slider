@@ -15,14 +15,22 @@ public class Parse {
 	public static final int H = 1;
 	public static final int B = 2;
 	
+	static Scanner s;
+	
+	public static void initScan() {
+		s = new Scanner(System.in);
+	}
+	
+	public static void closeScan() {
+		s.close();
+	}
+	
 	/**
 	 * Reads input position and returns an initialized bitboard
 	 * @return
 	 */
 	public static Position parseBoard() {
-		
 		Position board;
-		Scanner s = new Scanner(System.in);
 		String line = "";
 		int dimen;
 		char side;
@@ -52,7 +60,7 @@ public class Parse {
 		line = line.replaceAll("\\s+","");
 		
 		/* Checks the dimension of the board and decides type */
-		if(dimen > Run.BIG_INT_CASE){
+		if(dimen > Position.BIG_INT_CASE){
 			BigInteger[] bigPieces;
 			bigPieces = fromRawString2(line);	
 			board = new Position(dimen, bigPieces);
@@ -61,8 +69,6 @@ public class Parse {
 			pieces = fromRawString(line);
 			board = new Position(dimen, sidePlaying, pieces);
 		}
-		
-		s.close();
 		return board;
 	}
 	
@@ -73,7 +79,7 @@ public class Parse {
 	 */
 	
 	public static long[] fromRawString(String line) {
-		long [] smallPieces = new long[Run.PIECE_TYPES];
+		long [] smallPieces = new long[Position.PIECE_TYPES];
 		String vPieces = "";
 		String hPieces = "";
 		String bPieces = "";
@@ -114,7 +120,7 @@ public class Parse {
 	 * @return
 	 */
 	public static BigInteger[] fromRawString2(String line) {
-		BigInteger[] bigPieces = new BigInteger[Run.PIECE_TYPES];
+		BigInteger[] bigPieces = new BigInteger[Position.PIECE_TYPES];
 		String vPieces = "";
 		String hPieces = "";
 		String bPieces = "";
@@ -157,7 +163,7 @@ public class Parse {
 	public static String boardToString(Position board) {
 		String output = "";
 		String HPieces, VPieces, BPieces;
-		if(Position.getdimen() > Run.BIG_INT_CASE){
+		if(Position.getdimen() > Position.BIG_INT_CASE){
 			HPieces = bitBoardToString(board.getBigPieces()[H]);
 			VPieces = bitBoardToString(board.getBigPieces()[V]);
 			BPieces = bitBoardToString(board.getBigPieces()[B]);
@@ -201,6 +207,15 @@ public class Parse {
 	 * @param bitBoard
 	 * @return
 	 */
+	
+	public static void readMove() {
+		String move = s.next();
+		int file = (int) move.charAt(0) - 97;
+		int rank = Integer.parseInt(Character.toString(move.charAt(1))) - 1;
+		char direction = move.charAt(2);
+		System.out.println("File: " + file + "\nRank: " + rank + "\nDirection: " + direction);
+	}
+	
 	private static String stringToBoardString(String bitBoard, int dimen) {
 		String output = "";
 		
