@@ -3,6 +3,23 @@
 H B V
 + V +
 
+A cruel case...
+4
+H + + +
+H + + +
+H B B B
++ V V V
+
+Test input from spec
+6
+H + + + + +
++ H B + + +
+H + + + + +
+H + V B V +
++ + + + H +
++ V + + V V
+
+Chess-sized board
 8
 + + + H + + + +
 + + + + H B + +

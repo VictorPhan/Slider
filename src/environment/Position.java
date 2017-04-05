@@ -11,88 +11,115 @@ import java.math.BigInteger;
 
 /**
  * The current position of the game space
+ * 
  * @author TB VP
  *
  */
 public class Position {
-	
+
+	/** The dimension of the board (fixed number) */
 	public static int dimen;
+	/** All the possible moves for all pieces */
 	public MoveList ml;
+	/** Positions of all pieces in long type */
 	private long[] pieces = new long[Run.PIECE_TYPES];
+	/** Positions of all pieces in big integer type */
 	private BigInteger[] bigPieces = new BigInteger[Run.PIECE_TYPES];
-	
+
 	/**
 	 * Constructor initializing dimension and initial position
-	 * @param dimen
-	 * @param pieces
+	 * 
+	 * @param dimen: the dimension of the board
+	 * @param pieces: the position of all pieces on the current board
 	 */
-	public Position(int dimen, long [] pieces) {
+	public Position(int dimen, long[] pieces) {
 		Position.dimen = dimen;
 		this.pieces = pieces;
 		ml = new MoveList(dimen, pieces);
 	}
-	
+
 	/**
-	 * Constructor for position
-	 * @param pieces 
+	 * Constructor for position after the first state
+	 * 
+	 * @param pieces: the position of all pieces on the current board
 	 */
-	public Position(long [] pieces) {
+	public Position(long[] pieces) {
 		this.pieces = pieces;
 		ml = new MoveList(pieces);
 	}
-	
+
 	/**
-	 * Constructor for n > 8 case
-	 * @param dimension 
-	 * @param bigPieces
+	 * Constructor for big integer case
+	 * 
+	 * @param dimen: the dimension of the board
+	 * @param bigPieces: the position of all pieces on the current board
 	 */
-	public Position(int dimen, BigInteger[] bigPieces){
+	public Position(int dimen, BigInteger[] bigPieces) {
 		Position.dimen = dimen;
 		this.bigPieces = bigPieces;
 		ml = new MoveList(dimen, bigPieces);
 	}
-	
+
 	/**
-	 * Constructor for after the first state
-	 * @param bigPieces
+	 * Constructor for position after the first state
+	 * 
+	 * @param bigPieces: the position of all pieces on the current board
 	 */
-	public Position(BigInteger[] bigPieces){
+	public Position(BigInteger[] bigPieces) {
 		this.bigPieces = bigPieces;
 		ml = new MoveList(bigPieces);
 	}
-	
+
 	/**
-	 * @param i index postion of the piece
-	 * @return A specific piece by i
+	 * Gets a specific piece type's position for long
+	 * 
+	 * @param i: index postion of the piece type
+	 * @return a specific piece type by i
 	 */
 	public long getPieces(int i) {
 		return pieces[i];
 	}
-	
+
+	/**
+	 * Gets a specific piece type's position for big integer
+	 * 
+	 * @param i: index postion of the piece type
+	 * @return a specific piece type by i
+	 */
 	public BigInteger getBigPieces(int i) {
 		return bigPieces[i];
 	}
-	
-	public long [] getPieces() {
+
+	/**
+	 * Gets all the pieces of long type
+	 * 
+	 * @return all the pieces
+	 */
+	public long[] getPieces() {
 		return pieces;
 	}
 
-	public void setPieces(long[] pieces) {
-		this.pieces = pieces;
-	}
-
-	public static int getdimen() {
-		return dimen;
-	}
-
+	/**
+	 * Gets all the pieces of big integer type
+	 * 
+	 * @return all the pieces
+	 */
 	public BigInteger[] getBigPieces() {
 		return bigPieces;
 	}
 
-	public void setBigPieces(BigInteger[] bigPieces) {
-		this.bigPieces = bigPieces;
+	/**
+	 * Gets the dimension
+	 * 
+	 * @return dimension
+	 */
+	public static int getdimen() {
+		return dimen;
 	}
-	
+
+	/**
+	 * Draws the board in the specification's notation (input)
+	 */
 	public void draw() {
 		System.out.println(Parse.boardToString(this));
 	}
