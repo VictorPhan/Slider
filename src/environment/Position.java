@@ -51,6 +51,17 @@ public class Position {
 	public void updateBoard(Side playing) {
 		sidePlaying = playing;
 		updateMoveList();
+		checkGameState();
+	}
+	
+	public void checkGameState() {
+		if(Long.bitCount(pieces[MoveList.H])==0) {
+			gs = GameState.H_WON;
+		}
+		else if(Long.bitCount(pieces[MoveList.V])==0) {
+			gs = GameState.V_WON;
+		}
+		// add case where draws
 	}
 	
 	public void updateMoveList() {

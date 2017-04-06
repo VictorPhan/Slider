@@ -13,6 +13,7 @@ public class Human extends Player {
 	int R = 1;
 	int D = 2;
 	int L = 2;
+	int O = 3;
 	char illegalMove;
 	
 	public Human(Side color) {
@@ -44,12 +45,22 @@ public class Human extends Player {
 		
 		switch(frd[2]) {
 			case 'r':
-				legalBB = userMoveBB & p.ml.moves[R];
-				newBB 	= legalBB >>> 1;
+				if(color==Side.H && frd[0]+1==Position.dimen) {
+					legalBB = userMoveBB & p.ml.moves[O];
+				}
+				else {
+					legalBB = userMoveBB & p.ml.moves[R];
+					newBB 	= legalBB >>> 1;
+				}
 				break;
 			case 'u':
-				legalBB = userMoveBB & p.ml.moves[U];
-				newBB	= legalBB >>> Position.dimen;
+				if(color==Side.V && frd[1]+1==Position.dimen) {
+					legalBB = userMoveBB & p.ml.moves[O];
+				}
+				else {
+					legalBB = userMoveBB & p.ml.moves[U];
+					newBB	= legalBB >>> Position.dimen;
+				}
 				break;
 			case 'd':
 				legalBB = userMoveBB & p.ml.moves[D];
