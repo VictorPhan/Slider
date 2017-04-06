@@ -75,6 +75,16 @@ public class MoveList {
 		}
 	}
 	
+	public void updateMoveList(long[] pieces, Side sidePlaying) {
+		occupied = pieces[B] | pieces[V] | pieces[H];
+		if(sidePlaying == Side.H) {
+			moves = generateHMoves(pieces);
+		}
+		else if (sidePlaying == Side.V) {
+			moves = generateVMoves(pieces);
+		}
+	}
+	
 	/**
 	 * Generate all the possible moves for the V pieces.
 	 * @param pieces

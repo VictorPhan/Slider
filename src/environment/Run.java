@@ -14,12 +14,25 @@ public class Run {
 	public static void main(String[] args) {
 		Parse.initScan();
 		Position curr = Parse.parseBoard();
-		Player p1 = new Human(Side.H);
+		Player ph = new Human(Side.H);
+		Player pv = new Human(Side.V);
 		curr.draw();
-		try {
-			curr = p1.makeMove(curr);
-		} catch (InvalidMoveException e) {
-			e.printStackTrace();
+		while(curr.gs==GameState.PLAYING) {
+			if(curr.sidePlaying==Side.H) {
+				try {
+					ph.makeMove(curr);
+				} catch (InvalidMoveException e) {
+					e.printStackTrace();
+				}
+			}
+			else {
+				try {
+					pv.makeMove(curr);
+				} catch (InvalidMoveException e) {
+					e.printStackTrace();
+				}
+			}
+			curr.draw();
 		}
 		Parse.closeScan();
 	}

@@ -8,6 +8,7 @@ import exceptions.InvalidMoveException;
 public class Human extends Player {
 	
 	Side color;
+	Side opponent;
 	int U = 0;
 	int R = 1;
 	int D = 2;
@@ -18,33 +19,55 @@ public class Human extends Player {
 		this.color = color;
 		if(color == Side.H) {
 			illegalMove = 'L';
+			opponent = Side.V;
 		}
 		else if(color == Side.V) {
 			illegalMove = 'D';
+			opponent = Side.H;
 		}
 	}
 	
 	@Override
-	public Position makeMove(Position p) throws InvalidMoveException {
+	public void makeMove(Position p) throws InvalidMoveException {
 		int[] frd = Parse.readMove();
 		
 		/* Check for invalid side move */
-		if(	frd[2] == illegalMove) {
+		if(frd[2] == illegalMove) {
 			throw new InvalidMoveException();
 		}
 		
+		/* Check for legal move, generates a bitboard from user input move, AND it with the
+		 * moveList bitboard then check if there is a 1 bit -> legal move available */
+		long userMoveBB = Parse.frToBitboard(frd[0], frd[1]);
+		long legalBB = 0;
+		long newBB = 0;
+		
 		switch(frd[2]) {
-		case 'R':
-			
-		case 'U':
-			
-		case 'D':
-			
-		case 'L':
-			
+			case 'r':
+				legalBB = userMoveBB & p.ml.moves[R];
+				newBB 	= legalBB >>> 1;
+				break;
+			case 'u':
+				legalBB = userMoveBB & p.ml.moves[U];
+				newBB	= legalBB >>> Position.dimen;
+				break;
+			case 'd':
+				legalBB = userMoveBB & p.ml.moves[D];
+				newBB 	= legalBB << Position.dimen;
+				break;
+			case 'l':
+				legalBB = userMoveBB & p.ml.moves[L];
+				newBB 	= legalBB << 1;
+				break;
+			default:
+				throw new InvalidMoveException();
 		}
 		
-		return null;
+		if(Long.bitCount(legalBB) == 0) {
+			throw new InvalidMoveException();
+		}
+		
+		p.setCurrPieces(p.getCurrPieces() & ~legalBB | newBB, opponent);
 	}
 
 }

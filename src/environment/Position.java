@@ -8,11 +8,12 @@ import java.math.BigInteger;
  *
  */
 public class Position {
+	public GameState gs = GameState.PLAYING;
 	public static final int PIECE_TYPES = 3;
 	public static final int BIG_INT_CASE = 8;
 	public Side sidePlaying;
 	public static int dimen;
-	public MoveList ml;
+	public MoveList ml = null;
 	private long[] pieces = new long[PIECE_TYPES];
 	private BigInteger[] bigPieces = new BigInteger[PIECE_TYPES];
 	
@@ -24,8 +25,7 @@ public class Position {
 	public Position(int dimen, Side sidePlaying, long [] pieces) {
 		Position.dimen = dimen;
 		this.pieces = pieces;
-		this.sidePlaying = sidePlaying;
-		ml = new MoveList(pieces, sidePlaying, dimen);
+		updateBoard(sidePlaying);
 	}
 	
 	/**
@@ -34,8 +34,7 @@ public class Position {
 	 */
 	public Position(long [] pieces, Side sidePlaying) {
 		this.pieces = pieces;
-		this.sidePlaying = sidePlaying;
-		ml = new MoveList(pieces, sidePlaying);
+		updateBoard(sidePlaying);
 	}
 	
 	/**
@@ -46,7 +45,26 @@ public class Position {
 	public Position(int dimen, BigInteger[] bigPieces){
 		Position.dimen = dimen;
 		this.bigPieces = bigPieces;
-		ml = new MoveList(bigPieces, sidePlaying, dimen);
+		updateBoard(sidePlaying);
+	}
+	
+	public void updateBoard(Side playing) {
+		sidePlaying = playing;
+		updateMoveList();
+	}
+	
+	public void updateMoveList() {
+		if(ml==null) {
+			if(Position.dimen <= Position.BIG_INT_CASE) {
+				ml = new MoveList(pieces, sidePlaying, dimen);
+			}
+			else {
+				ml = new MoveList(bigPieces, sidePlaying, dimen);
+			}
+		}
+		else {
+			ml.updateMoveList(pieces, sidePlaying);
+		}
 	}
 	
 	/**
@@ -78,10 +96,6 @@ public class Position {
 		this.pieces = pieces;
 	}
 
-	public static int getdimen() {
-		return dimen;
-	}
-
 	public BigInteger[] getBigPieces() {
 		return bigPieces;
 	}
@@ -92,5 +106,30 @@ public class Position {
 	
 	public void draw() {
 		System.out.println(Parse.boardToString(this));
+	}
+	
+	public long getCurrPieces() {
+		if(sidePlaying == Side.H) {
+			return pieces[MoveList.H];
+		}
+		else if(sidePlaying == Side.V) {
+			return pieces[MoveList.V];
+		}
+		else {
+			throw new Error("Game state not in playing!");
+		}
+	}
+	
+	public void setCurrPieces(long newPieces, Side opponent) {
+		if(sidePlaying == Side.H) {
+			pieces[MoveList.H] = newPieces;
+		}
+		else if(sidePlaying == Side.V) {
+			pieces[MoveList.V] = newPieces;
+		}
+		else {
+			throw new Error("Game state not in playing!");
+		}
+		updateBoard(opponent);
 	}
 }

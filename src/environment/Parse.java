@@ -11,11 +11,14 @@ import java.lang.Error;
  */
 public class Parse {
 	
+	// avoiding integer overflow at 2^63
+	public static final long SPECIALCASE = 0b1000000000000000000000000000000000000000000000000000000000000000L;
+	
 	public static final int V = 0;
 	public static final int H = 1;
 	public static final int B = 2;
 	
-	static Scanner s;
+	static Scanner s = null;
 	
 	public static void initScan() {
 		s = new Scanner(System.in);
@@ -30,6 +33,11 @@ public class Parse {
 	 * @return
 	 */
 	public static Position parseBoard() {
+		
+		if(s == null) {
+			throw new Error("Scanner not initialised");
+		}
+		
 		Position board;
 		String line = "";
 		int dimen;
@@ -163,7 +171,7 @@ public class Parse {
 	public static String boardToString(Position board) {
 		String output = "";
 		String HPieces, VPieces, BPieces;
-		if(Position.getdimen() > Position.BIG_INT_CASE){
+		if(Position.dimen > Position.BIG_INT_CASE){
 			HPieces = bitBoardToString(board.getBigPieces()[H]);
 			VPieces = bitBoardToString(board.getBigPieces()[V]);
 			BPieces = bitBoardToString(board.getBigPieces()[B]);
@@ -209,6 +217,9 @@ public class Parse {
 	 */
 	
 	public static int[] readMove() {
+		if(s == null) {
+			throw new Error("Scanner not initialised");
+		}
 		String move = s.next();
 		int file = (int) move.charAt(0) - 97;
 		int rank = Integer.parseInt(Character.toString(move.charAt(1))) - 1;
@@ -279,6 +290,21 @@ public class Parse {
 			spacedOutput += s.charAt(i) + " ";
 		}
 		return spacedOutput;
+	}
+	
+	public static long frToBitboard(int file, int row) {
+		if(Position.dimen==Position.BIG_INT_CASE && file==0 && row==0) {
+			return SPECIALCASE;
+		}
+		return pow(2, -file + Position.dimen*(Position.dimen - row) - 1);
+	}
+	
+	public static long pow(int a, int b) {
+		long result = 1;
+		for(int i = 0; i < b; i++) {
+			result *= a;
+		}
+		return result;
 	}
 	
 }
