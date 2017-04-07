@@ -71,11 +71,11 @@ public class Parse {
 		if(dimen > Position.BIG_INT_CASE){
 			BigInteger[] bigPieces;
 			bigPieces = fromRawString2(line);	
-			board = new Position(dimen, bigPieces);
+			board = new Position(bigPieces, sidePlaying, dimen);
 		} else {
 			long[] pieces;
 			pieces = fromRawString(line);
-			board = new Position(dimen, sidePlaying, pieces);
+			board = new Position(pieces, sidePlaying, dimen);
 		}
 		return board;
 	}

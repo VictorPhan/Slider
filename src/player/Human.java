@@ -1,5 +1,6 @@
 package player;
 
+import environment.MoveList;
 import environment.Parse;
 import environment.Position;
 import environment.Side;
@@ -28,8 +29,21 @@ public class Human extends Player {
 		}
 	}
 	
+	public boolean checkPass(long[] ml) {
+		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
+			if(Long.bitCount(ml[i])!=0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	@Override
 	public void makeMove(Position p) throws InvalidMoveException {
+		if(checkPass(p.ml.moves)) {
+			p.setCurrPieces(p.getCurrPieces(), opponent);
+		}
+		
 		int[] frd = Parse.readMove();
 		
 		/* Check for invalid side move */

@@ -29,13 +29,10 @@ public class MoveList {
 	protected static BigInteger bigLeftCol, bigRightCol, bigTopRow;
 	
 	public long [] moves = new long[MOVE_TYPES];
-	public long occupied;
 	public BigInteger [] bigMoves = new BigInteger[MOVE_TYPES];
-	public BigInteger bigOccupied;
 	
 	public MoveList(long[] pieces, Side sidePlaying, int dimen) {
 		generateUsefulBitboards(dimen);
-		occupied = pieces[B] | pieces[V] | pieces[H];
 		if(sidePlaying == Side.H) {
 			moves = generateHMoves(pieces);
 		}
@@ -45,7 +42,6 @@ public class MoveList {
 	}
 	
 	public MoveList(long[] pieces, Side sidePlaying) {
-		occupied = pieces[B] | pieces[V] | pieces[H];
 		if(sidePlaying == Side.H) {
 			moves = generateHMoves(pieces);
 		}
@@ -56,7 +52,6 @@ public class MoveList {
 	
 	public MoveList(BigInteger[] pieces, Side sidePlaying, int dimen) {
 		generateUsefulBitboards(dimen);
-		bigOccupied = pieces[B].or(pieces[V]).or(pieces[H]);
 		if(sidePlaying == Side.H) {
 			bigMoves = generateHMoves(pieces);
 		}
@@ -66,7 +61,6 @@ public class MoveList {
 	}
 	
 	public MoveList(BigInteger[] pieces, Side sidePlaying) {
-		bigOccupied = pieces[B].or(pieces[V]).or(pieces[H]);
 		if(sidePlaying == Side.H) {
 			bigMoves = generateHMoves(pieces);
 		}
@@ -76,7 +70,6 @@ public class MoveList {
 	}
 	
 	public void updateMoveList(long[] pieces, Side sidePlaying) {
-		occupied = pieces[B] | pieces[V] | pieces[H];
 		if(sidePlaying == Side.H) {
 			moves = generateHMoves(pieces);
 		}
@@ -85,12 +78,24 @@ public class MoveList {
 		}
 	}
 	
+	public static boolean checkDraw(long[] pieces) {
+		long[] hm = generateHMoves(pieces);
+		long[] vm = generateVMoves(pieces);
+		for(int i=0; i<MOVE_TYPES; i++) {
+			if(Long.bitCount(hm[i])!=0 || Long.bitCount(vm[i])!=0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	/**
 	 * Generate all the possible moves for the V pieces.
 	 * @param pieces
 	 * @return
 	 */
-	public long [] generateVMoves(long[] pieces) {
+	public static long [] generateVMoves(long[] pieces) {
+		long occupied = pieces[B] | pieces[V] | pieces[H];
 		long[] vm = new long[MOVE_TYPES];
 		vm[VU] = ((pieces[V] >>> Position.dimen) & ~occupied) << Position.dimen;
 		vm[VL] = ((pieces[V] << 1) & ~occupied & ~rightCol) >>> 1;
@@ -99,6 +104,7 @@ public class MoveList {
 		return vm;
 	}
 	public BigInteger [] generateVMoves(BigInteger[] pieces) {
+		BigInteger bigOccupied = pieces[B].or(pieces[V]).or(pieces[H]);
 		BigInteger[] vm = new BigInteger[MOVE_TYPES];
 		vm[VU] = ((pieces[V].shiftRight(Position.dimen)).
 				and(bigOccupied.not())).shiftLeft(Position.dimen);
@@ -115,7 +121,8 @@ public class MoveList {
 	 * @param pieces
 	 * @return
 	 */
-	public long [] generateHMoves(long[] pieces) {
+	public static long [] generateHMoves(long[] pieces) {
+		long occupied = pieces[B] | pieces[V] | pieces[H];
 		long[] hm = new long[MOVE_TYPES];
 		hm[HR] = ((pieces[H] >>> 1) & ~occupied & ~leftCol) << 1;
 		hm[HU] = ((pieces[H] >>> Position.dimen) & ~occupied) << Position.dimen;
@@ -124,6 +131,7 @@ public class MoveList {
 		return hm;
 	}
 	public BigInteger [] generateHMoves(BigInteger[] pieces) {
+		BigInteger bigOccupied = pieces[B].or(pieces[V]).or(pieces[H]);
 		BigInteger[] hm = new BigInteger[MOVE_TYPES];
 		hm[HR] = (((pieces[H].shiftRight(1)).and(bigOccupied.not())).
 				and(bigLeftCol.not())).shiftLeft(1);

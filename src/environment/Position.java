@@ -22,7 +22,7 @@ public class Position {
 	 * @param dimen
 	 * @param pieces
 	 */
-	public Position(int dimen, Side sidePlaying, long [] pieces) {
+	public Position(long[] pieces, Side sidePlaying, int dimen) {
 		Position.dimen = dimen;
 		this.pieces = pieces;
 		updateBoard(sidePlaying);
@@ -42,7 +42,7 @@ public class Position {
 	 * @param dimension 
 	 * @param bigPieces
 	 */
-	public Position(int dimen, BigInteger[] bigPieces){
+	public Position(BigInteger[] bigPieces, Side sidePlaying, int dimen) {
 		Position.dimen = dimen;
 		this.bigPieces = bigPieces;
 		updateBoard(sidePlaying);
@@ -61,7 +61,9 @@ public class Position {
 		else if(Long.bitCount(pieces[MoveList.V])==0) {
 			gs = GameState.V_WON;
 		}
-		// add case where draws
+		else if(MoveList.checkDraw(pieces)) {
+			gs = GameState.DRAW;
+		}
 	}
 	
 	public void updateMoveList() {

@@ -34,6 +34,7 @@ public class Run {
 			}
 			curr.draw();
 		}
+		System.out.println(curr.gs);
 		Parse.closeScan();
 	}
 }
