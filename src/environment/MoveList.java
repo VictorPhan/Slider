@@ -1,10 +1,3 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
- *            COMP30024 Artificial Intelligence - Semester 1 2017            *
- *                      Project A - Slider Move Generation                   *
- *                                                                           *
- *          Submission by: Tin Bao <tinb> and Victor Phan <victorp1>         *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 package environment;
 
 import java.math.BigInteger;
@@ -16,7 +9,6 @@ import java.math.BigInteger;
  *
  */
 public class MoveList {
-
 	/* Representation of the piece values in the array */
 	/** Position of V pieces in the array */
 	public static final int V = 0;
@@ -68,8 +60,12 @@ public class MoveList {
 	public MoveList(int dimen, long[] pieces) {
 		generateUsefulBitboards(dimen);
 		occupied = pieces[B] | pieces[V] | pieces[H];
-		vMoves = generateVMoves(pieces);
-		hMoves = generateHMoves(pieces);
+		if(sidePlaying == Side.H) {
+			moves = generateHMoves(pieces);
+		}
+		else if (sidePlaying == Side.V) {
+			moves = generateVMoves(pieces);
+		}
 	}
 
 	/**
@@ -79,8 +75,12 @@ public class MoveList {
 	 */
 	public MoveList(long[] pieces) {
 		occupied = pieces[B] | pieces[V] | pieces[H];
-		vMoves = generateVMoves(pieces);
-		hMoves = generateHMoves(pieces);
+		if(sidePlaying == Side.H) {
+			moves = generateHMoves(pieces);
+		}
+		else if (sidePlaying == Side.V) {
+			moves = generateVMoves(pieces);
+		}
 	}
 
 	/**
@@ -92,8 +92,12 @@ public class MoveList {
 	public MoveList(int dimen, BigInteger[] pieces) {
 		generateUsefulBitboards(dimen);
 		bigOccupied = pieces[B].or(pieces[V]).or(pieces[H]);
-		bigvMoves = generateVMoves(pieces);
-		bighMoves = generateHMoves(pieces);
+		if(sidePlaying == Side.H) {
+			bigMoves = generateHMoves(pieces);
+		}
+		else if (sidePlaying == Side.V) {
+			bigMoves = generateVMoves(pieces);
+		}
 	}
 
 	/**
@@ -103,8 +107,22 @@ public class MoveList {
 	 */
 	public MoveList(BigInteger[] pieces) {
 		bigOccupied = pieces[B].or(pieces[V]).or(pieces[H]);
-		bigvMoves = generateVMoves(pieces);
-		bighMoves = generateHMoves(pieces);
+		if(sidePlaying == Side.H) {
+			bigMoves = generateHMoves(pieces);
+		}
+		else if (sidePlaying == Side.V) {
+			bigMoves = generateVMoves(pieces);
+		}
+	}
+	
+	public void updateMoveList(long[] pieces, Side sidePlaying) {
+		occupied = pieces[B] | pieces[V] | pieces[H];
+		if(sidePlaying == Side.H) {
+			moves = generateHMoves(pieces);
+		}
+		else if (sidePlaying == Side.V) {
+			moves = generateVMoves(pieces);
+		}
 	}
 
 	/**
@@ -163,52 +181,14 @@ public class MoveList {
 	 */
 	public BigInteger[] generateHMoves(BigInteger[] pieces) {
 		BigInteger[] hm = new BigInteger[Run.MOVE_TYPES];
-		hm[HR] = (((pieces[H].shiftRight(1)).
-				and(bigOccupied.not())).and(bigLeftCol.not())).shiftLeft(1);
+		hm[HR] = (((pieces[H].shiftRight(1)).and(bigOccupied.not())).
+				and(bigLeftCol.not())).shiftLeft(1);
 		hm[HU] = ((pieces[H].shiftRight(Position.dimen)).
 				and(bigOccupied.not())).shiftLeft(Position.dimen);
 		hm[HD] = ((pieces[H].shiftLeft(Position.dimen)).
 				and(bigOccupied.not())).shiftRight(Position.dimen);
 		hm[HO] = pieces[H].and(bigRightCol);
 		return hm;
-	}
-
-	/**
-	 * The number of V moves that the board permits
-	 * 
-	 * @return integer representing the possible V moves
-	 */
-	public int nVMoves() {
-		int numMoves = 0;
-		if (Position.dimen > Run.BIG_INT_CASE) {
-			for (int i = 0; i < Run.MOVE_TYPES; i++) {
-				numMoves += bigvMoves[i].bitCount();
-			}
-		} else {
-			for (int i = 0; i < Run.MOVE_TYPES; i++) {
-				numMoves += Long.bitCount(vMoves[i]);
-			}
-		}
-		return numMoves;
-	}
-
-	/**
-	 * The number of H moves that the board permits
-	 * 
-	 * @return integer representing the possible H moves
-	 */
-	public int nHMoves() {
-		int numMoves = 0;
-		if (Position.dimen > Run.BIG_INT_CASE) {
-			for (int i = 0; i < Run.MOVE_TYPES; i++) {
-				numMoves += bighMoves[i].bitCount();
-			}
-		} else {
-			for (int i = 0; i < Run.MOVE_TYPES; i++) {
-				numMoves += Long.bitCount(hMoves[i]);
-			}
-		}
-		return numMoves;
 	}
 
 	/**

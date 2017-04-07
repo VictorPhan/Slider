@@ -1,10 +1,3 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
- *            COMP30024 Artificial Intelligence - Semester 1 2017            *
- *                      Project A - Slider Move Generation                   *
- *                                                                           *
- *          Submission by: Tin Bao <tinb> and Victor Phan <victorp1>         *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 package environment;
 
 import java.math.BigInteger;
@@ -16,26 +9,25 @@ import java.math.BigInteger;
  *
  */
 public class Position {
-
-	/** The dimension of the board (fixed number) */
+	public GameState gs = GameState.PLAYING;
+	public static final int PIECE_TYPES = 3;
+	public static final int BIG_INT_CASE = 8;
+	public Side sidePlaying;
 	public static int dimen;
-	/** All the possible moves for all pieces */
-	public MoveList ml;
-	/** Positions of all pieces in long type */
-	private long[] pieces = new long[Run.PIECE_TYPES];
-	/** Positions of all pieces in big integer type */
-	private BigInteger[] bigPieces = new BigInteger[Run.PIECE_TYPES];
-
+	public MoveList ml = null;
+	private long[] pieces = new long[PIECE_TYPES];
+	private BigInteger[] bigPieces = new BigInteger[PIECE_TYPES];
+	
 	/**
 	 * Constructor initializing dimension and initial position
 	 * 
 	 * @param dimen: the dimension of the board
 	 * @param pieces: the position of all pieces on the current board
 	 */
-	public Position(int dimen, long[] pieces) {
+	public Position(int dimen, Side sidePlaying, long [] pieces) {
 		Position.dimen = dimen;
 		this.pieces = pieces;
-		ml = new MoveList(dimen, pieces);
+		updateBoard(sidePlaying);
 	}
 
 	/**
@@ -43,9 +35,9 @@ public class Position {
 	 * 
 	 * @param pieces: the position of all pieces on the current board
 	 */
-	public Position(long[] pieces) {
+	public Position(long [] pieces, Side sidePlaying) {
 		this.pieces = pieces;
-		ml = new MoveList(pieces);
+		updateBoard(sidePlaying);
 	}
 
 	/**
@@ -57,7 +49,37 @@ public class Position {
 	public Position(int dimen, BigInteger[] bigPieces) {
 		Position.dimen = dimen;
 		this.bigPieces = bigPieces;
-		ml = new MoveList(dimen, bigPieces);
+		updateBoard(sidePlaying);
+	}
+	
+	public void updateBoard(Side playing) {
+		sidePlaying = playing;
+		updateMoveList();
+		checkGameState();
+	}
+	
+	public void checkGameState() {
+		if(Long.bitCount(pieces[MoveList.H])==0) {
+			gs = GameState.H_WON;
+		}
+		else if(Long.bitCount(pieces[MoveList.V])==0) {
+			gs = GameState.V_WON;
+		}
+		// add case where draws
+	}
+	
+	public void updateMoveList() {
+		if(ml==null) {
+			if(Position.dimen <= Position.BIG_INT_CASE) {
+				ml = new MoveList(pieces, sidePlaying, dimen);
+			}
+			else {
+				ml = new MoveList(bigPieces, sidePlaying, dimen);
+			}
+		}
+		else {
+			ml.updateMoveList(pieces, sidePlaying);
+		}
 	}
 
 	/**
@@ -67,7 +89,7 @@ public class Position {
 	 */
 	public Position(BigInteger[] bigPieces) {
 		this.bigPieces = bigPieces;
-		ml = new MoveList(bigPieces);
+		ml = new MoveList(bigPieces, sidePlaying);
 	}
 
 	/**
@@ -108,19 +130,40 @@ public class Position {
 		return bigPieces;
 	}
 
-	/**
-	 * Gets the dimension
-	 * 
-	 * @return dimension
-	 */
-	public static int getdimen() {
-		return dimen;
+	public BigInteger[] getBigPieces() {
+		return bigPieces;
 	}
 
-	/**
-	 * Draws the board in the specification's notation (input)
-	 */
+	public void setBigPieces(BigInteger[] bigPieces) {
+		this.bigPieces = bigPieces;
+	}
+	
 	public void draw() {
 		System.out.println(Parse.boardToString(this));
+	}
+	
+	public long getCurrPieces() {
+		if(sidePlaying == Side.H) {
+			return pieces[MoveList.H];
+		}
+		else if(sidePlaying == Side.V) {
+			return pieces[MoveList.V];
+		}
+		else {
+			throw new Error("Game state not in playing!");
+		}
+	}
+	
+	public void setCurrPieces(long newPieces, Side opponent) {
+		if(sidePlaying == Side.H) {
+			pieces[MoveList.H] = newPieces;
+		}
+		else if(sidePlaying == Side.V) {
+			pieces[MoveList.V] = newPieces;
+		}
+		else {
+			throw new Error("Game state not in playing!");
+		}
+		updateBoard(opponent);
 	}
 }
