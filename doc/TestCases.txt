@@ -1,18 +1,11 @@
 3 V
-+ H +
-H B V
-+ V +
-c2u
-a2d
-b1r
-a1r
-c3u
-b3r
-c1u
-c3r
-c2u
-b1r
-c3u 
++ + H
++ + H
++ B V
+c3+
+c2c3
+c1c2
+c3+
 
 3 V
 H + +
