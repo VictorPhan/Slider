@@ -1,3 +1,10 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+ *            COMP30024 Artificial Intelligence - Semester 1 2017            *
+ *                      Project A - Slider Move Generation                   *
+ *                                                                           *
+ *          Submission by: Tin Bao <tinb> and Victor Phan <victorp1>         *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 package environment;
 
 import java.math.BigInteger;
@@ -11,23 +18,14 @@ import java.lang.Error;
  *
  */
 public class Parse {
-	// avoiding integer overflow at 2^63
-	public static final long SPECIALCASE = 0b1000000000000000000000000000000000000000000000000000000000000000L;
+
+	/* Representation of the piece values in the array */
+	/** Position of V pieces in the array */
 	public static final int V = 0;
 	/** Position of H pieces in the array */
 	public static final int H = 1;
 	/** Position of B blocks in the array */
 	public static final int B = 2;
-
-	static Scanner s = null;
-	
-	public static void initScan() {
-		s = new Scanner(System.in);
-	}
-	
-	public static void closeScan() {
-		s.close();
-	}
 
 	/**
 	 * Reads and parses the input board and translates it into bitboard
@@ -35,48 +33,30 @@ public class Parse {
 	 * @return the initialized bitboard
 	 */
 	public static Position parseBoard() {
-		if(s == null) {
-			throw new Error("Scanner not initialised");
-		}
-		
+
 		Position board;
+		Scanner s = new Scanner(System.in);
 		String line = "";
-		int dimen;
-		char side;
-		Side sidePlaying;
-		
-		dimen = s.nextInt();
-		side = s.next().charAt(0);
-		
-		if(side == 'H') {
-			sidePlaying = Side.H;
-		}
-		else if(side == 'V') {
-			sidePlaying = Side.V;
-		}
-		else {
-			s.close();
-			throw new Error("Only the characters 'H' or 'V' are accepted as side playing input.");
-		}
-		
-		/* 
-		 * Gets each line info on the board and makes 
-		 * a single String from that.
-		 */
-		for(int i = 0; i < dimen + 1; i++) {
+		int dimen = s.nextInt();
+
+		/* Gets each line info on the board and makes a single String from that */
+		for (int i = 0; i < dimen + 1; i++) {
 			line = s.nextLine() + line;
 		}
-		line = line.replaceAll("\\s+","");
-		
+		line = line.replaceAll("\\s+", "");
+
+		/* Debug: runtime */
+		// long startTime = System.nanoTime();
+
 		/* Checks the dimension of the board and decides type */
-		if(dimen > Position.BIG_INT_CASE){
+		if (dimen > Run.BIG_INT_CASE) {
 			BigInteger[] bigPieces;
 			bigPieces = fromBigRawString(line);
 			board = new Position(dimen, bigPieces);
 		} else {
 			long[] pieces;
 			pieces = fromRawString(line);
-			board = new Position(dimen, sidePlaying, pieces);
+			board = new Position(dimen, pieces);
 		}
 
 		s.close();
@@ -86,6 +66,7 @@ public class Parse {
 		 * long totalTime = (endTime - startTime)/1000000; 
 		 * System.out.println("Runtime = " + totalTime + "ms");
 		 */
+
 		return board;
 	}
 
@@ -96,7 +77,7 @@ public class Parse {
 	 * @return binary of the current board in an array
 	 */
 	public static long[] fromRawString(String line) {
-		long [] smallPieces = new long[Position.PIECE_TYPES];
+		long[] smallPieces = new long[Run.PIECE_TYPES];
 		String vPieces = "";
 		String hPieces = "";
 		String bPieces = "";
@@ -138,9 +119,8 @@ public class Parse {
 	 * @param line: the whole board in string notation
 	 * @return binary of the current board in an array
 	 */
-
-	public static BigInteger[] fromRawString2(String line) {
-		BigInteger[] bigPieces = new BigInteger[Position.PIECE_TYPES];
+	public static BigInteger[] fromBigRawString(String line) {
+		BigInteger[] bigPieces = new BigInteger[Run.PIECE_TYPES];
 		String vPieces = "";
 		String hPieces = "";
 		String bPieces = "";
@@ -184,7 +164,7 @@ public class Parse {
 	public static String boardToString(Position board) {
 		String output = "";
 		String HPieces, VPieces, BPieces;
-		if(Position.dimen > Position.BIG_INT_CASE){
+		if (Position.getdimen() > Run.BIG_INT_CASE) {
 			HPieces = bitBoardToString(board.getBigPieces()[H]);
 			VPieces = bitBoardToString(board.getBigPieces()[V]);
 			BPieces = bitBoardToString(board.getBigPieces()[B]);
@@ -235,19 +215,6 @@ public class Parse {
 	 * @param dimen: the dimension of the board
 	 * @return A formatted board (notation same as specification input)
 	 */
-	
-	public static int[] readMove() {
-		if(s == null) {
-			throw new Error("Scanner not initialised");
-		}
-		String move = s.next();
-		int file = (int) move.charAt(0) - 97;
-		int rank = Integer.parseInt(Character.toString(move.charAt(1))) - 1;
-		int direction = (int) move.charAt(2);
-		int[] frd = {file, rank, direction};
-		return frd;
-	}
-	
 	private static String stringToBoardString(String bitBoard, int dimen) {
 		String output = "";
 		
@@ -324,19 +291,4 @@ public class Parse {
 		return spacedOutput;
 	}
 
-	public static long frToBitboard(int file, int row) {
-		if(Position.dimen==Position.BIG_INT_CASE && file==0 && row==0) {
-			return SPECIALCASE;
-		}
-		return pow(2, -file + Position.dimen*(Position.dimen - row) - 1);
-	}
-	
-	public static long pow(int a, int b) {
-		long result = 1;
-		for(int i = 0; i < b; i++) {
-			result *= a;
-		}
-		return result;
-	}
-	
 }
