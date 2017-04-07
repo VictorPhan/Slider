@@ -31,6 +31,9 @@ public class MoveList {
 	public long [] moves = new long[MOVE_TYPES];
 	public BigInteger [] bigMoves = new BigInteger[MOVE_TYPES];
 	
+	/**
+	 * Constructor	 
+	 */
 	public MoveList(long[] pieces, Side sidePlaying, int dimen) {
 		generateUsefulBitboards(dimen);
 		if(sidePlaying == Side.H) {
@@ -69,6 +72,9 @@ public class MoveList {
 		}
 	}
 	
+	/**
+	 * Updates the moveList attributes to the latest board position
+	 */
 	public void updateMoveList(long[] pieces, Side sidePlaying) {
 		if(sidePlaying == Side.H) {
 			moves = generateHMoves(pieces);
@@ -78,6 +84,9 @@ public class MoveList {
 		}
 	}
 	
+	/**
+	 * CHeck for a draw in the position
+	 */
 	public static boolean checkDraw(long[] pieces) {
 		long[] hm = generateHMoves(pieces);
 		long[] vm = generateVMoves(pieces);
@@ -103,6 +112,7 @@ public class MoveList {
 		vm[VO] = pieces[V] & topRow;
 		return vm;
 	}
+	
 	public BigInteger [] generateVMoves(BigInteger[] pieces) {
 		BigInteger bigOccupied = pieces[B].or(pieces[V]).or(pieces[H]);
 		BigInteger[] vm = new BigInteger[MOVE_TYPES];
@@ -130,6 +140,7 @@ public class MoveList {
 		hm[HO] = pieces[H] & rightCol;
 		return hm;
 	}
+	
 	public BigInteger [] generateHMoves(BigInteger[] pieces) {
 		BigInteger bigOccupied = pieces[B].or(pieces[V]).or(pieces[H]);
 		BigInteger[] hm = new BigInteger[MOVE_TYPES];

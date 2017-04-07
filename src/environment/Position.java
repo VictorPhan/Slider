@@ -8,9 +8,11 @@ import java.math.BigInteger;
  *
  */
 public class Position {
-	public GameState gs = GameState.PLAYING;
+	protected static final int V = 0;
+	protected static final int H = 1;
 	public static final int PIECE_TYPES = 3;
 	public static final int BIG_INT_CASE = 8;
+	public GameState gs;
 	public Side sidePlaying;
 	public static int dimen;
 	public MoveList ml = null;
@@ -55,14 +57,17 @@ public class Position {
 	}
 	
 	public void checkGameState() {
-		if(Long.bitCount(pieces[MoveList.H])==0) {
+		if(Long.bitCount(pieces[H])==0) {
 			gs = GameState.H_WON;
 		}
-		else if(Long.bitCount(pieces[MoveList.V])==0) {
+		else if(Long.bitCount(pieces[V])==0) {
 			gs = GameState.V_WON;
 		}
 		else if(MoveList.checkDraw(pieces)) {
 			gs = GameState.DRAW;
+		}
+		else {
+			gs = GameState.PLAYING;
 		}
 	}
 	
@@ -123,10 +128,10 @@ public class Position {
 	
 	public long getCurrPieces() {
 		if(sidePlaying == Side.H) {
-			return pieces[MoveList.H];
+			return pieces[H];
 		}
 		else if(sidePlaying == Side.V) {
-			return pieces[MoveList.V];
+			return pieces[V];
 		}
 		else {
 			throw new Error("Game state not in playing!");
@@ -135,10 +140,10 @@ public class Position {
 	
 	public void setCurrPieces(long newPieces, Side opponent) {
 		if(sidePlaying == Side.H) {
-			pieces[MoveList.H] = newPieces;
+			pieces[H] = newPieces;
 		}
 		else if(sidePlaying == Side.V) {
-			pieces[MoveList.V] = newPieces;
+			pieces[V] = newPieces;
 		}
 		else {
 			throw new Error("Game state not in playing!");

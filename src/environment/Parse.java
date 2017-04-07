@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.lang.Error;
 
 /**
- * Parses through the input data from run
+ * Contains all the read in and print out functioanlities
  * @author TB VP
  *
  */
@@ -29,7 +29,8 @@ public class Parse {
 	}
 	
 	/**
-	 * Reads input position and returns an initialized bitboard
+	 * Reads board dimensionality, which side is immediately playing,
+	 * and an input position to return an initialized Position object
 	 * @return
 	 */
 	public static Position parseBoard() {
@@ -85,7 +86,6 @@ public class Parse {
 	 * @param line
 	 * @return
 	 */
-	
 	public static long[] fromRawString(String line) {
 		long [] smallPieces = new long[Position.PIECE_TYPES];
 		String vPieces = "";
@@ -206,20 +206,25 @@ public class Parse {
 		return stringToBoardString(bitBoardToString(bitboard), Position.dimen);
 	}
 	
+	/**
+	 * Converts a BigInteger bitboard into a printable string
+	 * @param bitboard
+	 * @return
+	 */
 	public static String bitBoardToBoardString(BigInteger bitboard) {
 		return stringToBoardString(bitBoardToString(bitboard), Position.dimen);
 	}
 	
 	/**
-	 * Formats a flat string to a printable board.
-	 * @param bitBoard
-	 * @return
+	 * Reads a move in algebraic notation, returns an int[]
+	 * where frd[0] = file, frd[1] = rank, frd[2] = direction
+	 * Files and ranks will take integer values over [0, Position.dimen-1]
 	 */
-	
 	public static int[] readMove() {
 		if(s == null) {
 			throw new Error("Scanner not initialised");
 		}
+		System.out.println("Enter move: ");
 		String move = s.next();
 		int file = (int) move.charAt(0) - 97;
 		int rank = Integer.parseInt(Character.toString(move.charAt(1))) - 1;
@@ -228,6 +233,10 @@ public class Parse {
 		return frd;
 	}
 	
+	/**
+	 * Inserts the appropriate newline characters into the bitBoard
+	 * to print the board as a square
+	 */
 	private static String stringToBoardString(String bitBoard, int dimen) {
 		String output = "";
 		
@@ -255,6 +264,11 @@ public class Parse {
 		return output;
 	}
 	
+	/**
+	 * Converts a bigInteger bitboard into a flat string
+	 * @param bitboard
+	 * @return
+	 */
 	private static String bitBoardToString(BigInteger bitboard) {
 		String output = "";
 		int leadingZeros = (int) Math.pow(Position.dimen, 2) - 
@@ -292,6 +306,13 @@ public class Parse {
 		return spacedOutput;
 	}
 	
+	/**
+	 * File and rank into a bitboard of size dimen with 0s and a single 1
+	 * on the specified square
+	 * @param file
+	 * @param row
+	 * @return
+	 */
 	public static long frToBitboard(int file, int row) {
 		if(Position.dimen==Position.BIG_INT_CASE && file==0 && row==0) {
 			return SPECIALCASE;
@@ -299,6 +320,10 @@ public class Parse {
 		return pow(2, -file + Position.dimen*(Position.dimen - row) - 1);
 	}
 	
+	/**
+	 * Integer power, more efficient than using Math.pow as it avoids
+	 * the double type operations
+	 */
 	public static long pow(int a, int b) {
 		long result = 1;
 		for(int i = 0; i < b; i++) {
