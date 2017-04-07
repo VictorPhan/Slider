@@ -222,23 +222,74 @@ public class Parse {
 	 * Reads a move in algebraic notation, returns an int[]
 	 * where frd[0] = file, frd[1] = rank, frd[2] = direction
 	 * Files and ranks will take integer values over [0, Position.dimen-1]
+	 * @param color 
 	 * @throws InvalidMoveException 
 	 */
-	public static int[] readMove() throws InvalidMoveException {
+	public static int[] readMove(Side color) throws InvalidMoveException {
 		if(s == null) {
 			throw new Error("Scanner not initialised");
 		}
-		System.out.println("Enter move: ");
+		
+		if(color == Side.H) {
+			System.out.print("H player move: ");
+		}
+		else {
+			System.out.print("V player move: ");
+		}
+		
 		String move = s.next();
-		if(move.length()!=3) {
+		if(move.length()!=4) {
+			if(move.length()==3) {
+				int file = (int) move.charAt(0) - 97;
+				int rank = Integer.parseInt(Character.toString(move.charAt(1))) - 1;
+				int direction = (int) move.charAt(2);
+				if(direction == (int) '+') {
+					if(color == Side.H) {
+						direction = (int) 'R';
+					}
+					else {
+						direction = (int) 'U';
+					}
+				}
+				int[] frd = {file, rank, direction};
+				Run.addHistory(move);
+				return frd;
+			}
 			throw new InvalidMoveException();
 		}
+		
 		int file = (int) move.charAt(0) - 97;
 		int rank = Integer.parseInt(Character.toString(move.charAt(1))) - 1;
-		int direction = (int) move.charAt(2);
+		int f2 = (int) move.charAt(2) - 97;
+		int r2 = Integer.parseInt(Character.toString(move.charAt(3))) - 1;
+		int direction = getDirection(file, rank, f2, r2);
 		int[] frd = {file, rank, direction};
 		Run.addHistory(move);
 		return frd;
+	}
+	
+	public static int getDirection(int f1, int r1, int f2, int r2) throws InvalidMoveException {
+		int hDisp = f2-f1;
+		int vDisp = r2-r1;
+		if(hDisp==1) {
+			if(vDisp==0) {
+				return (int) 'R';
+			}
+		}
+		else if(hDisp==-1) {
+			if(vDisp==0) {
+				return (int) 'L';
+			}
+		}
+		else if(hDisp==0) {
+			if(vDisp==1) {
+				return (int) 'U';
+			}
+			else if(vDisp==-1) {
+				return (int) 'D';
+			}
+		}
+		throw new InvalidMoveException();
 	}
 	
 	/**

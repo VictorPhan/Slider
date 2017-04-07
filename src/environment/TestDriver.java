@@ -12,7 +12,7 @@ public class TestDriver {
 		Position.dimen = 8;
 		int[] frd = null;
 		try {
-			frd = Parse.readMove();
+			frd = Parse.readMove(Side.V);
 		} catch (InvalidMoveException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -14,6 +14,22 @@ c2u
 b1r
 c3u 
 
+3 V
+H + +
+H + +
++ V V
+b1b2
+a3b3
+c1c2
+b3c3
+b2b3
+a2b2
+b3+
+c3+
+c2c3
+b2c2
+c3+
+
 
 8
 + + + H + + + +

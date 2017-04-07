@@ -3,6 +3,7 @@ package player;
 import environment.MoveList;
 import environment.Parse;
 import environment.Position;
+import environment.Run;
 import environment.Side;
 import exceptions.InvalidMoveException;
 
@@ -41,10 +42,18 @@ public class Human extends Player {
 	@Override
 	public void makeMove(Position p) throws InvalidMoveException {
 		if(checkPass(p.ml.moves)) {
+			if(color == Side.H) {
+				System.out.print("H player move: Pass");
+			}
+			else {
+				System.out.println("V player move: Pass");
+			}
 			p.setCurrPieces(p.getCurrPieces(), opponent);
+			Run.addHistory("—");
+			return;
 		}
 		
-		int[] frd = Parse.readMove();
+		int[] frd = Parse.readMove(color);
 		
 		/* Check for invalid side move */
 		if(frd[2] == illegalMove) {
@@ -58,7 +67,7 @@ public class Human extends Player {
 		long newBB = 0;
 		
 		switch(frd[2]) {
-			case 'r':
+			case 'R':
 				if(color==Side.H && frd[0]+1==Position.dimen) {
 					legalBB = userMoveBB & p.ml.moves[O];
 				}
@@ -67,7 +76,7 @@ public class Human extends Player {
 					newBB 	= legalBB >>> 1;
 				}
 				break;
-			case 'u':
+			case 'U':
 				if(color==Side.V && frd[1]+1==Position.dimen) {
 					legalBB = userMoveBB & p.ml.moves[O];
 				}
@@ -76,11 +85,11 @@ public class Human extends Player {
 					newBB	= legalBB >>> Position.dimen;
 				}
 				break;
-			case 'd':
+			case 'D':
 				legalBB = userMoveBB & p.ml.moves[D];
 				newBB 	= legalBB << Position.dimen;
 				break;
-			case 'l':
+			case 'L':
 				legalBB = userMoveBB & p.ml.moves[L];
 				newBB 	= legalBB << 1;
 				break;

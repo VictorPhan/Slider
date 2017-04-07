@@ -19,6 +19,8 @@ public class Run {
 		boolean hFirst;
 		int moveNum = 1;
 		
+		System.out.println("");
+		
 		if(curr.sidePlaying == Side.H) {
 			hFirst = true;
 		}
@@ -28,7 +30,6 @@ public class Run {
 		
 		Player ph = new Human(Side.H);
 		Player pv = new Human(Side.V);
-		curr.draw();
 		while(curr.gs==GameState.PLAYING) {
 			if(curr.sidePlaying==Side.H) {
 				if(hFirst) {
@@ -54,7 +55,20 @@ public class Run {
 			}
 			curr.draw();
 		}
-		addHistory(curr.gs.toString());
+		
+		if(curr.gs==GameState.DRAW) {
+			addHistory("#=");
+		}
+		else if(curr.gs==GameState.H_WON) {
+			addHistory("#H");
+		}
+		else if(curr.gs==GameState.V_WON) {
+			addHistory("#V");
+		}
+		else {
+			throw new Error("Game hasn't ended.");
+		}
+		
 		System.out.println(moveHistory);
 		Parse.closeScan();
 	}
