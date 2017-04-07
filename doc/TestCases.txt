@@ -1,8 +1,18 @@
-3
+3 V
 + H +
 H B V
 + V +
-
+c2u
+a2d
+b1r
+a1r
+c3u
+b3r
+c1u
+c3r
+c2u
+b1r
+c3u 
 
 
 8

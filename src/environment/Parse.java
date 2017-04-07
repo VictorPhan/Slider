@@ -230,6 +230,7 @@ public class Parse {
 		int rank = Integer.parseInt(Character.toString(move.charAt(1))) - 1;
 		int direction = (int) move.charAt(2);
 		int[] frd = {file, rank, direction};
+		Run.addHistory(move);
 		return frd;
 	}
 	
