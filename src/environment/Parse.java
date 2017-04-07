@@ -2,6 +2,9 @@ package environment;
 
 import java.math.BigInteger;
 import java.util.Scanner;
+
+import exceptions.InvalidMoveException;
+
 import java.lang.Error;
 
 /**
@@ -219,13 +222,17 @@ public class Parse {
 	 * Reads a move in algebraic notation, returns an int[]
 	 * where frd[0] = file, frd[1] = rank, frd[2] = direction
 	 * Files and ranks will take integer values over [0, Position.dimen-1]
+	 * @throws InvalidMoveException 
 	 */
-	public static int[] readMove() {
+	public static int[] readMove() throws InvalidMoveException {
 		if(s == null) {
 			throw new Error("Scanner not initialised");
 		}
 		System.out.println("Enter move: ");
 		String move = s.next();
+		if(move.length()!=3) {
+			throw new InvalidMoveException();
+		}
 		int file = (int) move.charAt(0) - 97;
 		int rank = Integer.parseInt(Character.toString(move.charAt(1))) - 1;
 		int direction = (int) move.charAt(2);
