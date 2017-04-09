@@ -12,10 +12,18 @@ public class GameHistory {
 			new HashMap<ArrayList<Long>, MutableInteger>();
 	private static int threeFoldCase = 3;
 	
+	/**
+	 * Add a string to the move history which may be printed at the end of the game
+	 * @param move
+	 */
 	public static void addHistory(String move) {
 		moveHistory = moveHistory.concat(move).concat(" ");
 	}
 	
+	/**
+	 * Adds final string output when game has ended
+	 * @param curr
+	 */
 	public static void addFinalHistory(Position curr) {
 		if(curr.gs==GameState.DRAW) {
 			addHistory("#=");
@@ -34,7 +42,7 @@ public class GameHistory {
 	/**
 	 * Checks for a repeated position by using a HashMap positionCounter.
 	 * The key is piecesWrapper which stores piece centric information about
-	 * the H pieces and the V pieces.
+	 * the H pieces and the V pieces. Does not store the ordering of the positions.
 	 * @param pieces
 	 * @return
 	 */
