@@ -1,0 +1,16 @@
+{
+	4 V
+	H + + + 
+	H + + + 
+	H + + + 
+	+ V V V 
+	
+	V - Victor, H - Vish
+	1. d1d2 a4b4 2. d2d3 b4c4 3. d3d4 c4c3 4. c1c2 a3b3 5. b1c1 a2b2 6. c1d1 c3d3 7. d1d2 b3c3 8. d4c4 b2b1 9. c2b2 c3c2 10. b2b3 b1c1 11. b3b4 c1d1 12. 13. b4+ d1+ 14. c4+ d3+ 15. d2d3 c2d2 16. d3d4 d2+ #H
+	
+	V - Vish, H - Victor
+	1. d1d2 a3b3 2. d2c2 a2a3 3. c2c3 a4b4 4. b1b2 b4c4 5. c1c2 a3a4 6. c2d2 a4a3 7. d2c2 a3a2 8. c2d2 c4d4 9. d2d3 a2a1 10. b2c2 a1b1 11. c2b2 b1c1 12. b2c2 c1d1 13. c2b2 d1d2 14. b2c2 b3b2 15. c3b3 b2b1 16. b3b4 b1c1 17. b4+ c1d1 18. c2c3 c1+ c1+ d1+ 19. c3c4 d2+ 20. c4+ d4+ #H 
+	
+	V - Vish, H - Victor
+	1. d1d2 a3b3 2. d2c2 a4b4 3. c2c3 a2b2 4. c1c2 b4c4 5. b1c1 b3b4 6. c1b1 b4b3 7. b1c1 b3b4 8. c1b1 b4b3 9. b1c1 b3b4 10. c3b3 c4c3 11. c1b1 b4c4 12. b3b4 c3d3 13. b1c1 b2b3 14. c2c3 b3b2 15. c1c2 b2b1 16. b4+ b1c1 17. c2b2 c1d1 18. b2b3 d1+ 19. b3b4 c3+ d3+ 20. b4+ c4d4 21. c3c4 d4+ #H
+}

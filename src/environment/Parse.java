@@ -252,7 +252,7 @@ public class Parse {
 					}
 				}
 				int[] frd = {file, rank, direction};
-				Run.addHistory(move);
+				GameHistory.addHistory(move);
 				return frd;
 			}
 			throw new InvalidMoveException();
@@ -264,7 +264,7 @@ public class Parse {
 		int r2 = Integer.parseInt(Character.toString(move.charAt(3))) - 1;
 		int direction = getDirection(file, rank, f2, r2);
 		int[] frd = {file, rank, direction};
-		Run.addHistory(move);
+		GameHistory.addHistory(move);
 		return frd;
 	}
 	

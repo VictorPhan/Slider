@@ -3,7 +3,9 @@ package environment;
 import java.math.BigInteger;
 
 /**
- * The current position of the game space
+ * A state of the game space. Consists of the location of all the pieces,
+ * whether the game is playing, tied, or a side has won, and all the possible
+ * actions a particular player can take from the current state.
  * @author TB VP
  *
  */
@@ -63,7 +65,8 @@ public class Position {
 		else if(Long.bitCount(pieces[V])==0) {
 			gs = GameState.V_WON;
 		}
-		else if(MoveList.checkDraw(pieces)) {
+		else if(MoveList.checkDraw(pieces) || 
+				GameHistory.threeFoldRepitition(pieces)) {
 			gs = GameState.DRAW;
 		}
 		else {
@@ -89,7 +92,7 @@ public class Position {
 	 * Constructor for after the first state
 	 * @param bigPieces
 	 */
-	public Position(BigInteger[] bigPieces){
+	public Position(BigInteger[] bigPieces) {
 		this.bigPieces = bigPieces;
 		ml = new MoveList(bigPieces, sidePlaying);
 	}

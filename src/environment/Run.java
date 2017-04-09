@@ -11,8 +11,6 @@ import player.Player;
  */
 public class Run {
 	
-	static String moveHistory = "";
-	
 	public static void main(String[] args) {
 		Parse.initScan();
 		Position curr = Parse.parseBoard();
@@ -30,10 +28,11 @@ public class Run {
 		
 		Player ph = new Human(Side.H);
 		Player pv = new Human(Side.V);
+		
 		while(curr.gs==GameState.PLAYING) {
 			if(curr.sidePlaying==Side.H) {
 				if(hFirst) {
-					addHistory(Integer.toString(moveNum) + ".");
+					GameHistory.addHistory(Integer.toString(moveNum) + ".");
 					moveNum++;
 				}
 				try {
@@ -44,7 +43,7 @@ public class Run {
 			}
 			else {
 				if(!hFirst) {
-					addHistory(Integer.toString(moveNum) + ".");
+					GameHistory.addHistory(Integer.toString(moveNum) + ".");
 					moveNum++;
 				}
 				try {
@@ -56,25 +55,10 @@ public class Run {
 			curr.draw();
 		}
 		
-		if(curr.gs==GameState.DRAW) {
-			addHistory("#=");
-		}
-		else if(curr.gs==GameState.H_WON) {
-			addHistory("#H");
-		}
-		else if(curr.gs==GameState.V_WON) {
-			addHistory("#V");
-		}
-		else {
-			throw new Error("Game hasn't ended.");
-		}
+		GameHistory.addFinalHistory(curr);
 		
-		System.out.println(moveHistory);
+		System.out.println(GameHistory.moveHistory);
 		Parse.closeScan();
-	}
-	
-	public static void addHistory(String move) {
-		moveHistory = moveHistory.concat(move).concat(" ");
 	}
 	
 }

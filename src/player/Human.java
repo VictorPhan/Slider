@@ -1,9 +1,9 @@
 package player;
 
+import environment.GameHistory;
 import environment.MoveList;
 import environment.Parse;
 import environment.Position;
-import environment.Run;
 import environment.Side;
 import exceptions.InvalidMoveException;
 
@@ -49,7 +49,7 @@ public class Human extends Player {
 				System.out.println("V player move: Pass");
 			}
 			p.setCurrPieces(p.getCurrPieces(), opponent);
-			Run.addHistory("—");
+			GameHistory.addHistory("—");
 			return;
 		}
 		
