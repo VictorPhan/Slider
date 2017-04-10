@@ -1,6 +1,7 @@
 package environment;
 
 import exceptions.InvalidMoveException;
+import player.AIPlayer;
 import player.Human;
 import player.Player;
 
@@ -26,8 +27,8 @@ public class Run {
 			hFirst = false;
 		}
 		
-		Player ph = new Human(Side.H);
 		Player pv = new Human(Side.V);
+		Player ph = new AIPlayer(Side.H);
 		
 		while(curr.gs==GameState.PLAYING) {
 			if(curr.sidePlaying==Side.H) {

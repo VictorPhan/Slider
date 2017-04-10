@@ -1,20 +1,18 @@
 package player;
 
+import java.util.ArrayList;
+
 import environment.GameHistory;
+import environment.GameState;
 import environment.MoveList;
 import environment.Position;
 import environment.Side;
-import exceptions.InvalidMoveException;
 
 public class AIPlayer extends Player {
 	
+	public int MAX_DEPTH = 30;
 	Side color;
 	Side opponent;
-	int U = 0;
-	int R = 1;
-	int D = 2;
-	int L = 2;
-	int O = 3;
 	char illegalMove;
 	
 	public AIPlayer(Side color) {
@@ -39,7 +37,7 @@ public class AIPlayer extends Player {
 	}
 	
 	@Override
-	public void makeMove(Position p) throws InvalidMoveException {
+	public void makeMove(Position p) {
 		if(checkPass(p.ml.moves)) {
 			if(color == Side.H) {
 				System.out.print("H player move: Pass");
@@ -51,11 +49,69 @@ public class AIPlayer extends Player {
 			GameHistory.addHistory("—");
 			return;
 		}
-		
 		// First implement minimax algorithm, test on small board case (size 3), include transposition tables
-		
-		
+		Action bestAction = alphaBeta(p);
+		Action.supplyAction(p, bestAction);
 	}
 	
+	/**
+	 * Returns a long[] containing respectively the direction and the bitboard for the corresponding move
+	 * @param p
+	 * @return
+	 */
+	public Action alphaBeta(Position p) {
+		ArrayList<Action> actions = Action.generateActions(p.ml.moves);
+		double v = maxValue(p, actions, 0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+		for(Action a : actions) {
+			if(a.score == v) {
+				return a;
+			}
+		}
+		return actions.get(0);
+	}
+	
+	public double maxValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
+		if(cutOffTest(p, depth)) {
+			return Evaluation.evaluate(p);
+		}
+		double v = Double.NEGATIVE_INFINITY;
+		
+		for(Action a : actions) {
+			Position newPos = Action.applyAction(p, a, color);
+			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+			v = Math.max(v, minValue(newPos, newActions, depth + 1, alpha, beta));
+			if(v >= beta) {
+				a.score = v;
+				return v;
+			}
+			alpha = Math.max(alpha, v);
+		}
+		return v;
+	}
+	
+	public double minValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
+		if(cutOffTest(p, depth)) {
+			return Evaluation.evaluate(p);
+		}
+		double v = Double.POSITIVE_INFINITY;
+		for(Action a : actions) {
+			Position newPos = Action.applyAction(p, a, color);
+			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+			v = Math.min(v, maxValue(newPos, newActions, depth + 1, alpha, beta));
+			if(v <= alpha) {
+				a.score = v;
+				return v;
+			}
+			beta = Math.min(beta, v);
+		}
+		return v;
+	}
+
+	private boolean cutOffTest(Position p, int depth) {
+		if(p.gs != GameState.PLAYING || depth >= MAX_DEPTH) {
+			return true;
+		}
+		return false;
+	}
 
 }

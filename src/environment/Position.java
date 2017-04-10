@@ -65,8 +65,7 @@ public class Position {
 		else if(Long.bitCount(pieces[V])==0) {
 			gs = GameState.V_WON;
 		}
-		else if(MoveList.checkDraw(pieces) || 
-				GameHistory.threeFoldRepitition(pieces)) {
+		else if(MoveList.checkDraw(pieces) /*|| GameHistory.threeFoldRepitition(pieces) leave out to deal with AI*/) {
 			gs = GameState.DRAW;
 		}
 		else {

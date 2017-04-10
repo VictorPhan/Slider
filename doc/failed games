@@ -1,0 +1,74 @@
+3 V
+H + +
+H + +
++ V V
+
+V player move: b1b2
+H + + 
+H V + 
++ + V 
+
++ H + 
+H V + 
++ + V 
+
+V player move: c1c2
++ H + 
+H V V 
++ + + 
+
+H H + 
++ V V 
++ + + 
+
+V player move: c2c3
+H H V 
++ V + 
++ + + 
+
++ H V 
+H V + 
++ + + 
+
+V player move: b2c2
++ H V 
+H + V 
++ + + 
+
+H H V 
++ + V 
++ + + 
+
+V player move: c3+
+H H + 
++ + V 
++ + + 
+
+H + H 
++ + V 
++ + + 
+
+V player move: c2b2
+H + H 
++ V + 
++ + + 
+
++ + H 
+H V + 
++ + + 
+
+V player move: b2b3
++ V H 
+H + + 
++ + + 
+
+H V H 
++ + + 
++ + + 
+
+V player move: b3+
+H + H 
++ + + 
++ + + 
+
+1. b1b2 2. c1c2 3. c2c3 4. b2c2 5. c3+ 6. c2b2 7. b2b3 8. b3+ #V 
