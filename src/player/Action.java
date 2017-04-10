@@ -37,8 +37,8 @@ public class Action {
 		}
 	}
 
-	public static Position applyAction(Position p, Action a, Side color) {
-		Position nextP = new Position(p.getPieces().clone(), color);
+	public static Position applyAction(Position p, Action a) {
+		Side color = p.sidePlaying;
 		Side opponent;
 		if(color == Side.H) {
 			opponent = Side.V;
@@ -46,6 +46,8 @@ public class Action {
 		else {
 			opponent = Side.H;
 		}
+		
+		Position nextP = new Position(p.getPieces().clone(), color);
 		
 		long legalBB = a.bitboard;
 		long newBB = 0;

@@ -27,7 +27,7 @@ public class Run {
 			hFirst = false;
 		}
 		
-		Player pv = new Human(Side.V);
+		Player pv = new AIPlayer(Side.V);
 		Player ph = new AIPlayer(Side.H);
 		
 		while(curr.gs==GameState.PLAYING) {

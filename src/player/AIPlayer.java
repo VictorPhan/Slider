@@ -10,7 +10,7 @@ import environment.Side;
 
 public class AIPlayer extends Player {
 	
-	public int MAX_DEPTH = 30;
+	public int MAX_DEPTH = 10;
 	Side color;
 	Side opponent;
 	char illegalMove;
@@ -64,6 +64,7 @@ public class AIPlayer extends Player {
 		double v = maxValue(p, actions, 0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
 		for(Action a : actions) {
 			if(a.score == v) {
+				System.out.println(a.score);
 				return a;
 			}
 		}
@@ -72,12 +73,13 @@ public class AIPlayer extends Player {
 	
 	public double maxValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
-			return Evaluation.evaluate(p);
+			return Evaluation.evaluate(p, color);
 		}
 		double v = Double.NEGATIVE_INFINITY;
 		
 		for(Action a : actions) {
-			Position newPos = Action.applyAction(p, a, color);
+			a.score = v;
+			Position newPos = Action.applyAction(p, a);
 			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
 			v = Math.max(v, minValue(newPos, newActions, depth + 1, alpha, beta));
 			if(v >= beta) {
@@ -91,11 +93,12 @@ public class AIPlayer extends Player {
 	
 	public double minValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
-			return Evaluation.evaluate(p);
+			return Evaluation.evaluate(p, color);
 		}
 		double v = Double.POSITIVE_INFINITY;
 		for(Action a : actions) {
-			Position newPos = Action.applyAction(p, a, color);
+			a.score = v;
+			Position newPos = Action.applyAction(p, a);
 			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
 			v = Math.min(v, maxValue(newPos, newActions, depth + 1, alpha, beta));
 			if(v <= alpha) {
