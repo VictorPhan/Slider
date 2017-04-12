@@ -37,6 +37,16 @@ public class Position {
 	 * Constructor for position
 	 * @param pieces 
 	 */
+	public Position(long [] pieces, Side sidePlaying, GameHistory gh) {
+		this.pieces = pieces;
+		this.gHistory = gh;
+		updateBoard(sidePlaying);
+	}
+	
+	/**
+	 * Constructor for position
+	 * @param pieces 
+	 */
 	public Position(long [] pieces, Side sidePlaying) {
 		this.pieces = pieces;
 		updateBoard(sidePlaying);

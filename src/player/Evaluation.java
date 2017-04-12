@@ -5,6 +5,11 @@ import environment.MoveList;
 import environment.Position;
 import environment.Side;
 
+/**
+ * Evaluation class. POSITIVE INFINITY is H's win, NEGATIVE INFINITY is V's win
+ * @author Victor
+ *
+ */
 public class Evaluation {
 		static int V = 0;
 		static int H = 1;
@@ -28,9 +33,6 @@ public class Evaluation {
 		}
 		mobilityDiff = mobilityDiff/(Long.bitCount(pieces[V]) + Long.bitCount(pieces[H]));
 		double score = pieceDiff + mobilityDiff;
-		if(color == Side.V) {
-			score *= -1;
-		}
 		return score;
 	}
 }

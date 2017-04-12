@@ -62,4 +62,11 @@ public class GameHistory {
 		return false;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public GameHistory clone() {
+		GameHistory ghClone = new GameHistory();
+		ghClone.positionCounter = (HashMap<ArrayList<Long>, MutableInteger>) this.positionCounter.clone();
+		return ghClone;
+	}
+	
 }

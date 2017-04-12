@@ -47,7 +47,7 @@ public class Action {
 			opponent = Side.H;
 		}
 		
-		Position nextP = new Position(p.getPieces().clone(), color);
+		Position nextP = new Position(p.getPieces().clone(), color, p.gHistory.clone());
 		
 		long legalBB = a.bitboard;
 		long newBB = 0;

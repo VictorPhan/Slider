@@ -11,6 +11,12 @@ c3+
 H + +
 H + +
 + V V
+
+3 H
+H + +
+H + +
++ V V
+
 b1b2
 a3b3
 c1c2
@@ -52,7 +58,7 @@ B V V V V V V V V
 
 It really slows down on n=17
 
-17
+17 V
 H + + + + + + + + + + + + + + + + 
 H + + + + + + + + + + + + + + + + 
 H + + + + + + + + + + + + + + + + 

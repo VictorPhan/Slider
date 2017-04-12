@@ -10,7 +10,6 @@ import environment.Side;
 
 public class AIPlayer extends Player {
 	
-	public int MAX_DEPTH = 20;
 	Side color;
 	Side opponent;
 	char illegalMove;
@@ -38,6 +37,7 @@ public class AIPlayer extends Player {
 	
 	@Override
 	public void makeMove(Position p) {
+		// Check for passing move
 		if(checkPass(p.ml.moves)) {
 			if(color == Side.H) {
 				System.out.println("H player move: Pass");
@@ -49,10 +49,12 @@ public class AIPlayer extends Player {
 			GameHistory.addHistory("—");
 			return;
 		}
+		
 		// First implement minimax algorithm, test on small board case (size 3), include transposition tables
 		Action bestAction = alphaBeta(p);
 		Action.supplyAction(p, bestAction);
 		String move = bestAction.toString(color);
+		System.out.println(bestAction.score);
 		if(color == Side.H) {
 			System.out.println("H player move: " + move);
 		}
@@ -69,10 +71,15 @@ public class AIPlayer extends Player {
 	 */
 	public Action alphaBeta(Position p) {
 		ArrayList<Action> actions = Action.generateActions(p.ml.moves);
-		double v = maxValue(p, actions, 0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+		double v = 0;
+		if(p.sidePlaying == Side.H) {
+			v = maxValue(p, actions, 0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+		}
+		else {
+			v = minValue(p, actions, 0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+		}
 		for(Action a : actions) {
 			if(a.score == v) {
-				System.out.println(a.score);
 				return a;
 			}
 		}

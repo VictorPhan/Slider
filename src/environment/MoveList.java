@@ -148,7 +148,7 @@ public class MoveList {
 				and(bigLeftCol.not())).shiftLeft(1);
 		hm[HU] = ((pieces[H].shiftRight(Position.dimen)).
 				and(bigOccupied.not())).shiftLeft(Position.dimen);
-		hm[HD] = ((pieces[H].shiftLeft(Position.dimen)).
+		hm[HD] = (((pieces[H].and(bigBottomRow.not())).shiftLeft(Position.dimen)).
 				and(bigOccupied.not())).shiftRight(Position.dimen);
 		hm[HO] = pieces[H].and(bigRightCol);
 		return hm;
