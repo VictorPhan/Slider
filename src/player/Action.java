@@ -3,7 +3,6 @@ package player;
 import java.util.ArrayList;
 
 import environment.MoveList;
-import environment.Parse;
 import environment.Position;
 import environment.Side;
 
@@ -115,7 +114,6 @@ public class Action {
 	 */
 	public String toString(Side color) {
 		int i=0;
-		Position.dimen = 3;
 		while(bitboard % 2 == 0) {
 			bitboard /= 2;
 			i++;

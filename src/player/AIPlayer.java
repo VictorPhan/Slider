@@ -10,7 +10,7 @@ import environment.Side;
 
 public class AIPlayer extends Player {
 	
-	public int MAX_DEPTH = 5;
+	public int MAX_DEPTH = 20;
 	Side color;
 	Side opponent;
 	char illegalMove;
