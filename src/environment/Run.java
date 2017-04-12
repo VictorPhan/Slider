@@ -5,18 +5,12 @@ import player.AIPlayer;
 import player.Human;
 import player.Player;
 
-/**
- * The main file
- * @author TB VP
- *
- */
 public class Run {
 	
 	public static void main(String[] args) {
 		Parse.initScan();
 		Position curr = Parse.parseBoard();
 		boolean hFirst;
-		int moveNum = 1;
 		
 		System.out.println("");
 		
@@ -30,6 +24,16 @@ public class Run {
 		Player pv = new AIPlayer(Side.V);
 		Player ph = new AIPlayer(Side.H);
 		
+		playGame(curr, hFirst, ph, pv);
+		
+		GameHistory.addFinalHistory(curr);
+		
+		System.out.println(GameHistory.moveHistory);
+		Parse.closeScan();
+	}
+	
+	public static void playGame(Position curr, boolean hFirst, Player ph, Player pv) {
+		int moveNum = 1;
 		while(curr.gs==GameState.PLAYING) {
 			if(curr.sidePlaying==Side.H) {
 				if(hFirst) {
@@ -55,11 +59,6 @@ public class Run {
 			}
 			curr.draw();
 		}
-		
-		GameHistory.addFinalHistory(curr);
-		
-		System.out.println(GameHistory.moveHistory);
-		Parse.closeScan();
 	}
 	
 }

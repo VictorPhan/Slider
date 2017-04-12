@@ -25,8 +25,8 @@ public class MoveList {
 	
 	public static final int MOVE_TYPES = 4;
 	
-	protected static long leftCol, rightCol, topRow;
-	protected static BigInteger bigLeftCol, bigRightCol, bigTopRow;
+	protected static long leftCol, rightCol, topRow, bottomRow;
+	protected static BigInteger bigLeftCol, bigRightCol, bigTopRow, bigBottomRow;
 	
 	public long [] moves = new long[MOVE_TYPES];
 	public BigInteger [] bigMoves = new BigInteger[MOVE_TYPES];
@@ -136,7 +136,7 @@ public class MoveList {
 		long[] hm = new long[MOVE_TYPES];
 		hm[HR] = ((pieces[H] >>> 1) & ~occupied & ~leftCol) << 1;
 		hm[HU] = ((pieces[H] >>> Position.dimen) & ~occupied) << Position.dimen;
-		hm[HD] = ((pieces[H] << Position.dimen) & ~occupied) >>> Position.dimen;
+		hm[HD] = (((pieces[H] & ~bottomRow) << Position.dimen) & ~occupied) >>> Position.dimen;
 		hm[HO] = pieces[H] & rightCol;
 		return hm;
 	}
@@ -202,10 +202,25 @@ public class MoveList {
 			bigTopRow = new BigInteger(sTopRow, 2);
 		}
 		
+		/**
+		 * Bottom row filled with 1s bitboard
+		 */
+		{
+			String sTopRow = "";
+			for(int i=0; i<dimen; i++) {
+				sTopRow = sTopRow.concat("1");
+			}
+			for(int i=0; i<dimen*(dimen-1); i++) {
+				sTopRow = sTopRow.concat("0");
+			}
+			bigBottomRow = new BigInteger(sTopRow, 2);
+		}
+		
 		if(dimen <= Position.BIG_INT_CASE) {
 			leftCol = bigLeftCol.longValue();
 			rightCol = bigRightCol.longValue();
 			topRow = bigTopRow.longValue();
+			bottomRow = bigBottomRow.longValue();
 		}
 	}
 	

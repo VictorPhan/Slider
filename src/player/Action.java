@@ -12,9 +12,9 @@ public class Action {
 	static final int R = 1;
 	static final int DL= 2;
 	static final int O = 3;
-	double score;
-	int direction;
-	long bitboard;
+	public double score;
+	public int direction;
+	public long bitboard;
 	
 	public Action(int direction, long bitboard) {
 		this.direction = direction;
