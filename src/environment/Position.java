@@ -20,6 +20,7 @@ public class Position {
 	public MoveList ml = null;
 	private long[] pieces = new long[PIECE_TYPES];
 	private BigInteger[] bigPieces = new BigInteger[PIECE_TYPES];
+	public GameHistory gHistory = new GameHistory();
 	
 	/**
 	 * Constructor initializing dimension and initial position
@@ -65,7 +66,7 @@ public class Position {
 		else if(Long.bitCount(pieces[V])==0) {
 			gs = GameState.V_WON;
 		}
-		else if(MoveList.checkDraw(pieces) /*|| GameHistory.threeFoldRepitition(pieces) leave out to deal with AI*/) {
+		else if(MoveList.checkDraw(pieces) || gHistory.threeFoldRepitition(pieces)) {
 			gs = GameState.DRAW;
 		}
 		else {

@@ -8,7 +8,7 @@ import types.MutableInteger;
 public class GameHistory {
 	
 	static String moveHistory = "";
-	static HashMap<ArrayList<Long>, MutableInteger> positionCounter = 
+	public HashMap<ArrayList<Long>, MutableInteger> positionCounter = 
 			new HashMap<ArrayList<Long>, MutableInteger>();
 	private static int threeFoldCase = 3;
 	
@@ -46,7 +46,7 @@ public class GameHistory {
 	 * @param pieces
 	 * @return
 	 */
-	public static boolean threeFoldRepitition(long[] pieces) {
+	public boolean threeFoldRepitition(long[] pieces) {
 		ArrayList<Long> piecesWrapper = new ArrayList<Long>();
 		for(int i=0; i<Position.PIECE_TYPES-1; i++) {
 			piecesWrapper.add(pieces[i]);

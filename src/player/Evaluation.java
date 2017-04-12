@@ -9,7 +9,10 @@ public class Evaluation {
 		static int V = 0;
 		static int H = 1;
 	public static double evaluate(Position p, Side color) {
-		if(p.gs == GameState.H_WON) {
+		if (p.gs == GameState.DRAW) {
+			return 0;
+		}
+		else if(p.gs == GameState.H_WON) {
 			return Double.POSITIVE_INFINITY;
 		}
 		else if(p.gs == GameState.V_WON) {

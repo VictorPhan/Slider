@@ -3,6 +3,7 @@ package player;
 import java.util.ArrayList;
 
 import environment.MoveList;
+import environment.Parse;
 import environment.Position;
 import environment.Side;
 
@@ -105,10 +106,44 @@ public class Action {
 			case O:
 				break;
 		}
-		//System.out.println(Parse.bitBoardToBoardString(legalBB));
-		//System.out.println(Parse.bitBoardToBoardString(newBB));
-		//System.out.println(Parse.bitBoardToBoardString(p.getCurrPieces()));
 		p.setCurrPieces((p.getCurrPieces() & (~legalBB)) | newBB, opponent);
+	}
+	
+	/**
+	 * toString class to print in chess notation
+	 * @param color 
+	 */
+	public String toString(Side color) {
+		int i=0;
+		Position.dimen = 3;
+		while(bitboard % 2 == 0) {
+			bitboard /= 2;
+			i++;
+		}
+		int col = Position.dimen-i%Position.dimen+96;
+		int row = Position.dimen-i/Position.dimen;
+		String from = Character.toString((char) (col)).concat(Integer.toString(row));
+		String to = "";
+		switch(direction) {
+		case U:
+			to = Character.toString((char) (col)).concat(Integer.toString(row+1));
+			break;
+		case R:
+			to = Character.toString((char) (col+1)).concat(Integer.toString(row));
+			break;
+		case DL:
+			if(color==Side.H) {
+				to = Character.toString((char) (col)).concat(Integer.toString(row-1));
+			}
+			else {
+				to = Character.toString((char) (col-1)).concat(Integer.toString(row));
+			}
+			break;
+		case O:
+			to = "+";
+			break;
+		}
+		return from.concat(to);
 	}
 	
 }
