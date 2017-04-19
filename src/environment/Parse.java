@@ -296,7 +296,7 @@ public class Parse {
 	 * Inserts the appropriate newline characters into the bitBoard
 	 * to print the board as a square
 	 */
-	private static String stringToBoardString(String bitBoard, int dimen) {
+	public static String stringToBoardString(String bitBoard, int dimen) {
 		String output = "";
 		
 		for(int i=0; i<dimen; i++) {
@@ -312,7 +312,7 @@ public class Parse {
 	 * @param bitboard
 	 * @return
 	 */
-	private static String bitBoardToString(long bitboard) {
+	public static String bitBoardToString(long bitboard) {
 		String output = "";
 		int leadingZeros = (int) Math.pow(Position.dimen, 2) - 
 				Long.toBinaryString(bitboard).length();
@@ -328,7 +328,7 @@ public class Parse {
 	 * @param bitboard
 	 * @return
 	 */
-	private static String bitBoardToString(BigInteger bitboard) {
+	public static String bitBoardToString(BigInteger bitboard) {
 		String output = "";
 		int leadingZeros = (int) Math.pow(Position.dimen, 2) - 
 				bitboard.toString(2).length();

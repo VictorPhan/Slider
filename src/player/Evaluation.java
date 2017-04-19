@@ -2,6 +2,7 @@ package player;
 
 import environment.GameState;
 import environment.MoveList;
+import environment.Parse;
 import environment.Position;
 import environment.Side;
 
@@ -49,6 +50,7 @@ public class Evaluation {
 		 * Piece centric is location of each piece, including directional mobility of each moving piece
 		 * Square centric includes the 'bled' board
 		 */
+		double[] all = new double[4 + (Position.dimen-1)*5*2+4 + Position.dimen * Position.dimen];
 		double[] inG = new double[4];
 		double[] inP = new double[(Position.dimen-1)*5*2+4];
 		double[] inS = new double[Position.dimen * Position.dimen];
@@ -114,16 +116,53 @@ public class Evaluation {
 		
 		// Square centric features
 		{
-			inS = bleedBoard(p.getPieces());
+			inS = bleedBoard(p.getPieces(), p.sidePlaying);
 		}
-		
-		return null;
+		for(int i=0; i<4; i++) {
+			all[i] = inG[i];
+		}
+		for(int i=0; i<(Position.dimen-1)*5*2+4; i++) {
+			all[i+4] = inP[i];
+		}
+		for(int i=0; i<Position.dimen * Position.dimen; i++) {
+			all[i+4+(Position.dimen-1)*5*2+4] = inS[i];
+		}
+		return all;
 	}
 	
-	public long[] bleedBoard(long[] pieces) {
+	public static double[] bleedBoard(long[] pieces, Side s) {
+		long occupied = pieces[B] | pieces[V] | pieces[H];
+		long[] oldP;
+		long[] newP = pieces;
+		do {
+			oldP = Arrays.copyOf(newP, newP.length);
+			if(s == Side.H) {
+				long[] hMoves = MoveList.generateHMoves(newP);
+				newP[H] = oldP[H] | 
+						(((hMoves[HU] >>> Position.dimen) & ~MoveList.bottomRow) | 
+						((hMoves[HR] >>> 1) & ~MoveList.leftCol) | 
+						((hMoves[HD] & ~MoveList.bottomRow) << Position.dimen)) & ~occupied;
+				s = Side.V;
+			}
+			else {
+				long[] vMoves = MoveList.generateVMoves(newP);
+				newP[V] = oldP[V] | 
+						(((vMoves[VU] >>> Position.dimen) & ~MoveList.bottomRow) | 
+						((vMoves[VR] >>> 1) & ~MoveList.leftCol) | 
+						((vMoves[VL] << 1) & ~MoveList.rightCol)) & ~occupied;
+				s = Side.H;
+			}
+		} while(!Arrays.equals(newP, oldP));
 		
+		double[] returnPieces = new double[Position.dimen * Position.dimen];
+		String hBytes = Parse.bitBoardToString(newP[H]);
+		String vBytes = Parse.bitBoardToString(newP[V]);
+		for(int i=0; i<Position.dimen*Position.dimen; i++) {
+			returnPieces[i] = vBytes.charAt(i) - hBytes.charAt(i);
+		}
+		return returnPieces;
 	}
-	
+
 	public static double[] getNormXY(long bit) {
 		int i=0;
 		while(bit % 2 == 0) {

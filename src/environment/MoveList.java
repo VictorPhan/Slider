@@ -25,8 +25,8 @@ public class MoveList {
 	
 	public static final int MOVE_TYPES = 4;
 	
-	protected static long leftCol, rightCol, topRow, bottomRow;
-	protected static BigInteger bigLeftCol, bigRightCol, bigTopRow, bigBottomRow;
+	public static long leftCol, rightCol, topRow, bottomRow;
+	public static BigInteger bigLeftCol, bigRightCol, bigTopRow, bigBottomRow;
 	
 	public long [] moves = new long[MOVE_TYPES];
 	public BigInteger [] bigMoves = new BigInteger[MOVE_TYPES];
