@@ -89,7 +89,7 @@ public class AIPlayer extends Player {
 	
 	public double maxValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
-			return Evaluation.evaluate(p, color);
+			return Evaluation.evaluate(p);
 		}
 		double v = Double.NEGATIVE_INFINITY;
 		
@@ -109,7 +109,7 @@ public class AIPlayer extends Player {
 	
 	public double minValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
-			return Evaluation.evaluate(p, color);
+			return Evaluation.evaluate(p);
 		}
 		double v = Double.POSITIVE_INFINITY;
 		for(Action a : actions) {

@@ -9,19 +9,19 @@ import java.math.BigInteger;
  */
 public class MoveList {
 	
-	protected static final int V = 0;
-	protected static final int H = 1;
-	protected static final int B = 2;
+	static final int V = 0;
+	static final int H = 1;
+	static final int B = 2;
 	
-	protected static final int VU = 0;
-	protected static final int VR = 1;
-	protected static final int VL = 2;
-	protected static final int VO = 3;
+	static final int VU = 0;
+	static final int VR = 1;
+	static final int VL = 2;
+	static final int VO = 3;
 	
-	protected static final int HU = 0;
-	protected static final int HR = 1;
-	protected static final int HD = 2;
-	protected static final int HO = 3;
+	static final int HU = 0;
+	static final int HR = 1;
+	static final int HD = 2;
+	static final int HO = 3;
 	
 	public static final int MOVE_TYPES = 4;
 	
@@ -113,7 +113,7 @@ public class MoveList {
 		return vm;
 	}
 	
-	public BigInteger [] generateVMoves(BigInteger[] pieces) {
+	public static BigInteger [] generateVMoves(BigInteger[] pieces) {
 		BigInteger bigOccupied = pieces[B].or(pieces[V]).or(pieces[H]);
 		BigInteger[] vm = new BigInteger[MOVE_TYPES];
 		vm[VU] = ((pieces[V].shiftRight(Position.dimen)).
@@ -141,7 +141,7 @@ public class MoveList {
 		return hm;
 	}
 	
-	public BigInteger [] generateHMoves(BigInteger[] pieces) {
+	public static BigInteger [] generateHMoves(BigInteger[] pieces) {
 		BigInteger bigOccupied = pieces[B].or(pieces[V]).or(pieces[H]);
 		BigInteger[] hm = new BigInteger[MOVE_TYPES];
 		hm[HR] = (((pieces[H].shiftRight(1)).and(bigOccupied.not())).
