@@ -111,10 +111,17 @@ public class Evaluation {
 				bPieces -= piece;
 			}
 		}
-		System.out.println(Arrays.toString(inP));
+		
 		// Square centric features
+		{
+			inS = bleedBoard(p.getPieces());
+		}
 		
 		return null;
+	}
+	
+	public long[] bleedBoard(long[] pieces) {
+		
 	}
 	
 	public static double[] getNormXY(long bit) {
