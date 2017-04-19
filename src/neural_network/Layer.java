@@ -5,7 +5,8 @@ import jeigen.DenseMatrix;
 
 public class Layer {
 	
-	DenseMatrix weightMatrix;
+	// The weightMatrix which includes every weight
+	public DenseMatrix weightMatrix;
 	
 	/**
 	 * Initialise weightMatrix with random values
@@ -31,7 +32,7 @@ public class Layer {
 	 */
 	public double[] output(double[] input) {
 		DenseMatrix inputVector = new DenseMatrix(new double[][] {input});
-		return reLu(weightMatrix.mmul(inputVector).getValues());
+		return weightMatrix.mmul(inputVector.t()).getValues();
 	}
 	
 	/**
