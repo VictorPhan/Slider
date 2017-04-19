@@ -5,6 +5,7 @@ import environment.MoveList;
 import environment.Parse;
 import environment.Position;
 import environment.Side;
+import neural_network.NeuralNetwork;
 
 import java.util.Arrays;
 
@@ -28,6 +29,11 @@ public class Evaluation {
 	static final int HR = 1;
 	static final int HD = 2;
 	static final int HO = 3;
+	
+	static NeuralNetwork nn = new NeuralNetwork
+			(4, (Position.dimen-1)*5*2+4, Position.dimen * Position.dimen, 
+			4, (Position.dimen-1)*5*2+4, Position.dimen * Position.dimen, 
+			4+(Position.dimen-1)*5*2+4+Position.dimen * Position.dimen);
 		
 	public static double evaluate(Position p) {
 		if (p.gs == GameState.DRAW) {
@@ -39,10 +45,7 @@ public class Evaluation {
 		else if(p.gs == GameState.V_WON) {
 			return Double.NEGATIVE_INFINITY;
 		}
-		
-		double[] input = createInputLayer(p);
-		System.out.println(Arrays.toString(input));
-		return 0;
+		return nn.evaluate(createInputLayer(p));
 	}
 	
 	public static double[] createInputLayer(Position p) {
