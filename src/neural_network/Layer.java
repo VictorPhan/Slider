@@ -15,6 +15,7 @@ public class Layer {
 	 */
 	public Layer(int rows, int cols) {
 		this.weightMatrix = DenseMatrix.rand(rows, cols);
+		weightMatrix = weightMatrix.sub(0.5);
 	}
 	
 	/**
@@ -31,6 +32,11 @@ public class Layer {
 	 * @return
 	 */
 	public double[] output(double[] input) {
+		DenseMatrix inputVector = new DenseMatrix(new double[][] {input});
+		return reLu(weightMatrix.mmul(inputVector.t()).getValues());
+	}
+	
+	public double[] outputNoReLu(double[] input) {
 		DenseMatrix inputVector = new DenseMatrix(new double[][] {input});
 		return weightMatrix.mmul(inputVector.t()).getValues();
 	}

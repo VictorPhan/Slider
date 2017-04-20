@@ -1,6 +1,5 @@
 package environment;
 
-import exceptions.InvalidMoveException;
 import player.AIPlayer;
 import player.Human;
 import player.Player;
@@ -40,22 +39,14 @@ public class Run {
 					GameHistory.addHistory(Integer.toString(moveNum) + ".");
 					moveNum++;
 				}
-				try {
-					ph.makeMove(curr);
-				} catch (InvalidMoveException e) {
-					e.printStackTrace();
-				}
+				ph.makeMove(curr);
 			}
 			else {
 				if(!hFirst) {
 					GameHistory.addHistory(Integer.toString(moveNum) + ".");
 					moveNum++;
 				}
-				try {
-					pv.makeMove(curr);
-				} catch (InvalidMoveException e) {
-					e.printStackTrace();
-				}
+				pv.makeMove(curr);
 			}
 			curr.draw();
 		}

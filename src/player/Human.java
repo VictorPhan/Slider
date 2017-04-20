@@ -40,7 +40,7 @@ public class Human extends Player {
 	}
 	
 	@Override
-	public void makeMove(Position p) throws InvalidMoveException {
+	public void makeMove(Position p) {
 		if(checkPass(p.ml.moves)) {
 			if(color == Side.H) {
 				System.out.print("H player move: Pass");
@@ -53,55 +53,60 @@ public class Human extends Player {
 			return;
 		}
 		
-		int[] frd = Parse.readMove(color);
-		
-		/* Check for invalid side move */
-		if(frd[2] == illegalMove) {
-			throw new InvalidMoveException();
-		}
-		
-		/* Check for legal move, generates a bitboard from user input move, AND it with the
-		 * moveList bitboard then check if there is a 1 bit -> legal move available */
-		long userMoveBB = Parse.frToBitboard(frd[0], frd[1]);
-		long legalBB = 0;
-		long newBB = 0;
-		
-		switch(frd[2]) {
-			case 'R':
-				if(color==Side.H && frd[0]+1==Position.dimen) {
-					legalBB = userMoveBB & p.ml.moves[O];
-				}
-				else {
-					legalBB = userMoveBB & p.ml.moves[R];
-					newBB 	= legalBB >>> 1;
-				}
-				break;
-			case 'U':
-				if(color==Side.V && frd[1]+1==Position.dimen) {
-					legalBB = userMoveBB & p.ml.moves[O];
-				}
-				else {
-					legalBB = userMoveBB & p.ml.moves[U];
-					newBB	= legalBB >>> Position.dimen;
-				}
-				break;
-			case 'D':
-				legalBB = userMoveBB & p.ml.moves[D];
-				newBB 	= legalBB << Position.dimen;
-				break;
-			case 'L':
-				legalBB = userMoveBB & p.ml.moves[L];
-				newBB 	= legalBB << 1;
-				break;
-			default:
+		int[] frd;
+		try {
+			frd = Parse.readMove(color);
+			/* Check for invalid side move */
+			if(frd[2] == illegalMove) {
 				throw new InvalidMoveException();
+			}
+			
+			/* Check for legal move, generates a bitboard from user input move, AND it with the
+			 * moveList bitboard then check if there is a 1 bit -> legal move available */
+			long userMoveBB = Parse.frToBitboard(frd[0], frd[1]);
+			long legalBB = 0;
+			long newBB = 0;
+			
+			switch(frd[2]) {
+				case 'R':
+					if(color==Side.H && frd[0]+1==Position.dimen) {
+						legalBB = userMoveBB & p.ml.moves[O];
+					}
+					else {
+						legalBB = userMoveBB & p.ml.moves[R];
+						newBB 	= legalBB >>> 1;
+					}
+					break;
+				case 'U':
+					if(color==Side.V && frd[1]+1==Position.dimen) {
+						legalBB = userMoveBB & p.ml.moves[O];
+					}
+					else {
+						legalBB = userMoveBB & p.ml.moves[U];
+						newBB	= legalBB >>> Position.dimen;
+					}
+					break;
+				case 'D':
+					legalBB = userMoveBB & p.ml.moves[D];
+					newBB 	= legalBB << Position.dimen;
+					break;
+				case 'L':
+					legalBB = userMoveBB & p.ml.moves[L];
+					newBB 	= legalBB << 1;
+					break;
+				default:
+					throw new InvalidMoveException();
+			}
+			
+			if(Long.bitCount(legalBB) == 0) {
+				throw new InvalidMoveException();
+			}
+			
+			p.setCurrPieces(p.getCurrPieces() & ~legalBB | newBB, opponent);
+			
+		} catch (InvalidMoveException e) {
+			e.printStackTrace();
 		}
-		
-		if(Long.bitCount(legalBB) == 0) {
-			throw new InvalidMoveException();
-		}
-		
-		p.setCurrPieces(p.getCurrPieces() & ~legalBB | newBB, opponent);
 	}
 
 }

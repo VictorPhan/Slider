@@ -10,10 +10,11 @@ import environment.Side;
 
 public class AIPlayer extends Player {
 	
-	public int MAX_DEPTH = 10;
-	Side color;
+	public int MAX_DEPTH = 5;
+	public Side color;
 	Side opponent;
 	char illegalMove;
+	boolean printMove = true;
 	
 	public AIPlayer(Side color) {
 		this.color = color;
@@ -40,27 +41,32 @@ public class AIPlayer extends Player {
 	public void makeMove(Position p) {
 		// Check for passing move
 		if(checkPass(p.ml.moves)) {
-			if(color == Side.H) {
-				System.out.println("H player move: Pass");
-			}
-			else {
-				System.out.println("V player move: Pass");
+			if(printMove == true) {
+				if(color == Side.H) {
+					System.out.println("H player move: Pass");
+				}
+				else {
+					System.out.println("V player move: Pass");
+				}
 			}
 			p.setCurrPieces(p.getCurrPieces(), opponent);
 			GameHistory.addHistory("—");
 			return;
 		}
 		
-		// First implement minimax algorithm, test on small board case (size 3), include transposition tables
+		// TODO: include transposition tables
 		Action bestAction = alphaBeta(p);
 		Action.supplyAction(p, bestAction);
 		String move = bestAction.toString(color);
-		System.out.println(bestAction.score);
-		if(color == Side.H) {
-			System.out.println("H player move: " + move);
-		}
-		else {
-			System.out.println("V player move: " + move);
+		
+		if(printMove == true) {
+			System.out.println(bestAction.score);
+			if(color == Side.H) {
+				System.out.println("H player move: " + move);
+			}
+			else {
+				System.out.println("V player move: " + move);
+			}
 		}
 		GameHistory.addHistory(move);
 	}
@@ -131,6 +137,10 @@ public class AIPlayer extends Player {
 			return true;
 		}
 		return false;
+	}
+	
+	public void setPrintMove(boolean b) {
+		printMove = b;
 	}
 
 }

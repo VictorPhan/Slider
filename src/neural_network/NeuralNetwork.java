@@ -41,7 +41,29 @@ public class NeuralNetwork {
 		double[] h1p = H1_P.output(Arrays.copyOfRange(input, g, g+p));
 		double[] h1s = H1_S.output(Arrays.copyOfRange(input, g+p, g+p+s));
 		double[] h1 = concat(concat(h1g, h1p), h1s);
-		return (OUT.output(H2.output(h1)))[0];
+		return (OUT.outputNoReLu(H2.output(h1)))[0];
+	}
+	
+	public double evaluateLearn(double[] input) {
+		double[] h1g_in = Arrays.copyOfRange(input, 0, g);
+		double[] h1p_in = Arrays.copyOfRange(input, g, g+p);
+		double[] h1s_in = Arrays.copyOfRange(input, g+p, g+p+s);
+		double[] h1g_out = H1_G.output(h1g_in);
+		double[] h1p_out = H1_P.output(h1p_in);
+		double[] h1s_out = H1_S.output(h1s_in);
+		double[] h2_in = concat(concat(h1g_out, h1p_out), h1s_out);
+		double[] h2_out = H2.output(h2_in);
+		double[] out_in = h2_out;
+		double[] out_out = OUT.outputNoReLu(out_in);
+		return out_out[0];
+	}
+	
+	public void printWeights() {
+		System.out.println("H1_G:\n" + H1_G.weightMatrix);
+		System.out.println("H1_P:\n" + H1_P.weightMatrix);
+		System.out.println("H1_S:\n" + H1_S.weightMatrix);
+		System.out.println("H2:\n" + H2.weightMatrix);
+		System.out.println("OUT:\n" + OUT.weightMatrix);
 	}
 	
 	public double[] concat(double[] a, double[] b) {
