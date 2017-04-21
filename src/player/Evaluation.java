@@ -10,7 +10,7 @@ import neural_network.NeuralNetwork;
 import java.util.Arrays;
 
 /**
- * Evaluation class. POSITIVE INFINITY is H's win, NEGATIVE INFINITY is V's win
+ * Evaluation class.
  * @author Victor
  *
  */
@@ -30,6 +30,11 @@ public class Evaluation {
 	static final int HD = 2;
 	static final int HO = 3;
 	
+	static final double H_WIN_SCORE = Double.POSITIVE_INFINITY;
+	static final double V_WIN_SCORE = Double.NEGATIVE_INFINITY;
+	//static final double H_WIN_SCORE = -10;
+	//static final double V_WIN_SCORE = 10;
+	
 	static int g = 4;
 	static int p = (Position.dimen-1)*5*2+4;
 	static int s = Position.dimen * Position.dimen;
@@ -41,28 +46,13 @@ public class Evaluation {
 			return 0;
 		}
 		else if(p.gs == GameState.H_WON) {
-			return Double.POSITIVE_INFINITY;
+			return H_WIN_SCORE;
 		}
 		else if(p.gs == GameState.V_WON) {
-			return Double.NEGATIVE_INFINITY;
+			return V_WIN_SCORE;
 		}
 		else {
 			return nn.evaluate(createInputLayer(p));
-		}
-	}
-	
-	public static double evaluateLearn(Position p) {
-		if (p.gs == GameState.DRAW) {
-			return 0;
-		}
-		else if(p.gs == GameState.H_WON) {
-			return Double.POSITIVE_INFINITY;
-		}
-		else if(p.gs == GameState.V_WON) {
-			return Double.NEGATIVE_INFINITY;
-		}
-		else {
-			return nn.evaluateLearn(createInputLayer(p));
 		}
 	}
 	

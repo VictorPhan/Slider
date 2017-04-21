@@ -1,6 +1,10 @@
 package exceptions;
 
-
+/**
+ * Thrown for the Human Player
+ * @author Victor
+ *
+ */
 public class InvalidMoveException extends Exception {
 	
 	private static final long serialVersionUID = 1L;

@@ -46,6 +46,10 @@ public class Action {
 		else {
 			opponent = Side.H;
 		}
+		if(a == null) {
+			p.sidePlaying = opponent;
+			return p;
+		}
 		
 		Position nextP = new Position(p.getPieces().clone(), color, p.gHistory.clone());
 		

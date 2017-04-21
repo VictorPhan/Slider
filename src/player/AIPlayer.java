@@ -80,35 +80,47 @@ public class AIPlayer extends Player {
 		ArrayList<Action> actions = Action.generateActions(p.ml.moves);
 		double v = 0;
 		if(p.sidePlaying == Side.H) {
-			v = maxValue(p, actions, 0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+			v = maxValue(p, actions, 0, Evaluation.V_WIN_SCORE, Evaluation.H_WIN_SCORE);
 		}
 		else {
-			v = minValue(p, actions, 0, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+			v = minValue(p, actions, 0, Evaluation.V_WIN_SCORE, Evaluation.H_WIN_SCORE);
 		}
 		for(Action a : actions) {
 			if(a.score == v) {
 				return a;
 			}
 		}
-		return actions.get(0);
+		return null; // will return error. this line shouldn't be reached.
 	}
 	
 	public double maxValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
 			return Evaluation.evaluate(p);
 		}
-		double v = Double.NEGATIVE_INFINITY;
+		double v = Evaluation.V_WIN_SCORE;
 		
-		for(Action a : actions) {
-			a.score = v;
-			Position newPos = Action.applyAction(p, a);
+		// passing move
+		if(actions.size() == 0) {
+			Position newPos = Action.applyAction(p, null);
 			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
 			v = Math.max(v, minValue(newPos, newActions, depth + 1, alpha, beta));
-			if(v >= beta) {
-				a.score = v;
+			alpha = Math.max(alpha, v);
+			if(alpha >= beta) {
 				return v;
 			}
-			alpha = Math.max(alpha, v);
+		}
+		else {
+			for(Action a : actions) {
+				Position newPos = Action.applyAction(p, a);
+				ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+				v = Math.max(v, minValue(newPos, newActions, depth + 1, alpha, beta));
+				a.score = v;
+				alpha = Math.max(alpha, v);
+				if(alpha >= beta) {
+					a.score = v;
+					return v;
+				}
+			}
 		}
 		return v;
 	}
@@ -117,17 +129,28 @@ public class AIPlayer extends Player {
 		if(cutOffTest(p, depth)) {
 			return Evaluation.evaluate(p);
 		}
-		double v = Double.POSITIVE_INFINITY;
+		double v = Evaluation.H_WIN_SCORE;
+		
+		// passing move
+		if(actions.size() == 0) {
+			Position newPos = Action.applyAction(p, null);
+			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+			v = Math.min(v, maxValue(newPos, newActions, depth + 1, alpha, beta));
+			beta = Math.min(beta, v);
+			if(beta <= alpha) {
+				return v;
+			}
+		}
 		for(Action a : actions) {
-			a.score = v;
 			Position newPos = Action.applyAction(p, a);
 			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
 			v = Math.min(v, maxValue(newPos, newActions, depth + 1, alpha, beta));
-			if(v <= alpha) {
+			a.score = v;
+			beta = Math.min(beta, v);
+			if(beta <= alpha) {
 				a.score = v;
 				return v;
 			}
-			beta = Math.min(beta, v);
 		}
 		return v;
 	}

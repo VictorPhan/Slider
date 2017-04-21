@@ -20,7 +20,7 @@ public class Run {
 			hFirst = false;
 		}
 		
-		Player pv = new AIPlayer(Side.V);
+		Player pv = new Human(Side.V);
 		Player ph = new AIPlayer(Side.H);
 		
 		playGame(curr, hFirst, ph, pv);
