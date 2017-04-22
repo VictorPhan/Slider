@@ -8,6 +8,7 @@ import player.AIPlayer;
 
 // aim is for each position encountered, play 12 moves and then update by TD leaf algo
 public class TestDriver {
+	static final int movesTD = 50;
 	public static void main(String[] args) {
 		ArrayList<ArrayList<double[]>> tensors = new ArrayList<ArrayList<double[]>>();
 		Parse.initScan();
