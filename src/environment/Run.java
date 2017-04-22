@@ -20,7 +20,7 @@ public class Run {
 			hFirst = false;
 		}
 		
-		Player pv = new AIPlayer();
+		Player pv = new Human();
 		Player ph = new AIPlayer();
 		
 		playGame(curr, hFirst, ph, pv);

@@ -11,8 +11,7 @@ import neural_network.Evaluation;
 
 public class AIPlayer extends Player {
 	
-	public int MAX_DEPTH = 5;
-	Side opponent;
+	public int MAX_DEPTH = 7;
 	char illegalMove;
 	boolean printMove = true;
 	public Evaluation e = new Evaluation();
@@ -41,7 +40,7 @@ public class AIPlayer extends Player {
 					System.out.println("V player move: Pass");
 				}
 			}
-			p.setCurrPieces(p.getCurrPieces(), opponent);
+			p.setCurrPieces(p.getCurrPieces());
 			GameHistory.addHistory("—");
 			return;
 		}

@@ -3,16 +3,18 @@ package neural_network;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import environment.Position;
+
 public class NeuralNetwork {
 	/* The modalities of the input to the first hidden layer—
 	 * global, piece-centric and square-centric features,
 	 * second hidden layer and output layer
 	 */
-	Layer H1_G;
-	Layer H1_P;
-	Layer H1_S;
-	Layer H2;
-	Layer OUT;
+	public Layer H1_G;
+	public Layer H1_P;
+	public Layer H1_S;
+	public Layer H2;
+	public Layer OUT;
 	
 	/*
 	 * g=global inputs, ng=global outputs
@@ -70,6 +72,14 @@ public class NeuralNetwork {
 		state.add(h1p_in);
 		state.add(h1g_in);
 		return state;
+	}
+	
+	public ArrayList<double[]> getInOut(Position p) {
+		return this.evaluateLearn(Evaluation.createInputLayer(p));
+	}
+	
+	public void printLayers(Position p) {
+		printArrayDouble(this.evaluateLearn(Evaluation.createInputLayer(p)));
 	}
 	
 	public static void printArrayDouble(ArrayList<double[]> dd) {

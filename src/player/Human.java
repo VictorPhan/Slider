@@ -9,7 +9,6 @@ import exceptions.InvalidMoveException;
 
 public class Human extends Player {
 	
-	Side opponent;
 	int U = 0;
 	int R = 1;
 	int D = 2;
@@ -35,7 +34,7 @@ public class Human extends Player {
 			else {
 				System.out.println("V player move: Pass");
 			}
-			p.setCurrPieces(p.getCurrPieces(), opponent);
+			p.swapPlayers();
 			GameHistory.addHistory("—");
 			return;
 		}
@@ -89,7 +88,7 @@ public class Human extends Player {
 				throw new InvalidMoveException();
 			}
 			
-			p.setCurrPieces(p.getCurrPieces() & ~legalBB | newBB, opponent);
+			p.setCurrPieces(p.getCurrPieces() & ~legalBB | newBB);
 			
 		} catch (InvalidMoveException e) {
 			e.printStackTrace();

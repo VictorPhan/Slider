@@ -151,7 +151,7 @@ public class Position {
 		}
 	}
 	
-	public void setCurrPieces(long newPieces, Side opponent) {
+	public void setCurrPieces(long newPieces) {
 		if(sidePlaying == Side.H) {
 			pieces[H] = newPieces;
 		}
@@ -161,7 +161,7 @@ public class Position {
 		else {
 			throw new Error("Game state not in playing!");
 		}
-		updateBoard(opponent);
+		swapPlayers();
 	}
 	
 	public void swapPlayers() {
@@ -171,5 +171,6 @@ public class Position {
 		else {
 			sidePlaying = Side.H;
 		}
+		updateBoard(sidePlaying);
 	}
 }

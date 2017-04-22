@@ -29,8 +29,8 @@ public class Evaluation {
 	static final int HD = 2;
 	static final int HO = 3;
 	
-	public static final double H_WIN_SCORE = 100; //Double.POSITIVE_INFINITY;
-	public static final double V_WIN_SCORE = -100; //Double.NEGATIVE_INFINITY;
+	public static final double H_WIN_SCORE = 10; //Double.POSITIVE_INFINITY;
+	public static final double V_WIN_SCORE = -10; //Double.NEGATIVE_INFINITY;
 	//static final double H_WIN_SCORE = -10;
 	//static final double V_WIN_SCORE = 10;
 	
@@ -38,7 +38,7 @@ public class Evaluation {
 	static int p = (Position.dimen-1)*5*2+4;
 	static int s = Position.dimen * Position.dimen;
 	
-	public static NeuralNetwork nn = new NeuralNetwork(g, p, s, g, p, s, g+p+s);
+	public NeuralNetwork nn = new NeuralNetwork(g, p, s, g, p, s, g+p+s);
 		
 	public double evaluate(Position p) {
 		if (p.gs == GameState.DRAW) {

@@ -38,20 +38,11 @@ public class Action {
 	}
 
 	public static Position applyAction(Position p, Action a) {
-		Side color = p.sidePlaying;
-		Side opponent;
-		if(color == Side.H) {
-			opponent = Side.V;
-		}
-		else {
-			opponent = Side.H;
-		}
+		Position nextP = new Position(p.getPieces().clone(), p.sidePlaying, p.gHistory.clone());
 		if(a == null) {
-			p.sidePlaying = opponent;
-			return p;
+			nextP.swapPlayers();
+			return nextP;
 		}
-		
-		Position nextP = new Position(p.getPieces().clone(), color, p.gHistory.clone());
 		
 		long legalBB = a.bitboard;
 		long newBB = 0;
@@ -64,7 +55,7 @@ public class Action {
 				newBB = legalBB >>> Position.dimen;
 				break;
 			case DL:
-				if(color == Side.H) {
+				if(p.sidePlaying == Side.H) {
 					newBB = legalBB << Position.dimen;
 				}
 				else {
@@ -74,20 +65,11 @@ public class Action {
 			case O:
 				break;
 		}
-		nextP.setCurrPieces(nextP.getCurrPieces() & ~legalBB | newBB, opponent);
+		nextP.setCurrPieces(nextP.getCurrPieces() & ~legalBB | newBB);
 		return nextP;
 	}
 
 	public static void supplyAction(Position p, Action bestAction) {
-		Side color = p.sidePlaying;
-		Side opponent;
-		if(color == Side.H) {
-			opponent = Side.V;
-		}
-		else {
-			opponent = Side.H;
-		}
-		
 		long legalBB = bestAction.bitboard;
 		long newBB = 0;
 		
@@ -99,7 +81,7 @@ public class Action {
 				newBB = legalBB >>> Position.dimen;
 				break;
 			case DL:
-				if(color == Side.H) {
+				if(p.sidePlaying == Side.H) {
 					newBB = legalBB << Position.dimen;
 				}
 				else {
@@ -109,7 +91,7 @@ public class Action {
 			case O:
 				break;
 		}
-		p.setCurrPieces((p.getCurrPieces() & (~legalBB)) | newBB, opponent);
+		p.setCurrPieces((p.getCurrPieces() & (~legalBB)) | newBB);
 	}
 	
 	/**
