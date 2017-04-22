@@ -9,7 +9,6 @@ import exceptions.InvalidMoveException;
 
 public class Human extends Player {
 	
-	Side color;
 	Side opponent;
 	int U = 0;
 	int R = 1;
@@ -17,18 +16,6 @@ public class Human extends Player {
 	int L = 2;
 	int O = 3;
 	char illegalMove;
-	
-	public Human(Side color) {
-		this.color = color;
-		if(color == Side.H) {
-			illegalMove = 'L';
-			opponent = Side.V;
-		}
-		else if(color == Side.V) {
-			illegalMove = 'D';
-			opponent = Side.H;
-		}
-	}
 	
 	public boolean checkPass(long[] ml) {
 		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
@@ -42,7 +29,7 @@ public class Human extends Player {
 	@Override
 	public void makeMove(Position p) {
 		if(checkPass(p.ml.moves)) {
-			if(color == Side.H) {
+			if(p.sidePlaying == Side.H) {
 				System.out.print("H player move: Pass");
 			}
 			else {
@@ -55,7 +42,7 @@ public class Human extends Player {
 		
 		int[] frd;
 		try {
-			frd = Parse.readMove(color);
+			frd = Parse.readMove(p.sidePlaying);
 			/* Check for invalid side move */
 			if(frd[2] == illegalMove) {
 				throw new InvalidMoveException();
@@ -69,7 +56,7 @@ public class Human extends Player {
 			
 			switch(frd[2]) {
 				case 'R':
-					if(color==Side.H && frd[0]+1==Position.dimen) {
+					if(p.sidePlaying==Side.H && frd[0]+1==Position.dimen) {
 						legalBB = userMoveBB & p.ml.moves[O];
 					}
 					else {
@@ -78,7 +65,7 @@ public class Human extends Player {
 					}
 					break;
 				case 'U':
-					if(color==Side.V && frd[1]+1==Position.dimen) {
+					if(p.sidePlaying==Side.V && frd[1]+1==Position.dimen) {
 						legalBB = userMoveBB & p.ml.moves[O];
 					}
 					else {

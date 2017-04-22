@@ -163,4 +163,13 @@ public class Position {
 		}
 		updateBoard(opponent);
 	}
+	
+	public void swapPlayers() {
+		if(sidePlaying == Side.H) {
+			sidePlaying = Side.V;
+		}
+		else {
+			sidePlaying = Side.H;
+		}
+	}
 }

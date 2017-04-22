@@ -72,6 +72,12 @@ public class NeuralNetwork {
 		return state;
 	}
 	
+	public static void printArrayDouble(ArrayList<double[]> dd) {
+		for(double[] d: dd) {
+			System.out.println(Arrays.toString(d));
+		}
+	}
+	
 	public void printWeights() {
 		System.out.println("H1_G:\n" + H1_G.weightMatrix);
 		System.out.println("H1_P:\n" + H1_P.weightMatrix);

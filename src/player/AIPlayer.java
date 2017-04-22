@@ -7,25 +7,17 @@ import environment.GameState;
 import environment.MoveList;
 import environment.Position;
 import environment.Side;
+import neural_network.Evaluation;
 
 public class AIPlayer extends Player {
 	
 	public int MAX_DEPTH = 5;
-	public Side color;
 	Side opponent;
 	char illegalMove;
 	boolean printMove = true;
+	public Evaluation e = new Evaluation();
 	
-	public AIPlayer(Side color) {
-		this.color = color;
-		if(color == Side.H) {
-			illegalMove = 'L';
-			opponent = Side.V;
-		}
-		else if(color == Side.V) {
-			illegalMove = 'D';
-			opponent = Side.H;
-		}
+	public AIPlayer() {
 	}
 	
 	public boolean checkPass(long[] ml) {
@@ -42,7 +34,7 @@ public class AIPlayer extends Player {
 		// Check for passing move
 		if(checkPass(p.ml.moves)) {
 			if(printMove == true) {
-				if(color == Side.H) {
+				if(p.sidePlaying == Side.H) {
 					System.out.println("H player move: Pass");
 				}
 				else {
@@ -57,11 +49,11 @@ public class AIPlayer extends Player {
 		// TODO: include transposition tables
 		Action bestAction = alphaBeta(p);
 		Action.supplyAction(p, bestAction);
-		String move = bestAction.toString(color);
+		String move = bestAction.toString(p.sidePlaying);
 		
 		if(printMove == true) {
 			System.out.println(bestAction.score);
-			if(color == Side.H) {
+			if(p.sidePlaying == Side.H) {
 				System.out.println("H player move: " + move);
 			}
 			else {
@@ -95,7 +87,7 @@ public class AIPlayer extends Player {
 	
 	public double maxValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
-			return Evaluation.evaluate(p);
+			return e.evaluate(p);
 		}
 		double v = Evaluation.V_WIN_SCORE;
 		
@@ -127,7 +119,7 @@ public class AIPlayer extends Player {
 	
 	public double minValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
-			return Evaluation.evaluate(p);
+			return e.evaluate(p);
 		}
 		double v = Evaluation.H_WIN_SCORE;
 		
