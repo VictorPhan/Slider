@@ -1,5 +1,6 @@
 package environment;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,6 +11,9 @@ public class GameHistory {
 	static String moveHistory = "";
 	public HashMap<ArrayList<Long>, MutableInteger> positionCounter = 
 			new HashMap<ArrayList<Long>, MutableInteger>();
+	
+	public HashMap<ArrayList<BigInteger>, MutableInteger> bigPositionCounter =
+			new HashMap<ArrayList<BigInteger>, MutableInteger>();
 	private static int threeFoldCase = 3;
 	
 	/**
@@ -53,6 +57,22 @@ public class GameHistory {
 		}
 		MutableInteger initValue = new MutableInteger(1);
 		MutableInteger oldValue = positionCounter.put(piecesWrapper, initValue);
+		if(oldValue!=null) {
+			initValue.set(oldValue.get() + 1);
+			if(initValue.equals(threeFoldCase)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean threeFoldRepitition(BigInteger[] pieces) {
+		ArrayList<BigInteger> piecesWrapper = new ArrayList<BigInteger>();
+		for(int i=0; i<Position.PIECE_TYPES-1; i++) {
+			piecesWrapper.add(pieces[i]);
+		}
+		MutableInteger initValue = new MutableInteger(1);
+		MutableInteger oldValue = bigPositionCounter.put(piecesWrapper, initValue);
 		if(oldValue!=null) {
 			initValue.set(oldValue.get() + 1);
 			if(initValue.equals(threeFoldCase)) {

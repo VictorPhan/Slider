@@ -1,5 +1,6 @@
 package player;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 import environment.MoveList;
@@ -15,10 +16,16 @@ public class Action {
 	public double score;
 	public int direction;
 	public long bitboard;
+	public BigInteger bigBitboard;
 	
 	public Action(int direction, long bitboard) {
 		this.direction = direction;
 		this.bitboard = bitboard;
+	}
+	
+	public Action(int direction, BigInteger bigBitboard) {
+		this.direction = direction;
+		this.bigBitboard = bigBitboard;
 	}
 
 	public static ArrayList<Action> generateActions(long[] moves) {
@@ -28,8 +35,24 @@ public class Action {
 		}
 		return actions;
 	}
+	
+	public static ArrayList<Action> generateActions(BigInteger[] moves) {
+		ArrayList<Action> actions = new ArrayList<Action>();
+		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
+			generateSubActions(actions, moves[i], i);
+		}
+		return actions;
+	}
 
 	private static void generateSubActions(ArrayList<Action> actions, long fullMoves, int direction) {
+		while(fullMoves != 0) {
+			long singularMove = Long.highestOneBit(fullMoves);
+			actions.add(new Action(direction, singularMove));
+			fullMoves -= singularMove;
+		}
+	}
+	
+	private static void generateSubActions(ArrayList<Action> actions, BigInteger fullMoves, int direction) {
 		while(fullMoves != 0) {
 			long singularMove = Long.highestOneBit(fullMoves);
 			actions.add(new Action(direction, singularMove));

@@ -1,5 +1,7 @@
 package player;
 
+import java.math.BigInteger;
+
 import environment.GameHistory;
 import environment.MoveList;
 import environment.Parse;
@@ -33,6 +35,15 @@ public class Human extends Player {
 	public boolean checkPass(long[] ml) {
 		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
 			if(Long.bitCount(ml[i])!=0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean checkPass(BigInteger[] ml) {
+		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
+			if(ml[i].bitCount() != 0) {
 				return false;
 			}
 		}

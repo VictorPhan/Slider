@@ -13,6 +13,7 @@ import environment.Side;
 public class Evaluation {
 		static int V = 0;
 		static int H = 1;
+		
 	public static double evaluate(Position p, Side color) {
 		if (p.gs == GameState.DRAW) {
 			return 0;

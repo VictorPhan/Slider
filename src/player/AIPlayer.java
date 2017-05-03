@@ -1,5 +1,6 @@
 package player;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 import environment.GameHistory;
@@ -30,6 +31,15 @@ public class AIPlayer extends Player {
 	public boolean checkPass(long[] ml) {
 		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
 			if(Long.bitCount(ml[i])!=0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean checkPass(BigInteger[] ml) {
+		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
+			if(ml[i].bitCount() != 0) {
 				return false;
 			}
 		}
