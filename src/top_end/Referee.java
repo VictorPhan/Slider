@@ -1,5 +1,15 @@
+
 package top_end;
 
+/* * * * * * * * *
+ * Slider game driver class 'Referee' along with some internal helper classes
+ * Note: you should build your own Board representation classes; you will not
+ * have access to the Referee.Board class when we test your project after 
+ * submission
+ *
+ * created for COMP30024 Artificial Intelligence 2017
+ * by Matt Farrugia <matt.farrugia@unimelb.edu.au>
+ */
 
 
 /** 
@@ -23,7 +33,6 @@ public class Referee {
 		/* * * *
 		 * then, set up the board and initialise the players
 		 */
-		
 		// create a new board
 		Board board = new Board(options.dimension);
 		

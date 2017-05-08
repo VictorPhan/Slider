@@ -1,5 +1,17 @@
+
 package top_end;
 
+/* * * * * * * * *
+ * Slider game player interface specification. Your program should implement
+ * this interface so that the Referee can conduct it to play a game of Slider.
+ * 
+ * Each of the methods in this interface are described in detail in the project 
+ * part B specification. Please read this specification carefully to ensure you 
+ * fully understand what is required of your program.
+ *
+ * created for COMP30024 Artificial Intelligence 2017
+ * by Matt Farrugia <matt.farrugia@unimelb.edu.au>
+ */
 
 
 /**

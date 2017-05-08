@@ -158,13 +158,8 @@ public class AIPlayer extends Player {
 				}
 			}
 			p.setCurrPieces(p.getCurrPieces());
-<<<<<<< HEAD
-			GameHistory.addHistory("—");
-			return 0;
-=======
 			GameHistory.addHistory("-");
-			return;
->>>>>>> workin referee
+			return 0;
 		}
 		
 		// TODO: include transposition tables

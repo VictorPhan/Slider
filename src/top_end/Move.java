@@ -1,5 +1,19 @@
+
 package top_end;
 
+
+/* * * * * *
+ * Helper class for representing and communicating a move in the game of Slider.
+ * 
+ * This class is used to represent moves by the opponent player in the update()
+ * method of the SliderPlayer interface.
+ * It's also used by the SliderPlayer to return a decision for what move to make 
+ * next, through the interface's move() method.
+ * method is called.
+ *
+ * created for COMP30024 Artificial Intelligence 2017
+ * by Matt Farrugia <matt.farrugia@unimelb.edu.au>
+ */
 
 
 /**
