@@ -6,6 +6,7 @@ import environment.Parse;
 import environment.Position;
 import environment.Side;
 import exceptions.InvalidMoveException;
+import top_end.Move;
 
 public class Human extends Player {
 	
@@ -93,6 +94,24 @@ public class Human extends Player {
 		} catch (InvalidMoveException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void init(int dimension, String board, char player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(Move move) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Move move() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
