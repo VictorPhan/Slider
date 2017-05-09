@@ -27,6 +27,10 @@ public class Parse {
 		s = new Scanner(System.in);
 	}
 	
+	public static void initScan(String board) {
+		s = new Scanner(board);
+	}
+	
 	public static void closeScan() {
 		s.close();
 	}
@@ -50,6 +54,55 @@ public class Parse {
 		
 		dimen = s.nextInt();
 		side = s.next().charAt(0);
+		
+		if(side == 'H') {
+			sidePlaying = Side.H;
+		}
+		else if(side == 'V') {
+			sidePlaying = Side.V;
+		}
+		else {
+			s.close();
+			throw new Error("Only the characters 'H' or 'V' are accepted as side playing input.");
+		}
+		
+		/* 
+		 * Gets each line info on the board and makes 
+		 * a single String from that.
+		 */
+		for(int i = 0; i < dimen + 1; i++) {
+			line = s.nextLine() + line;
+		}
+		line = line.replaceAll("\\s+","");
+		
+		/* Checks the dimension of the board and decides type */
+		if(dimen > Position.BIG_INT_CASE){
+			BigInteger[] bigPieces;
+			bigPieces = fromRawString2(line);	
+			board = new Position(bigPieces, sidePlaying, dimen);
+		} else {
+			long[] pieces;
+			pieces = fromRawString(line);
+			board = new Position(pieces, sidePlaying, dimen);
+		}
+		return board;
+	}
+	
+	/**
+	 * Constructor with new referee class
+	 * @param dimen
+	 * @param side
+	 * @return
+	 */
+	public static Position parseBoard(int dimen, char side) {
+		
+		if(s == null) {
+			throw new Error("Scanner not initialised");
+		}
+		
+		Position board;
+		String line = "";
+		Side sidePlaying;
 		
 		if(side == 'H') {
 			sidePlaying = Side.H;
