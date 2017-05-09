@@ -22,6 +22,10 @@ public class Position {
 	private BigInteger[] bigPieces = new BigInteger[PIECE_TYPES];
 	public GameHistory gHistory = new GameHistory();
 	
+	public Position copyPosition() {
+		return new Position(pieces, sidePlaying, gHistory);
+	}
+	
 	/**
 	 * Constructor initializing dimension and initial position
 	 * @param dimen

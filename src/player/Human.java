@@ -26,17 +26,17 @@ public class Human extends Player {
 	}
 	
 	@Override
-	public void makeMove(Position p) {
+	public double makeMove(Position p) {
 		if(checkPass(p.ml.moves)) {
 			if(p.sidePlaying == Side.H) {
-				System.out.print("H player move: Pass");
+				System.out.println("H player move: Pass");
 			}
 			else {
 				System.out.println("V player move: Pass");
 			}
 			p.swapPlayers();
 			GameHistory.addHistory("—");
-			return;
+			return 0;
 		}
 		
 		int[] frd;
@@ -93,6 +93,7 @@ public class Human extends Player {
 		} catch (InvalidMoveException e) {
 			e.printStackTrace();
 		}
+		return 0;
 	}
 
 }

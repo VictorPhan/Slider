@@ -1,7 +1,6 @@
 package environment;
 
 import player.AIPlayer;
-import player.Human;
 import player.Player;
 
 public class Run {
@@ -20,7 +19,7 @@ public class Run {
 			hFirst = false;
 		}
 		
-		Player pv = new Human();
+		Player pv = new AIPlayer();
 		Player ph = new AIPlayer();
 		
 		playGame(curr, hFirst, ph, pv);

@@ -11,7 +11,7 @@ import neural_network.Evaluation;
 
 public class AIPlayer extends Player {
 	
-	public int MAX_DEPTH = 7;
+	public int MAX_DEPTH = 5;
 	char illegalMove;
 	boolean printMove = true;
 	public Evaluation e = new Evaluation();
@@ -29,7 +29,7 @@ public class AIPlayer extends Player {
 	}
 	
 	@Override
-	public void makeMove(Position p) {
+	public double makeMove(Position p) {
 		// Check for passing move
 		if(checkPass(p.ml.moves)) {
 			if(printMove == true) {
@@ -42,7 +42,7 @@ public class AIPlayer extends Player {
 			}
 			p.setCurrPieces(p.getCurrPieces());
 			GameHistory.addHistory("—");
-			return;
+			return 0;
 		}
 		
 		// TODO: include transposition tables
@@ -60,6 +60,7 @@ public class AIPlayer extends Player {
 			}
 		}
 		GameHistory.addHistory(move);
+		return bestAction.score;
 	}
 	
 	/**

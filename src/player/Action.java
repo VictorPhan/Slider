@@ -99,6 +99,12 @@ public class Action {
 	 * @param color 
 	 */
 	public String toString(Side color) {
+		if(color == Side.H) {
+			color = Side.V;
+		}
+		else {
+			color = Side.H;
+		}
 		int i=0;
 		while(bitboard % 2 == 0) {
 			bitboard /= 2;
