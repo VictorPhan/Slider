@@ -7,7 +7,10 @@ import environment.GameState;
 import environment.MoveList;
 import environment.Position;
 import environment.Side;
+import environment.Parse;
 import neural_network.Evaluation;
+import top_end.Move;
+import player.AIPlayerAdapter;
 
 public class AIPlayer extends Player {
 	
@@ -15,6 +18,7 @@ public class AIPlayer extends Player {
 	char illegalMove;
 	boolean printMove = true;
 	public Evaluation e = new Evaluation();
+	public Position curr;
 	
 	public AIPlayer() {
 	}
@@ -172,6 +176,7 @@ public class AIPlayer extends Player {
 				System.out.println("V player move: " + move);
 			}
 		}
+		curr = p;
 		GameHistory.addHistory(move);
 		return bestAction.score;
 	}
@@ -271,4 +276,21 @@ public class AIPlayer extends Player {
 		printMove = b;
 	}
 
+	@Override
+	public void init(int dimension, String board, char player) {
+		Parse.initScan(board);
+		curr = Parse.parseBoard(dimension, player);
+	}
+
+	@Override
+	public void update(Move move) {
+		curr = AIPlayerAdapter.moveToBitboard(move, curr);
+	}
+
+	@Override
+	public Move move() {
+		Position prevBoard = curr;
+		makeMove(curr);
+		return AIPlayerAdapter.bitboardToMove(curr, prevBoard);
+	}
 }
