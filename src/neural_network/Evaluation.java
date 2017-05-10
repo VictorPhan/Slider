@@ -55,7 +55,7 @@ public class Evaluation {
 	public ArrayList<double[]> evaluateLearn(Position p) {
 		ArrayList<double[]> tensor = new ArrayList<double[]>();
 		if (p.gs == GameState.DRAW) {
-			tensor.add(new double[] {0});
+			tensor.add(new double[] {0, 0, 0, 0});
 			return tensor;
 		}
 		else if(p.gs == GameState.H_WON) {

@@ -9,7 +9,8 @@ import player.AIPlayer;
 // aim is for each position encountered, play 12 moves and then update by TD leaf algo
 public class TestDriver {
 	static final double tdLambda = 0.7;
-	static final double learningRate = 0.1;
+	static final double learningRate = 0.00001;
+	static final int lookAhead = 12;
 	public static void main(String[] args) {
 		ArrayList<ArrayList<double[]>> outerTensors = new ArrayList<ArrayList<double[]>>();
 		Parse.initScan();
@@ -26,56 +27,58 @@ public class TestDriver {
 		Parse.closeScan();
 	}
 	
+	public static double heaviside(double x) {
+		if(x > 0) {
+			return 1;
+		}
+		return 0;
+	}
+	
 	private static void
 	updateWeightMatrixL(NeuralNetwork nn, ArrayList<ArrayList<double[]>> tensors) {
+		double[] bias = {1};
 		// first compute temporal differences
 		double[] d = new double[tensors.size()-1];
 		for(int i=0; i<d.length; i++) {
 			d[i] = tensors.get(i+1).get(0)[0]-tensors.get(i).get(0)[0];
 		}
 		// then for n=0,...,N-1
-		for(int n=0; n<tensors.size()-1; n++) {
-			gradOut
-			gradH2
-			gradH1
-			for(int t=n; t<Math.min(n+12, tensors.size()-12); t++) {
+		for(int n=0; n<tensors.size()/2; n++) {
+			DenseMatrix gradOut = DenseMatrix.zeros(nn.OUT.weightMatrix.rows, nn.OUT.weightMatrix.cols);
+			DenseMatrix gradH2 = DenseMatrix.zeros(nn.H2.weightMatrix.rows, nn.H2.weightMatrix.cols);
+			DenseMatrix gradH1 = DenseMatrix.zeros(nn.H1.weightMatrix.rows, nn.H1.weightMatrix.cols);
+			for(int t=n; t<Math.min(n+lookAhead, tensors.size()-1); t++) {
+				// the temporal difference sum
 				double lambdaSum = 0;
-				for(int j=t; j<Math.min(n+12, tensors.size()-12); j++) {
+				for(int j=t; j<Math.min(n+lookAhead, tensors.size()-1); j++) {
 					lambdaSum+=Math.pow(tdLambda, j-t)*d[t];
 				}
-				delOut = tensors.get(t).get(0) - tensors.get(Math.min(n+12, tensors.size()-12)).get(0);
-				delH2 = nn.OUT.weightMatrix.t() times
-				delH2
+				
+				double delOut = tensors.get(t).get(0)[0] - 
+						tensors.get(Math.min(n+lookAhead, tensors.size()-1)).get(0)[0];
+				DenseMatrix delH2 = (nn.OUT.weightMatrix.cols(0, nn.OUT.weightMatrix.cols-1).t().mul(delOut)).
+						mul(nn.H2.weightMatrix.mmul(new DenseMatrix(new double[][] 
+								{concat(tensors.get(t).get(2), bias)}).t()).gt(0));
+				DenseMatrix delH1 = (nn.H2.weightMatrix.cols(0, nn.H2.weightMatrix.cols-1).t().mmul(delH2)).
+						mul(nn.H1.weightMatrix.mmul(new DenseMatrix(new double[][] 
+								{concat(tensors.get(t).get(3), bias)}).t()).gt(0));
 				// update the grads
-				gradOut
-				gradH2
-				gradH1
+				DenseMatrix x2 = new DenseMatrix(new double[][] {concat(tensors.get(t).get(1), bias)});
+				DenseMatrix x1 = new DenseMatrix(new double[][] {concat(tensors.get(t).get(2), bias)});
+				DenseMatrix s  = new DenseMatrix(new double[][] {concat(tensors.get(t).get(3), bias)});
+				gradOut = gradOut.add(x2.mul(delOut).mul(lambdaSum));
+				gradH2  = gradH2.add(delH2.mmul(x1).mul(lambdaSum));
+				gradH1  = gradH1.add(delH1.mmul(s).mul(lambdaSum));
 			}
-			nn.OUT.weightMatrix
-			nn.H2.weightMatrix
-			nn.H1.weightMatrix
+			nn.OUT.weightMatrix = nn.OUT.weightMatrix.add(gradOut.mul(learningRate));
+			nn.H2.weightMatrix	= nn.H2.weightMatrix.add(gradH2.mul(learningRate));
+			nn.H1.weightMatrix	= nn.H1.weightMatrix.add(gradH1.mul(learningRate));
 			// and update weight matrix here
 		}
 		// then print final weight matrix here
-		System.out.println(nn.OUT.weightMatrix.toString());
-		System.out.println(nn.H2.weightMatrix);
 		System.out.println(nn.H1.weightMatrix);
-	}
-	
-	private static void 
-	updateWeightMatrix(NeuralNetwork nn, ArrayList<ArrayList<double[]>> tensors) {
-		double[] s = new double[tensors.get(0).get(1).length];
-		for(int t=0; t<tensors.size()-2; t++) {
-			double td = 0;
-			s = elementWiseAdd(s, scalarMultiply(tensors.get(t).get(1), 
-					tensors.get(t).get(0)[0]-tensors.get(t+1).get(0)[0]));
-			for(int j=t; j<tensors.size()-2; j++) {
-				td += Math.pow(tdLambda, j-t) * (tensors.get(t+1).get(0)[0]-tensors.get(t).get(0)[0]);
-			}
-			s = scalarMultiply(s, td);
-		}
-		DenseMatrix delta = new DenseMatrix(new double[][] {s});
-		nn.OUT.weightMatrix = nn.OUT.weightMatrix.add(delta).mul(0.000001);
+		System.out.println(nn.H2.weightMatrix);
+		System.out.println(nn.OUT.weightMatrix);
 	}
 	
 	public static double[] elementWiseAdd(double[] a, double[] b) {
@@ -93,4 +96,13 @@ public class TestDriver {
 		}
 		return c;
 	}
+	
+	public static double[] concat(double[] a, double[] b) {
+		   int aLen = a.length;
+		   int bLen = b.length;
+		   double[] c = new double[aLen+bLen];
+		   System.arraycopy(a, 0, c, 0, aLen);
+		   System.arraycopy(b, 0, c, aLen, bLen);
+		   return c;
+		}
 }
