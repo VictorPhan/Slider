@@ -28,6 +28,115 @@ public class AIPlayer extends Player {
 		return true;
 	}
 	
+	public ArrayList<double[]> makeMoveLearn(Position p) {
+		// Check for passing move
+			if(checkPass(p.ml.moves)) {
+				p.setCurrPieces(p.getCurrPieces());
+				ArrayList<double[]> pass = new ArrayList<double[]>();
+				pass.add(new double[] {0});
+				return pass;
+			}
+			
+			Action bestAction = alphaBetaLearn(p);
+			Action.supplyAction(p, bestAction);
+			
+			return bestAction.nnTensor;
+	}
+	
+	private Action alphaBetaLearn(Position p) {
+		ArrayList<Action> actions = Action.generateActions(p.ml.moves);
+		ArrayList<double[]> v = new ArrayList<double[]>();
+		v.add(new double[] {0});
+		if(p.sidePlaying == Side.H) {
+			v = maxValueLearn(p, actions, 0, Evaluation.V_WIN_SCORE, Evaluation.H_WIN_SCORE);
+		}
+		else {
+			v = minValueLearn(p, actions, 0, Evaluation.V_WIN_SCORE, Evaluation.H_WIN_SCORE);
+		}
+		for(Action a : actions) {
+			if(a.score == v.get(0)[0]) {
+				return a;
+			}
+		}
+		return null; // will return error. this line shouldn't be reached.
+	}
+
+	public ArrayList<double[]> maxValueLearn(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
+		if(cutOffTest(p, depth)) {
+			return e.evaluateLearn(p);
+		}
+		ArrayList<double[]> v = new ArrayList<double[]>();
+		v.add(new double[] {Evaluation.V_WIN_SCORE});
+		
+		// passing move
+		if(actions.size() == 0) {
+			Position newPos = Action.applyAction(p, null);
+			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+			ArrayList<double[]> u = minValueLearn(newPos, newActions, depth + 1, alpha, beta);
+			if(v.get(0)[0] < u.get(0)[0]) {
+				v = u;
+			}
+			alpha = Math.max(alpha, v.get(0)[0]);
+			if(alpha >= beta) {
+				return v;
+			}
+		}
+		else {
+			for(Action a : actions) {
+				Position newPos = Action.applyAction(p, a);
+				ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+				ArrayList<double[]> u = minValueLearn(newPos, newActions, depth + 1, alpha, beta);
+				if(v.get(0)[0] < u.get(0)[0]) {
+					v = u;
+				}
+				a.score = v.get(0)[0];
+				a.nnTensor = v;
+				alpha = Math.max(alpha, v.get(0)[0]);
+				if(alpha >= beta) {
+					return v;
+				}
+			}
+		}
+		return v;
+	}
+	
+	public ArrayList<double[]> minValueLearn(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
+		if(cutOffTest(p, depth)) {
+			return e.evaluateLearn(p);
+		}
+		ArrayList<double[]> v = new ArrayList<double[]>();
+		v.add(new double[] {Evaluation.H_WIN_SCORE});
+		
+		// passing move
+		if(actions.size() == 0) {
+			Position newPos = Action.applyAction(p, null);
+			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+			ArrayList<double[]> u = maxValueLearn(newPos, newActions, depth + 1, alpha, beta);
+			if(v.get(0)[0] > u.get(0)[0]) {
+				v = u;
+			}
+			beta = Math.min(beta, v.get(0)[0]);
+			if(beta <= alpha) {
+				return v;
+			}
+		}
+		for(Action a : actions) {
+			Position newPos = Action.applyAction(p, a);
+			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+			ArrayList<double[]> u = maxValueLearn(newPos, newActions, depth + 1, alpha, beta);
+			if(v.get(0)[0] > u.get(0)[0]) {
+				v = u;
+			}
+			a.score = v.get(0)[0];
+			a.nnTensor = v;
+			beta = Math.min(beta, v.get(0)[0]);
+			if(beta <= alpha) {
+				return v;
+			}
+		}
+		return v;
+	}
+
 	@Override
 	public double makeMove(Position p) {
 		// Check for passing move

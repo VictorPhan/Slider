@@ -15,6 +15,7 @@ public class Action {
 	public double score;
 	public int direction;
 	public long bitboard;
+	public ArrayList<double[]> nnTensor;
 	
 	public Action(int direction, long bitboard) {
 		this.direction = direction;

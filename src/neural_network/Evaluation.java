@@ -6,6 +6,7 @@ import environment.Parse;
 import environment.Position;
 import environment.Side;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -48,6 +49,25 @@ public class Evaluation {
 		}
 		else {
 			return nn.evaluate(createInputLayer(p));
+		}
+	}
+	
+	public ArrayList<double[]> evaluateLearn(Position p) {
+		ArrayList<double[]> tensor = new ArrayList<double[]>();
+		if (p.gs == GameState.DRAW) {
+			tensor.add(new double[] {0});
+			return tensor;
+		}
+		else if(p.gs == GameState.H_WON) {
+			tensor.add(new double[] {H_WIN_SCORE});
+			return tensor;
+		}
+		else if(p.gs == GameState.V_WON) {
+			tensor.add(new double[] {V_WIN_SCORE});
+			return tensor;
+		}
+		else {
+			return nn.evaluateLearn(createInputLayer(p));
 		}
 	}
 	

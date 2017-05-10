@@ -1,5 +1,7 @@
 package neural_network;
 
+import java.util.ArrayList;
+
 import environment.Position;
 
 public class NeuralNetwork {
@@ -46,5 +48,15 @@ public class NeuralNetwork {
 		   System.arraycopy(b, 0, c, aLen, bLen);
 		   return c;
 		}
+
+	public ArrayList<double[]> evaluateLearn(double[] input) {
+		double[] bias = {1};
+		ArrayList<double[]> tensor = new ArrayList<double[]>();
+		tensor.add(0, input);
+		tensor.add(0, H1.output(concat(tensor.get(0), bias)));
+		tensor.add(0, H2.output(concat(tensor.get(0), bias)));
+		tensor.add(0, OUT.outputNoReLu(concat(tensor.get(0), bias)));
+		return tensor;
+	}
 	
 }

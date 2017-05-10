@@ -9,21 +9,57 @@ import player.AIPlayer;
 // aim is for each position encountered, play 12 moves and then update by TD leaf algo
 public class TestDriver {
 	static final double tdLambda = 0.7;
+	static final double learningRate = 0.1;
 	public static void main(String[] args) {
-		ArrayList<ArrayList<double[]>> tensors = new ArrayList<ArrayList<double[]>>();
+		ArrayList<ArrayList<double[]>> outerTensors = new ArrayList<ArrayList<double[]>>();
 		Parse.initScan();
 		Position p = Parse.parseBoard();
 		AIPlayer ai = new AIPlayer();
 		ai.setPrintMove(false);
 		
 		while(p.gs == GameState.PLAYING) {
-			ai.makeMove(p);
+			outerTensors.add(ai.makeMoveLearn(p));
 			p.draw();
 		}
 		
-		ai.setPrintMove(true);
-		updateWeightMatrix(ai.e.nn, tensors);
+		updateWeightMatrixL(ai.e.nn, outerTensors);
 		Parse.closeScan();
+	}
+	
+	private static void
+	updateWeightMatrixL(NeuralNetwork nn, ArrayList<ArrayList<double[]>> tensors) {
+		// first compute temporal differences
+		double[] d = new double[tensors.size()-1];
+		for(int i=0; i<d.length; i++) {
+			d[i] = tensors.get(i+1).get(0)[0]-tensors.get(i).get(0)[0];
+		}
+		// then for n=0,...,N-1
+		for(int n=0; n<tensors.size()-1; n++) {
+			gradOut
+			gradH2
+			gradH1
+			for(int t=n; t<Math.min(n+12, tensors.size()-12); t++) {
+				double lambdaSum = 0;
+				for(int j=t; j<Math.min(n+12, tensors.size()-12); j++) {
+					lambdaSum+=Math.pow(tdLambda, j-t)*d[t];
+				}
+				delOut = tensors.get(t).get(0) - tensors.get(Math.min(n+12, tensors.size()-12)).get(0);
+				delH2 = nn.OUT.weightMatrix.t() times
+				delH2
+				// update the grads
+				gradOut
+				gradH2
+				gradH1
+			}
+			nn.OUT.weightMatrix
+			nn.H2.weightMatrix
+			nn.H1.weightMatrix
+			// and update weight matrix here
+		}
+		// then print final weight matrix here
+		System.out.println(nn.OUT.weightMatrix.toString());
+		System.out.println(nn.H2.weightMatrix);
+		System.out.println(nn.H1.weightMatrix);
 	}
 	
 	private static void 
