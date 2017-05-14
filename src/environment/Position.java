@@ -23,7 +23,7 @@ public class Position {
 	public GameHistory gHistory = new GameHistory();
 	
 	public Position copyPosition() {
-		return new Position(pieces, sidePlaying, gHistory);
+		return new Position(pieces.clone(), sidePlaying, gHistory.clone());
 	}
 	
 	/**

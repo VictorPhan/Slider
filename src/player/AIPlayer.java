@@ -11,7 +11,7 @@ import neural_network.Evaluation;
 
 public class AIPlayer extends Player {
 	
-	public int MAX_DEPTH = 3;
+	public int MAX_DEPTH = 4;
 	char illegalMove;
 	boolean printMove = true;
 	public Evaluation e = new Evaluation();
@@ -36,13 +36,15 @@ public class AIPlayer extends Player {
 		
 		if(checkPass(p.ml.moves)) {
 			p.setCurrPieces(p.getCurrPieces());
-			ArrayList<double[]> pass = new ArrayList<double[]>();
-			pass.add(new double[] {0});
-			return pass;
+			return e.evaluateLearn(p);
 		}
 		
 		Action bestAction = alphaBetaLearn(p);
 		Action.supplyAction(p, bestAction);
+		
+		if(bestAction.nnTensor.size()==1) {
+			throw new Error("makeMoveLearn tensor size == 1");
+		}
 		
 		return bestAction.nnTensor;
 	}
