@@ -53,22 +53,20 @@ public class Evaluation {
 	}
 	
 	public ArrayList<double[]> evaluateLearn(Position p) {
-		ArrayList<double[]> tensor = new ArrayList<double[]>();
+		ArrayList<double[]> tensor = nn.evaluateLearn(createInputLayer(p));
 		if (p.gs == GameState.DRAW) {
-			tensor.add(new double[] {0, 0, 0, 0});
-			return tensor;
+			tensor.get(0)[0] = 0;
 		}
 		else if(p.gs == GameState.H_WON) {
-			tensor.add(new double[] {H_WIN_SCORE});
-			return tensor;
+			tensor.get(0)[0] = H_WIN_SCORE;
 		}
 		else if(p.gs == GameState.V_WON) {
-			tensor.add(new double[] {V_WIN_SCORE});
-			return tensor;
+			tensor.get(0)[0] = V_WIN_SCORE;
 		}
-		else {
-			return nn.evaluateLearn(createInputLayer(p));
+		if(tensor.size()==1) {
+			throw new Error("size error 2");
 		}
+		return tensor;
 	}
 	
 	public static double[] createInputLayer(Position p) {

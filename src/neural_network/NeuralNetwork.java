@@ -56,6 +56,9 @@ public class NeuralNetwork {
 		tensor.add(0, H1.output(concat(tensor.get(0), bias)));
 		tensor.add(0, H2.output(concat(tensor.get(0), bias)));
 		tensor.add(0, OUT.outputNoReLu(concat(tensor.get(0), bias)));
+		if(tensor.size()==1) {
+			throw new Error("size 1");
+		}
 		return tensor;
 	}
 	

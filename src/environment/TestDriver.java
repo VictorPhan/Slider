@@ -19,7 +19,11 @@ public class TestDriver {
 		ai.setPrintMove(false);
 		
 		while(p.gs == GameState.PLAYING) {
-			outerTensors.add(ai.makeMoveLearn(p));
+			ArrayList<double[]> tt = ai.makeMoveLearn(p);
+			if(tt.size() == 1) {
+				throw new Error("while gaming");
+			}
+			outerTensors.add(tt);
 			p.draw();
 		}
 		
@@ -43,7 +47,7 @@ public class TestDriver {
 			d[i] = tensors.get(i+1).get(0)[0]-tensors.get(i).get(0)[0];
 		}
 		// then for n=0,...,N-1
-		for(int n=0; n<tensors.size()/2; n++) {
+		for(int n=0; n<tensors.size()-1; n++) {
 			DenseMatrix gradOut = DenseMatrix.zeros(nn.OUT.weightMatrix.rows, nn.OUT.weightMatrix.cols);
 			DenseMatrix gradH2 = DenseMatrix.zeros(nn.H2.weightMatrix.rows, nn.H2.weightMatrix.cols);
 			DenseMatrix gradH1 = DenseMatrix.zeros(nn.H1.weightMatrix.rows, nn.H1.weightMatrix.cols);
@@ -53,7 +57,7 @@ public class TestDriver {
 				for(int j=t; j<Math.min(n+lookAhead, tensors.size()-1); j++) {
 					lambdaSum+=Math.pow(tdLambda, j-t)*d[t];
 				}
-				
+				System.out.println(tensors.get(t).size());
 				double delOut = tensors.get(t).get(0)[0] - 
 						tensors.get(Math.min(n+lookAhead, tensors.size()-1)).get(0)[0];
 				DenseMatrix delH2 = (nn.OUT.weightMatrix.cols(0, nn.OUT.weightMatrix.cols-1).t().mul(delOut)).

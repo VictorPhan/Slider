@@ -11,7 +11,7 @@ import neural_network.Evaluation;
 
 public class AIPlayer extends Player {
 	
-	public int MAX_DEPTH = 7;
+	public int MAX_DEPTH = 3;
 	char illegalMove;
 	boolean printMove = true;
 	public Evaluation e = new Evaluation();
@@ -29,32 +29,39 @@ public class AIPlayer extends Player {
 	}
 	
 	public ArrayList<double[]> makeMoveLearn(Position p) {
-		// Check for passing move
-			if(checkPass(p.ml.moves)) {
-				p.setCurrPieces(p.getCurrPieces());
-				ArrayList<double[]> pass = new ArrayList<double[]>();
-				pass.add(new double[] {0});
-				return pass;
-			}
-			
-			Action bestAction = alphaBetaLearn(p);
-			Action.supplyAction(p, bestAction);
-			
-			return bestAction.nnTensor;
+		// Check if position is won
+		if(p.gs != GameState.PLAYING) {
+			return e.evaluateLearn(p);
+		}
+		
+		if(checkPass(p.ml.moves)) {
+			p.setCurrPieces(p.getCurrPieces());
+			ArrayList<double[]> pass = new ArrayList<double[]>();
+			pass.add(new double[] {0});
+			return pass;
+		}
+		
+		Action bestAction = alphaBetaLearn(p);
+		Action.supplyAction(p, bestAction);
+		
+		return bestAction.nnTensor;
 	}
 	
 	private Action alphaBetaLearn(Position p) {
 		ArrayList<Action> actions = Action.generateActions(p.ml.moves);
-		ArrayList<double[]> v = new ArrayList<double[]>();
-		v.add(new double[] {0});
+		double v;
 		if(p.sidePlaying == Side.H) {
-			v = maxValueLearn(p, actions, 0, Evaluation.V_WIN_SCORE, Evaluation.H_WIN_SCORE);
+			v = maxValueLearn(p, actions, 0, Evaluation.V_WIN_SCORE, Evaluation.H_WIN_SCORE).get(0)[0];
 		}
 		else {
-			v = minValueLearn(p, actions, 0, Evaluation.V_WIN_SCORE, Evaluation.H_WIN_SCORE);
+			v = minValueLearn(p, actions, 0, Evaluation.V_WIN_SCORE, Evaluation.H_WIN_SCORE).get(0)[0];
 		}
 		for(Action a : actions) {
-			if(a.score == v.get(0)[0]) {
+			if(a.nnTensor.size() == 1) {
+				System.out.println(a.nnTensor.get(0)[0]);
+				throw new Error("acrions");
+			}
+			if(a.score == v) {
 				return a;
 			}
 		}
@@ -73,7 +80,7 @@ public class AIPlayer extends Player {
 			Position newPos = Action.applyAction(p, null);
 			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
 			ArrayList<double[]> u = minValueLearn(newPos, newActions, depth + 1, alpha, beta);
-			if(v.get(0)[0] < u.get(0)[0]) {
+			if(v.get(0)[0] <= u.get(0)[0]) {
 				v = u;
 			}
 			alpha = Math.max(alpha, v.get(0)[0]);
@@ -86,7 +93,7 @@ public class AIPlayer extends Player {
 				Position newPos = Action.applyAction(p, a);
 				ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
 				ArrayList<double[]> u = minValueLearn(newPos, newActions, depth + 1, alpha, beta);
-				if(v.get(0)[0] < u.get(0)[0]) {
+				if(v.get(0)[0] <= u.get(0)[0]) {
 					v = u;
 				}
 				a.score = v.get(0)[0];
@@ -112,7 +119,7 @@ public class AIPlayer extends Player {
 			Position newPos = Action.applyAction(p, null);
 			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
 			ArrayList<double[]> u = maxValueLearn(newPos, newActions, depth + 1, alpha, beta);
-			if(v.get(0)[0] > u.get(0)[0]) {
+			if(v.get(0)[0] >= u.get(0)[0]) {
 				v = u;
 			}
 			beta = Math.min(beta, v.get(0)[0]);
@@ -124,7 +131,7 @@ public class AIPlayer extends Player {
 			Position newPos = Action.applyAction(p, a);
 			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
 			ArrayList<double[]> u = maxValueLearn(newPos, newActions, depth + 1, alpha, beta);
-			if(v.get(0)[0] > u.get(0)[0]) {
+			if(v.get(0)[0] >= u.get(0)[0]) {
 				v = u;
 			}
 			a.score = v.get(0)[0];
