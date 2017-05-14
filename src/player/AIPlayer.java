@@ -160,6 +160,7 @@ public class AIPlayer extends Player {
 			p.setCurrPieces(p.getCurrPieces());
 			GameHistory.addHistory("-");
 			return 0;
+
 		}
 		
 		// TODO: include transposition tables

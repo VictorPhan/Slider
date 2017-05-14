@@ -12,6 +12,7 @@ package top_end;
  */
 
 
+
 /** 
  * Referee class: Driver for a game of Slider
  * Run this class on the command line using a command like:
@@ -33,6 +34,7 @@ public class Referee {
 		/* * * *
 		 * then, set up the board and initialise the players
 		 */
+
 		// create a new board
 		Board board = new Board(options.dimension);
 		
