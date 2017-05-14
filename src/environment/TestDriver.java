@@ -9,33 +9,31 @@ import player.AIPlayer;
 // aim is for each position encountered, play 12 moves and then update by TD leaf algo
 public class TestDriver {
 	static final double tdLambda = 0.7;
-	static final double learningRate = 0.00001;
-	static final int lookAhead = 12;
+	static final double learningRate = 0.001;
+	static final int lookAhead = 6;
 	public static void main(String[] args) {
-		ArrayList<ArrayList<double[]>> outerTensors = new ArrayList<ArrayList<double[]>>();
+		
 		Parse.initScan();
 		Position p = Parse.parseBoard();
+		Parse.closeScan();
+		
 		AIPlayer ai = new AIPlayer();
 		ai.setPrintMove(false);
 		
-		while(p.gs == GameState.PLAYING) {
-			ArrayList<double[]> tt = ai.makeMoveLearn(p);
-			if(tt.size() == 1) {
-				throw new Error("while gaming");
+		for(int i=1; i<3; i++) {
+			Position p2 = p.copyPosition();
+			ArrayList<ArrayList<double[]>> outerTensors = new ArrayList<ArrayList<double[]>>();
+			while(p.gs == GameState.PLAYING) {
+				ArrayList<double[]> tt = ai.makeMoveLearn(p2);
+				if(tt.size() == 1) {
+					throw new Error("while gaming");
+				}
+				outerTensors.add(tt);
+				p.draw();
 			}
-			outerTensors.add(tt);
-			p.draw();
+			updateWeightMatrixL(ai.e.nn, outerTensors);
 		}
 		
-		updateWeightMatrixL(ai.e.nn, outerTensors);
-		Parse.closeScan();
-	}
-	
-	public static double heaviside(double x) {
-		if(x > 0) {
-			return 1;
-		}
-		return 0;
 	}
 	
 	private static void
@@ -57,7 +55,6 @@ public class TestDriver {
 				for(int j=t; j<Math.min(n+lookAhead, tensors.size()-1); j++) {
 					lambdaSum+=Math.pow(tdLambda, j-t)*d[t];
 				}
-				System.out.println(tensors.get(t).size());
 				double delOut = tensors.get(t).get(0)[0] - 
 						tensors.get(Math.min(n+lookAhead, tensors.size()-1)).get(0)[0];
 				DenseMatrix delH2 = (nn.OUT.weightMatrix.cols(0, nn.OUT.weightMatrix.cols-1).t().mul(delOut)).
@@ -83,22 +80,6 @@ public class TestDriver {
 		System.out.println(nn.H1.weightMatrix);
 		System.out.println(nn.H2.weightMatrix);
 		System.out.println(nn.OUT.weightMatrix);
-	}
-	
-	public static double[] elementWiseAdd(double[] a, double[] b) {
-		double[] c = new double[a.length];
-		for(int i=0; i<a.length; i++) {
-			c[i] = a[i] + b[i];
-		}
-		return c;
-	}
-	
-	public static double[] scalarMultiply(double[] a, double s) {
-		double[] c = new double[a.length];
-		for(int i=0; i<a.length; i++) {
-			c[i] = a[i]*s;
-		}
-		return c;
 	}
 	
 	public static double[] concat(double[] a, double[] b) {

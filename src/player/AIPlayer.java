@@ -11,7 +11,7 @@ import neural_network.Evaluation;
 
 public class AIPlayer extends Player {
 	
-	public int MAX_DEPTH = 3;
+	public int MAX_DEPTH = 5;
 	char illegalMove;
 	boolean printMove = true;
 	public Evaluation e = new Evaluation();
@@ -73,7 +73,7 @@ public class AIPlayer extends Player {
 			return e.evaluateLearn(p);
 		}
 		ArrayList<double[]> v = new ArrayList<double[]>();
-		v.add(new double[] {Evaluation.V_WIN_SCORE});
+		v.add(new double[] {Evaluation.V_WIN_SCORE * 2});
 		
 		// passing move
 		if(actions.size() == 0) {
@@ -112,7 +112,7 @@ public class AIPlayer extends Player {
 			return e.evaluateLearn(p);
 		}
 		ArrayList<double[]> v = new ArrayList<double[]>();
-		v.add(new double[] {Evaluation.H_WIN_SCORE});
+		v.add(new double[] {Evaluation.H_WIN_SCORE * 2});
 		
 		// passing move
 		if(actions.size() == 0) {
