@@ -9,8 +9,8 @@ import environment.Position;
 import environment.Side;
 import environment.Parse;
 import neural_network.Evaluation;
-import top_end.Move;
 import player.AIPlayerAdapter;
+import top_end.Move;
 
 public class AIPlayer extends Player {
 	
@@ -163,8 +163,9 @@ public class AIPlayer extends Player {
 				}
 			}
 			p.setCurrPieces(p.getCurrPieces());
-			GameHistory.addHistory("—");
+			GameHistory.addHistory("-");
 			return 0;
+
 		}
 		
 		// TODO: include transposition tables
