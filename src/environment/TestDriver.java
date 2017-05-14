@@ -32,7 +32,7 @@ public class TestDriver {
 				p2.draw();
 			}
 			updateWeightMatrixL(ai.e.nn, outerTensors);
-		}
+		}	
 	}
 	
 	private static void

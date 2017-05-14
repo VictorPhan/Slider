@@ -75,7 +75,7 @@ public class AIPlayer extends Player {
 			return e.evaluateLearn(p);
 		}
 		ArrayList<double[]> v = new ArrayList<double[]>();
-		v.add(new double[] {Evaluation.V_WIN_SCORE});
+		v.add(new double[] {Evaluation.V_WIN_SCORE * 2});
 		
 		// passing move
 		if(actions.size() == 0) {
@@ -114,7 +114,7 @@ public class AIPlayer extends Player {
 			return e.evaluateLearn(p);
 		}
 		ArrayList<double[]> v = new ArrayList<double[]>();
-		v.add(new double[] {Evaluation.H_WIN_SCORE});
+		v.add(new double[] {Evaluation.H_WIN_SCORE * 2});
 		
 		// passing move
 		if(actions.size() == 0) {
