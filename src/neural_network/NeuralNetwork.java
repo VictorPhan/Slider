@@ -9,26 +9,22 @@ public class NeuralNetwork {
 	 * global, piece-centric and square-centric features,
 	 * second hidden layer and output layer
 	 */
+	
+	double scalingFactor = 100;
+	
 	public Layer H1;
 	public Layer H2;
 	public Layer OUT;
 	
 	public NeuralNetwork(int s, int h1, int h2) {
-		if(Position.dimen == 5) {
-			H1 = new Layer(NeuralNetwork_Params.H1_5);
-			H2 = new Layer(NeuralNetwork_Params.H2_5);
-			OUT = new Layer(NeuralNetwork_Params.OUT_5);
-		}
-		else {
-			H1	 = new Layer(s, s+1);
-			H2   = new Layer(h2, s+1);
-			OUT  = new Layer(1, h2+1);
-		}
+		H1	 = new Layer(s, s+1);
+		H2   = new Layer(h2, s+1);
+		OUT  = new Layer(1, h2+1);
 	}
 	
 	public double evaluate(double[] input) {
 		double[] bias = {1};
-		return 	OUT.outputNoReLu(concat(
+		return 	OUT.outputTanh(concat(
 				H2.output(concat(
 				H1.output(concat(
 				input, bias)), bias)), bias))[0];
@@ -40,7 +36,7 @@ public class NeuralNetwork {
 		System.out.println("OUT:\n" + OUT.weightMatrix);
 	}
 	
-	public double[] concat(double[] a, double[] b) {
+	public static double[] concat(double[] a, double[] b) {
 	   int aLen = a.length;
 	   int bLen = b.length;
 	   double[] c = new double[aLen+bLen];
@@ -55,10 +51,7 @@ public class NeuralNetwork {
 		tensor.add(0, input);
 		tensor.add(0, H1.output(concat(tensor.get(0), bias)));
 		tensor.add(0, H2.output(concat(tensor.get(0), bias)));
-		tensor.add(0, OUT.outputNoReLu(concat(tensor.get(0), bias)));
-		if(tensor.size()==1) {
-			throw new Error("size 1");
-		}
+		tensor.add(0, OUT.outputTanh(concat(tensor.get(0), bias)));
 		return tensor;
 	}
 	

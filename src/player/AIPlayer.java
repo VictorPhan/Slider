@@ -11,7 +11,7 @@ import neural_network.Evaluation;
 
 public class AIPlayer extends Player {
 	
-	public int MAX_DEPTH = 4;
+	public int MAX_DEPTH = 6;
 	char illegalMove;
 	boolean printMove = true;
 	public Evaluation e = new Evaluation();
@@ -61,6 +61,7 @@ public class AIPlayer extends Player {
 		for(Action a : actions) {
 			if(a.nnTensor.size() == 1) {
 				System.out.println(a.nnTensor.get(0)[0]);
+				p.draw();
 				throw new Error("acrions");
 			}
 			if(a.score == v) {
@@ -75,20 +76,14 @@ public class AIPlayer extends Player {
 			return e.evaluateLearn(p);
 		}
 		ArrayList<double[]> v = new ArrayList<double[]>();
-		v.add(new double[] {Evaluation.V_WIN_SCORE * 2});
+		v.add(new double[] {Evaluation.V_WIN_SCORE});
 		
 		// passing move
 		if(actions.size() == 0) {
 			Position newPos = Action.applyAction(p, null);
 			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
-			ArrayList<double[]> u = minValueLearn(newPos, newActions, depth + 1, alpha, beta);
-			if(v.get(0)[0] <= u.get(0)[0]) {
-				v = u;
-			}
-			alpha = Math.max(alpha, v.get(0)[0]);
-			if(alpha >= beta) {
-				return v;
-			}
+			v = minValueLearn(newPos, newActions, depth + 1, alpha, beta);
+			return v;
 		}
 		else {
 			for(Action a : actions) {
@@ -114,7 +109,7 @@ public class AIPlayer extends Player {
 			return e.evaluateLearn(p);
 		}
 		ArrayList<double[]> v = new ArrayList<double[]>();
-		v.add(new double[] {Evaluation.H_WIN_SCORE * 2});
+		v.add(new double[] {Evaluation.H_WIN_SCORE});
 		
 		// passing move
 		if(actions.size() == 0) {

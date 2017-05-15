@@ -33,7 +33,7 @@ public class Evaluation {
 	public static final double H_WIN_SCORE = 10; //Double.POSITIVE_INFINITY;
 	public static final double V_WIN_SCORE = -10; //Double.NEGATIVE_INFINITY;
 	
-	static int s = Position.dimen * Position.dimen;
+	static int s = Position.dimen * Position.dimen + 1;
 	
 	public NeuralNetwork nn = new NeuralNetwork(s, s, s);
 		
@@ -63,9 +63,6 @@ public class Evaluation {
 		else if(p.gs == GameState.V_WON) {
 			tensor.get(0)[0] = V_WIN_SCORE;
 		}
-		if(tensor.size()==1) {
-			throw new Error("size error 2");
-		}
 		return tensor;
 	}
 	
@@ -74,8 +71,12 @@ public class Evaluation {
 		 * Piece centric is location of each piece, including directional mobility of each moving piece
 		 * Square centric includes the 'bled' board
 		 */
-		double[] inS = bleedBoard(p.getPieces(), p.sidePlaying);
+		double[] inS = NeuralNetwork.concat(metaInfo(p), bleedBoard(p.getPieces(), p.sidePlaying));
 		return inS;
+	}
+	
+	public static double[] metaInfo(Position p) {
+		return new double[] {5*(Long.bitCount(p.getPieces(0))-Long.bitCount(p.getPieces(1)))};
 	}
 	
 	public static double[] bleedBoard(long[] pieces, Side s) {

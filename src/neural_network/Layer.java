@@ -7,6 +7,7 @@ public class Layer {
 	
 	// The weightMatrix which includes every weight
 	public DenseMatrix weightMatrix;
+	double scalingFactor = 100;
 	
 	/**
 	 * Initialise weightMatrix with random values
@@ -36,9 +37,10 @@ public class Layer {
 		return reLu(weightMatrix.mmul(inputVector.t()).getValues());
 	}
 	
-	public double[] outputNoReLu(double[] input) {
+	public double[] outputTanh(double[] input) {
 		DenseMatrix inputVector = new DenseMatrix(new double[][] {input});
-		return weightMatrix.mmul(inputVector.t()).getValues();
+		return Arrays.stream(weightMatrix.mmul(inputVector.t()).getValues()).
+				map(x -> (Evaluation.H_WIN_SCORE-1)*Math.tanh(x)).toArray();
 	}
 	
 	/**
