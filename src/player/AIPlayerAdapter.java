@@ -68,8 +68,12 @@ public class AIPlayerAdapter {
 	 */
 	public static Position moveToBitboard(Move move, Position curr) {
 		
+		if(move == null){
+			return curr;
+		}
 		long newMove = 0L;
-		newMove = newMove ^ (1 << move.i);
+		System.out.println(move.i);
+		newMove = newMove ^ (1L << move.i);
 		newMove = newMove << (Position.dimen * move.j);
 		if(move.d == Direction.RIGHT) {
 			newMove = newMove >>> 1;

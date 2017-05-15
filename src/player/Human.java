@@ -114,41 +114,4 @@ public class Human extends Player {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public void init(int dimension, String board, char player) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void update(Move move) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Move move() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void init(int dimension, String board, char player) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void update(Move move) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Move move() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
