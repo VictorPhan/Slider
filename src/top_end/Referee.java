@@ -12,7 +12,6 @@ package top_end;
  */
 
 
-
 /** 
  * Referee class: Driver for a game of Slider
  * Run this class on the command line using a command like:

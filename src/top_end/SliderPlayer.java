@@ -14,7 +14,6 @@ package top_end;
  */
 
 
-
 /**
  * Slider game player interface specification. Your program should implement
  * this interface so that the Referee can conduct it to play a game of Slider.
