@@ -7,13 +7,21 @@ import neural_network.Evaluation;
 import neural_network.NeuralNetwork;
 import player.AIPlayer;
 import player.Human;
+/*
 
+4 V
+H + + + 
+H + + + 
+H + + + 
++ V V V 
+
+ */
 // aim is for each position encountered, play lookAhead moves and then update by TD leaf algo
 public class TestDriver {
 	static final double tdLambda = 0.7;
-	static final double learningRate = 0.0000001;
+	static final double learningRate = 1;
 	static final int lookAhead = 8;
-	static final int numGames = 30;
+	static final int numGames = 20;
 	static int xOut = 0;
 	static int xH2 = 1;
 	static int xH1 = 2;
@@ -23,25 +31,46 @@ public class TestDriver {
 		Position p = Parse.parseBoard();
 		
 		AIPlayer ai = new AIPlayer();
+		Human h = new Human();
 		ai.setPrintMove(false);
 		
-		for(int i=0; i<numGames; i++) {
-			double score = 0;
-			Position p2 = p.copyPosition();
-			ArrayList<ArrayList<double[]>> outerTensors = new ArrayList<ArrayList<double[]>>();
-			while(score != 10. && score != -10.  && p2.gs != GameState.DRAW) {
-				ArrayList<double[]> tt = ai.makeMoveLearn(p2);
+		
+		double score = 0;
+		Position p2 = p.copyPosition();
+		ArrayList<ArrayList<double[]>> outerTensors = new ArrayList<ArrayList<double[]>>();
+		while(/*score != 10. && score != -10. && */p2.gs == GameState.PLAYING) {
+			if(p2.sidePlaying==Side.V) {
+				ArrayList<double[]> tt = ai.makeMoveLearn(p2, true);
 				outerTensors.add(tt);
 				score = tt.get(0)[0];
-				System.out.println(score);
-				p2.draw();
 			}
-			updateWeightMatrixL(ai.e.nn, outerTensors);
+			else {
+				ArrayList<double[]> tt = ai.makeMoveLearn(p2, false); // quiet move, allows AI to consider but not make the move
+				h.makeMove(p2);
+				outerTensors.add(tt);
+				score = tt.get(0)[0];
+			}
+			System.out.println(score);
+			p2.draw();
 		}
+		updateWeightMatrixL(ai.e.nn, outerTensors);
 		
-		ai.setPrintMove(true);
-		Human h = new Human();
-		Run.playGame(p, false, h, ai);
+//		for(int i=0; i<numGames; i++) {
+//			double score = 0;
+//			Position p2 = p.copyPosition();
+//			ArrayList<ArrayList<double[]>> outerTensors = new ArrayList<ArrayList<double[]>>();
+//			while(p2.gs == GameState.PLAYING) {
+//				ArrayList<double[]> tt = ai.makeMoveLearn(p2, true);
+//				outerTensors.add(tt);
+//				score = tt.get(0)[0];
+//				System.out.println(score);
+//				p2.draw();
+//			}
+//			updateWeightMatrixL(ai.e.nn, outerTensors);
+//		}
+		
+//		ai.setPrintMove(true);
+//		Run.playGame(p, false, h, ai);
 		Parse.closeScan();
 	}
 	

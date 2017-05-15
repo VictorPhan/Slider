@@ -28,7 +28,7 @@ public class AIPlayer extends Player {
 		return true;
 	}
 	
-	public ArrayList<double[]> makeMoveLearn(Position p) {
+	public ArrayList<double[]> makeMoveLearn(Position p, boolean loud) {
 		// Check if position is won
 		if(p.gs != GameState.PLAYING) {
 			return e.evaluateLearn(p);
@@ -40,7 +40,9 @@ public class AIPlayer extends Player {
 		}
 		
 		Action bestAction = alphaBetaLearn(p);
-		Action.supplyAction(p, bestAction);
+		if(loud) {
+			Action.supplyAction(p, bestAction);
+		}
 		
 		if(bestAction.nnTensor.size()==1) {
 			throw new Error("makeMoveLearn tensor size == 1");
