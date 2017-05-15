@@ -279,8 +279,7 @@ public class AIPlayer extends Player {
 
 	@Override
 	public void init(int dimension, String board, char player) {
-		Parse.initScan(board);
-		curr = Parse.parseBoard(dimension, player);
+		curr = Parse.parseBoard(dimension, player, board);
 	}
 
 	@Override

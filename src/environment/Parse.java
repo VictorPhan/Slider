@@ -27,10 +27,6 @@ public class Parse {
 		s = new Scanner(System.in);
 	}
 	
-	public static void initScan(String board) {
-		s = new Scanner(board);
-	}
-	
 	public static void closeScan() {
 		s.close();
 	}
@@ -94,14 +90,14 @@ public class Parse {
 	 * @param side
 	 * @return
 	 */
-	public static Position parseBoard(int dimen, char side) {
+	public static Position parseBoard(int dimen, char side, String initPos) {
 		
 		if(s == null) {
 			throw new Error("Scanner not initialised");
 		}
 		
 		Position board;
-		String line = "";
+		String reversedLine = "";
 		Side sidePlaying;
 		
 		if(side == 'H') {
@@ -119,19 +115,19 @@ public class Parse {
 		 * Gets each line info on the board and makes 
 		 * a single String from that.
 		 */
-		for(int i = 0; i < dimen + 1; i++) {
-			line = s.nextLine() + line;
+		for(String line : initPos.split("\n")){
+			reversedLine = line + reversedLine;
 		}
-		line = line.replaceAll("\\s+","");
+		reversedLine = reversedLine.replaceAll("\\s+","");
 		
 		/* Checks the dimension of the board and decides type */
 		if(dimen > Position.BIG_INT_CASE){
 			BigInteger[] bigPieces;
-			bigPieces = fromRawString2(line);	
+			bigPieces = fromRawString2(reversedLine);	
 			board = new Position(bigPieces, sidePlaying, dimen);
 		} else {
 			long[] pieces;
-			pieces = fromRawString(line);
+			pieces = fromRawString(reversedLine);
 			board = new Position(pieces, sidePlaying, dimen);
 		}
 		return board;
