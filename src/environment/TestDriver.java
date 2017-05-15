@@ -11,8 +11,8 @@ import player.Human;
 // aim is for each position encountered, play lookAhead moves and then update by TD leaf algo
 public class TestDriver {
 	static final double tdLambda = 0.7;
-	static final double learningRate = 0.000001;
-	static final int lookAhead = 6;
+	static final double learningRate = 0.0000001;
+	static final int lookAhead = 8;
 	static final int numGames = 30;
 	static int xOut = 0;
 	static int xH2 = 1;

@@ -33,7 +33,7 @@ public class Evaluation {
 	public static final double H_WIN_SCORE = 10; //Double.POSITIVE_INFINITY;
 	public static final double V_WIN_SCORE = -10; //Double.NEGATIVE_INFINITY;
 	
-	static int s = Position.dimen * Position.dimen + 1;
+	static int s = 10;
 	
 	public NeuralNetwork nn = new NeuralNetwork(s, s, s);
 		
@@ -71,12 +71,20 @@ public class Evaluation {
 		 * Piece centric is location of each piece, including directional mobility of each moving piece
 		 * Square centric includes the 'bled' board
 		 */
-		double[] inS = NeuralNetwork.concat(metaInfo(p), bleedBoard(p.getPieces(), p.sidePlaying));
-		return inS;
+		//double[] inS = NeuralNetwork.concat(metaInfo(p), bleedBoard(p.getPieces(), p.sidePlaying));
+		return metaInfo(p);
 	}
 	
 	public static double[] metaInfo(Position p) {
-		return new double[] {5*(Long.bitCount(p.getPieces(0))-Long.bitCount(p.getPieces(1)))};
+		double[] numberPieces = {Long.bitCount(p.getPieces(0)), Long.bitCount(p.getPieces(1))};
+		long[] hMoves = MoveList.generateHMoves(p.getPieces());
+		long[] vMoves = MoveList.generateVMoves(p.getPieces());
+		double[] moves = new double[MoveList.MOVE_TYPES * 2];
+		for(int i=0; i<MoveList.MOVE_TYPES; i+=2) {
+			moves[i] = Long.bitCount(hMoves[i]);
+			moves[i+1] = Long.bitCount(vMoves[i]);
+		}
+		return concat(numberPieces, moves);
 	}
 	
 	public static double[] bleedBoard(long[] pieces, Side s) {
@@ -110,5 +118,14 @@ public class Evaluation {
 			returnPieces[i] = vBytes.charAt(i) - hBytes.charAt(i);
 		}
 		return returnPieces;
+	}
+	
+	public static double[] concat(double[] a, double[] b) {
+	   int aLen = a.length;
+	   int bLen = b.length;
+	   double[] c = new double[aLen+bLen];
+	   System.arraycopy(a, 0, c, 0, aLen);
+	   System.arraycopy(b, 0, c, aLen, bLen);
+	   return c;
 	}
 }

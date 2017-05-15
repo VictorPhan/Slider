@@ -11,7 +11,7 @@ import neural_network.Evaluation;
 
 public class AIPlayer extends Player {
 	
-	public int MAX_DEPTH = 6;
+	public int MAX_DEPTH = 8;
 	char illegalMove;
 	boolean printMove = true;
 	public Evaluation e = new Evaluation();
