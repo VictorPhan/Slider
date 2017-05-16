@@ -6,8 +6,10 @@ import environment.Parse;
 import environment.Position;
 import environment.Side;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Evaluation class.
@@ -33,9 +35,14 @@ public class Evaluation {
 	public static final double H_WIN_SCORE = 1; //Double.POSITIVE_INFINITY;
 	public static final double V_WIN_SCORE = -1; //Double.NEGATIVE_INFINITY;
 	
+	/** A thought out arbitary number */
 	public static int s = 6;
+	/** The neural network responsible for training and utility */
 	public NeuralNetwork nn;
 	
+	/**
+	 * Constructor for evaluation
+	 */
 	public Evaluation() {
 		nn = new NeuralNetwork(s, s, s);
 	}
@@ -74,20 +81,41 @@ public class Evaluation {
 	}
 	
 	public static double[] metaInfo(Position p) {
-		long[] pieces = p.getPieces();
-		double[] numberPieces = {Long.bitCount(pieces[V])-Long.bitCount(pieces[H])};
+		if(Position.dimen > Position.BIG_INT_CASE){
+			BigInteger[] bigPieces = p.getBigPieces();
+			
+			double[] numberPieces = {bigPieces[V].bitCount() - bigPieces[H].bitCount()};
+			
+			BigInteger[] hMoves = MoveList.generateHMoves(bigPieces);
+			BigInteger[] vMoves = MoveList.generateVMoves(bigPieces);
+			
+			double[] moves = new double[MoveList.MOVE_TYPES];
+			
+			for(int i=0; i<MoveList.MOVE_TYPES; i++) {
+				moves[i] = hMoves[i].bitCount() - vMoves[i].bitCount();
+			}
+			
+			// Distance of all the pieces from the end
+			double[] hDist = {getDistanceV(bigPieces[V])-getDistanceH(bigPieces[H])};
+			return concat(concat(numberPieces, moves), hDist);
+			
+		} else {
+			long[] pieces = p.getPieces();
 		
-		long[] hMoves = MoveList.generateHMoves(pieces);
-		long[] vMoves = MoveList.generateVMoves(pieces);
+			double[] numberPieces = {Long.bitCount(pieces[V])-Long.bitCount(pieces[H])};
 		
-		double[] moves = new double[MoveList.MOVE_TYPES];
-		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
-			moves[i] = Long.bitCount(hMoves[i])-Long.bitCount(vMoves[i]);
+			long[] hMoves = MoveList.generateHMoves(pieces);
+			long[] vMoves = MoveList.generateVMoves(pieces);
+		
+			double[] moves = new double[MoveList.MOVE_TYPES];
+			for(int i=0; i<MoveList.MOVE_TYPES; i++) {
+				moves[i] = Long.bitCount(hMoves[i])-Long.bitCount(vMoves[i]);
+			}
+		
+			// Distance of all the pieces from the end
+			double[] hDist = {getDistanceV(pieces[V])-getDistanceH(pieces[H])};
+			return concat(concat(numberPieces, moves), hDist);
 		}
-		
-		// Distance of all the pieces from the end
-		double[] hDist = {getDistanceV(pieces[V])-getDistanceH(pieces[H])};
-		return concat(concat(numberPieces, moves), hDist);
 	}
 	
 	public static int getDistanceH(long h) {
@@ -105,6 +133,11 @@ public class Evaluation {
 		return distance;
 	}
 	
+	public static int getDistanceH(BigInteger h) {
+		return (Position.dimen * (Position.dimen - 1)) - 
+				ThreadLocalRandom.current().nextInt(0, 3);
+	}
+	
 	public static int getDistanceV(long v) {
 		int distance = 0;
 		while(v != 0) {
@@ -118,6 +151,10 @@ public class Evaluation {
 			distance += i/Position.dimen;
 		}
 		return distance;
+	}
+	
+	public static int getDistanceV(BigInteger h) {
+		return Position.dimen * (Position.dimen - 1);
 	}
 	
 	public static double[] bleedBoard(long[] pieces, Side s) {

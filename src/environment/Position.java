@@ -27,7 +27,11 @@ public class Position {
 	 * @return the new instance of the position, devoid of reference
 	 */
 	public Position copyPosition() {
-		return new Position(pieces.clone(), sidePlaying, gHistory.clone());
+		if(dimen >= BIG_INT_CASE){
+			return new Position(bigPieces.clone(), sidePlaying, gHistory.clone());
+		} else {
+			return new Position(pieces.clone(), sidePlaying, gHistory.clone());
+		}
 	}
 	
 	/**
@@ -131,7 +135,7 @@ public class Position {
 	 */
 	public void updateMoveList() {
 		if(ml==null) {
-			if(Position.dimen <= Position.BIG_INT_CASE) {
+			if(Position.dimen < Position.BIG_INT_CASE) {
 				ml = new MoveList(pieces, sidePlaying, dimen);
 			}
 			else {
@@ -218,7 +222,7 @@ public class Position {
 			throw new Error("Game state not in playing!");
 		}
 		// TOGGLED OFF FOR REFEREE //
-		swapPlayers();
+		//swapPlayers();
 	}
 	
 	/**
@@ -236,7 +240,7 @@ public class Position {
 			throw new Error("Game state not in playing!");
 		}
 		// TOGGLED OFF FOR REFEREE //
-		swapPlayers();
+		//swapPlayers();
 	}
 	
 	/**
@@ -250,6 +254,6 @@ public class Position {
 			sidePlaying = Side.H;
 		}
 		// TOGGLED OFF FOR REFEREE //
-		updateBoard(sidePlaying);
+		//updateBoard(sidePlaying);
 	}
 }

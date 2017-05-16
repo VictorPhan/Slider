@@ -36,7 +36,7 @@ public class AIPlayer extends Player {
 			setDepth(6);
 		}
 		// TOGGLED OFF FOR REFEREE //
-		e = new Evaluation();
+		//e = new Evaluation();
 	}
 	
 	public static void setDepth(int depth) {
@@ -370,7 +370,8 @@ public class AIPlayer extends Player {
 
 	@Override
 	public void update(Move move) {
-		Position updatePos = AIPlayerAdapter.moveToBitboard(move, curr).copyPosition();
+		Position updatePos = 
+				(AIPlayerAdapter.moveToBitboard(move, curr)).copyPosition();
 		curr = updatePos.copyPosition();
 		curr.updateBoard(curr.sidePlaying);
 	}
@@ -379,8 +380,7 @@ public class AIPlayer extends Player {
 	public Move move() {
 		Position prevBoard = curr.copyPosition();
 		makeMove(curr);
-		curr.updateBoard(curr.sidePlaying);
+		curr.updateBoard(curr.sidePlaying);	
 		return AIPlayerAdapter.bitboardToMove(curr, prevBoard, currentMove);
-		//return AIPlayerAdapter.bbMove(currentMove, curr);
 	}
 }

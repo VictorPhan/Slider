@@ -54,9 +54,15 @@ public class AIPlayerAdapter {
 		System.out.println(newX);
 		System.out.println(newY);
 		*/
-		char[] chessMove = move.toCharArray();
 		
-		if((chessMove[2] == PLUS) && (newP.sidePlaying == Side.H)) {
+		char[] chessMove;
+		try {
+			chessMove = move.toCharArray();
+		} catch (NullPointerException e){
+			return null;
+		}
+		
+		if((chessMove[2] == PLUS) && (prev.sidePlaying == Side.H)) {
 			d = Direction.RIGHT;
 		} else {
 			if((newX - x) == 1) {
@@ -75,48 +81,6 @@ public class AIPlayerAdapter {
 		//System.out.printf("%s PLAYING: ",newP.sidePlaying);
 		//System.out.printf("(%d, %d)",x, y);
 		//System.out.println(d);
-		Move newMove = new Move(x, y, d);
-		return newMove;
-	}
-	
-	public static Move bbMove(String bestMove, Position curr) {
-		
-		int x, y, newX, newY;
-		Direction d;
-		
-		char[] chessMove = bestMove.toCharArray(); 
-		
-		if(chessMove[2] == '+') {
-			x = chessMove[0]-97;
-			y = chessMove[1]-49;
-			if(curr.sidePlaying == Side.H){
-				d = Direction.RIGHT;
-			} else {
-				d = Direction.UP;
-			}
-			
-		} else {
-			y = chessMove[1]-49;
-			newY = chessMove[3]-49;
-			x = chessMove[0]-97;
-			newX = chessMove[2]-97;
-			
-			if((newX - x) == 1) {
-				d = Direction.RIGHT;
-			} else if((newX - x) == -1) {
-				d = Direction.LEFT;
-			} else if((newY - y) == 1) {
-				d = Direction.UP;
-			} else if((newY - y) == -1) {
-				d = Direction.DOWN;
-			} else {
-				return null;
-			}
-		}
-		
-		//System.out.printf("x:%d, y:%d, nx:%d, ny:%d\n", x, y, newX, newY);
-		//System.out.println(d);
-		
 		Move newMove = new Move(x, y, d);
 		return newMove;
 	}

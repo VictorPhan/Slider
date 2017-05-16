@@ -102,15 +102,12 @@ public class Parse {
 		Position board;
 		String reversedLine = "";
 		Side sidePlaying;
-		boolean first;
 		
 		if(side == 'H') {
 			sidePlaying = Side.H;
-			first = false;
 		}
 		else if(side == 'V') {
 			sidePlaying = Side.V;
-			first = true;
 		}
 		else {
 			throw new Error("Only the characters 'H' or 'V' are accepted as side playing input.");
@@ -126,7 +123,7 @@ public class Parse {
 		reversedLine = reversedLine.replaceAll("\\s+","");
 		
 		/* Checks the dimension of the board and decides type */
-		if(dimen > Position.BIG_INT_CASE){
+		if(dimen >= Position.BIG_INT_CASE){
 			BigInteger[] bigPieces;
 			bigPieces = fromRawStringBig(reversedLine);	
 			board = new Position(bigPieces, sidePlaying, dimen);
