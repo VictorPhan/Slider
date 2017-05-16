@@ -16,19 +16,22 @@ public class AIPlayer extends Player {
 	
 	public static int MAX_DEPTH = 3;
 	char illegalMove;
-	boolean printMove = false;
+	boolean printMove = true;
 	public Evaluation e;
 	public Position curr;
 	public String currentMove;
 	
 	public AIPlayer() {
-		if(Position.dimen == 5) {
+		if(Position.dimen == 4) {
+			setDepth(11);
+		}
+		else if(Position.dimen == 5) {
 			setDepth(8);
 		}
-		if(Position.dimen == 6) {
+		else if(Position.dimen == 6) {
 			setDepth(7);
 		}
-		if(Position.dimen == 7) {
+		else if(Position.dimen == 7) {
 			setDepth(6);
 		}
 	}

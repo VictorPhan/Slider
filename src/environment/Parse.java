@@ -126,7 +126,7 @@ public class Parse {
 		} else {
 			long[] pieces;
 			pieces = fromRawString(reversedLine);
-			board = new Position(pieces, sidePlaying, dimen, first);
+			board = new Position(pieces, sidePlaying, dimen);
 		}
 		return board;
 	}

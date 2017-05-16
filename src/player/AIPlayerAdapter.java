@@ -37,7 +37,7 @@ public class AIPlayerAdapter {
 		//System.out.println(String.format("%25s", Long.toBinaryString(prevState)).replace(' ', '0'));
 		//System.out.println(String.format("%25s", Long.toBinaryString(newState)).replace(' ', '0'));
 		
-		int removePadding = 64 - (Position.dimen*Position.dimen);
+		int removePadding = 64 - (Position.dimen * Position.dimen);
 		
 		index = Long.numberOfLeadingZeros(prevState) - removePadding;
 		y = (int)(index/Position.dimen);

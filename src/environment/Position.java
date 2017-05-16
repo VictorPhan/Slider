@@ -21,7 +21,6 @@ public class Position {
 	private long[] pieces = new long[PIECE_TYPES];
 	private BigInteger[] bigPieces = new BigInteger[PIECE_TYPES];
 	public GameHistory gHistory = new GameHistory();
-	public boolean firstPlayer;
 	
 	public Position copyPosition() {
 		return new Position(pieces.clone(), sidePlaying, gHistory.clone());
@@ -35,13 +34,6 @@ public class Position {
 	public Position(long[] pieces, Side sidePlaying, int dimen) {
 		Position.dimen = dimen;
 		this.pieces = pieces;
-		updateBoard(sidePlaying);
-	}
-	
-	public Position(long[] pieces, Side sidePlaying, int dimen, boolean first) {
-		Position.dimen = dimen;
-		this.pieces = pieces;
-		this.firstPlayer = first;
 		updateBoard(sidePlaying);
 	}
 	
@@ -145,10 +137,6 @@ public class Position {
 
 	public void setBigPieces(BigInteger[] bigPieces) {
 		this.bigPieces = bigPieces;
-	}
-	
-	public void setFirstPlayer(boolean playerOrder) {
-		this.firstPlayer = playerOrder;
 	}
 	
 	public void draw() {
