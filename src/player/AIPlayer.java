@@ -7,14 +7,19 @@ import environment.GameState;
 import environment.MoveList;
 import environment.Position;
 import environment.Side;
+import environment.Parse;
 import neural_network.Evaluation;
+import player.AIPlayerAdapter;
+import top_end.Move;
 
 public class AIPlayer extends Player {
 	
 	public static int MAX_DEPTH = 3;
 	char illegalMove;
-	boolean printMove = true;
-	public Evaluation e = new Evaluation();
+	boolean printMove = false;
+	public Evaluation e;
+	public Position curr;
+	public String currentMove;
 	
 	public AIPlayer() {
 		if(Position.dimen == 5) {
@@ -171,14 +176,16 @@ public class AIPlayer extends Player {
 				}
 			}
 			p.setCurrPieces(p.getCurrPieces());
-			GameHistory.addHistory("—");
+			GameHistory.addHistory("-");
 			return 0;
+
 		}
 		
 		// Otherwise run alpha beta algorithm
 		Action bestAction = alphaBeta(p);
 		Action.supplyAction(p, bestAction);
 		String move = bestAction.toString(p.sidePlaying);
+		currentMove = move;
 		
 		if(printMove == true) {
 			System.out.println(bestAction.score);
@@ -297,4 +304,28 @@ public class AIPlayer extends Player {
 		printMove = b;
 	}
 
+	@Override
+	public void init(int dimension, String board, char player) {
+		curr = Parse.parseBoard(dimension, player, board);
+		e = new Evaluation();
+	}
+
+	@Override
+	public void update(Move move) {
+		Position updatePos = AIPlayerAdapter.moveToBitboard(move, curr).copyPosition();
+		curr = updatePos.copyPosition();
+		System.out.println("SUCCESS!");
+		curr.draw();
+		
+		curr.updateBoard(curr.sidePlaying);
+	}
+
+	@Override
+	public Move move() {
+		Position prevBoard = curr.copyPosition();
+		makeMove(curr);
+		curr.updateBoard(curr.sidePlaying);
+		return AIPlayerAdapter.bitboardToMove(curr, prevBoard);
+		//return AIPlayerAdapter.bbMove(currentMove, curr);
+	}
 }

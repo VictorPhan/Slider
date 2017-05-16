@@ -85,6 +85,53 @@ public class Parse {
 	}
 	
 	/**
+	 * Constructor with new referee class
+	 * @param dimen
+	 * @param side
+	 * @return
+	 */
+	public static Position parseBoard(int dimen, char side, String initPos) {
+		
+		Position board;
+		String reversedLine = "";
+		Side sidePlaying;
+		boolean first;
+		
+		if(side == 'H') {
+			sidePlaying = Side.H;
+			first = false;
+		}
+		else if(side == 'V') {
+			sidePlaying = Side.V;
+			first = true;
+		}
+		else {
+			throw new Error("Only the characters 'H' or 'V' are accepted as side playing input.");
+		}
+		
+		/* 
+		 * Gets each line info on the board and makes 
+		 * a single String from that.
+		 */
+		for(String line : initPos.split("\n")){
+			reversedLine = line + reversedLine;
+		}
+		reversedLine = reversedLine.replaceAll("\\s+","");
+		
+		/* Checks the dimension of the board and decides type */
+		if(dimen > Position.BIG_INT_CASE){
+			BigInteger[] bigPieces;
+			bigPieces = fromRawString2(reversedLine);	
+			board = new Position(bigPieces, sidePlaying, dimen);
+		} else {
+			long[] pieces;
+			pieces = fromRawString(reversedLine);
+			board = new Position(pieces, sidePlaying, dimen, first);
+		}
+		return board;
+	}
+	
+	/**
 	 * Converts a raw input string into the long [] bitboards
 	 * @param line
 	 * @return

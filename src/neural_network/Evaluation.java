@@ -33,11 +33,13 @@ public class Evaluation {
 	public static final double H_WIN_SCORE = 1; //Double.POSITIVE_INFINITY;
 	public static final double V_WIN_SCORE = -1; //Double.NEGATIVE_INFINITY;
 	
-	// input size
-	static int s = 6;
+	public static int s = 6;
+	public NeuralNetwork nn;
 	
-	public NeuralNetwork nn = new NeuralNetwork(s, s, s);
-	
+	public Evaluation() {
+		nn = new NeuralNetwork(s, s, s);
+	}
+
 	public double evaluate(Position p) {
 		if (p.gs == GameState.DRAW) {
 			return 0;

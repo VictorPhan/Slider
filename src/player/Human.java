@@ -6,6 +6,7 @@ import environment.Parse;
 import environment.Position;
 import environment.Side;
 import exceptions.InvalidMoveException;
+import top_end.Move;
 
 public class Human extends Player {
 	
@@ -15,6 +16,7 @@ public class Human extends Player {
 	int L = 2;
 	int O = 3;
 	char illegalMove;
+	public Position curr;
 	
 	public boolean checkPass(long[] ml) {
 		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
@@ -35,7 +37,7 @@ public class Human extends Player {
 				System.out.println("V player move: Pass");
 			}
 			p.swapPlayers();
-			GameHistory.addHistory("—");
+			GameHistory.addHistory("-");
 			return 0;
 		}
 		
@@ -96,4 +98,21 @@ public class Human extends Player {
 		return 0;
 	}
 
+	@Override
+	public void init(int dimension, String board, char player) {
+		Parse.initScan();
+		curr = Parse.parseBoard(dimension, player, board);
+	}
+
+	@Override
+	public void update(Move move) {
+		AIPlayerAdapter.moveToBitboard(move, curr);
+	}
+
+	@Override
+	public Move move() {
+		Position prevBoard = curr;
+		makeMove(curr);
+		return AIPlayerAdapter.bitboardToMove(curr, prevBoard);
+	}
 }
