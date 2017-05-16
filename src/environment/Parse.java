@@ -92,22 +92,20 @@ public class Parse {
 	 */
 	public static Position parseBoard(int dimen, char side, String initPos) {
 		
-		if(s == null) {
-			throw new Error("Scanner not initialised");
-		}
-		
 		Position board;
 		String reversedLine = "";
 		Side sidePlaying;
+		boolean first;
 		
 		if(side == 'H') {
 			sidePlaying = Side.H;
+			first = false;
 		}
 		else if(side == 'V') {
 			sidePlaying = Side.V;
+			first = true;
 		}
 		else {
-			s.close();
 			throw new Error("Only the characters 'H' or 'V' are accepted as side playing input.");
 		}
 		
@@ -128,7 +126,7 @@ public class Parse {
 		} else {
 			long[] pieces;
 			pieces = fromRawString(reversedLine);
-			board = new Position(pieces, sidePlaying, dimen);
+			board = new Position(pieces, sidePlaying, dimen, first);
 		}
 		return board;
 	}

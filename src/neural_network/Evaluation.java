@@ -33,9 +33,13 @@ public class Evaluation {
 	public static final double H_WIN_SCORE = 10; //Double.POSITIVE_INFINITY;
 	public static final double V_WIN_SCORE = -10; //Double.NEGATIVE_INFINITY;
 	
-	static int s = Position.dimen * Position.dimen + 1;
+	public static int s;
+	public NeuralNetwork nn;
 	
-	public NeuralNetwork nn = new NeuralNetwork(s, s, s);
+	public Evaluation() {
+		s = Position.dimen * Position.dimen + 1;
+		nn = new NeuralNetwork(s, s, s);
+	}
 		
 	public double evaluate(Position p) {
 		if (p.gs == GameState.DRAW) {

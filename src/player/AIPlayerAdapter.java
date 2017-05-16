@@ -1,5 +1,6 @@
 package player;
 
+import environment.Parse;
 import environment.Position;
 import environment.Side;
 import top_end.Move;
@@ -20,30 +21,35 @@ public class AIPlayerAdapter {
 	 */
 	public static Move bitboardToMove(Position newP, Position prev) {
 		long diff, prevState, newState;
+		int index, newIndex, x, y, newX, newY;
 		Direction d;
+				
+		System.out.printf("PLAYER %s TURN!\n", newP.sidePlaying);
+		System.out.println(String.format("%16s", Long.toBinaryString(prev.getCurrPieces())).replace(' ', '0'));
+		System.out.println(String.format("%16s", Long.toBinaryString(newP.getCurrPieces())).replace(' ', '0'));
 		
-		if(prev.sidePlaying == Side.H) {
-			diff = newP.getPieces()[1] ^ prev.getPieces()[1];
-			diff = ~diff;
-			prevState = diff & prev.getPieces()[1];
-			newState = diff & newP.getPieces()[1];
-		} else if (prev.sidePlaying == Side.V) {
-			diff = newP.getPieces()[0] ^ prev.getPieces()[0];
-			diff = ~diff;
-			prevState = diff & prev.getPieces()[0];
-			newState = diff & newP.getPieces()[0];
-		} else {
-			throw new Error("Board ERROR");
-		}
+		diff = newP.getCurrPieces() ^ prev.getCurrPieces();
+		prevState = diff & prev.getCurrPieces();
+		newState = diff & newP.getCurrPieces();
 		
-		int index = Long.numberOfLeadingZeros(prevState);
-		int y = (int) Math.floor(index / Position.dimen);
-		int x = Long.numberOfLeadingZeros(prevState << y*Position.dimen);
+		int removePadding = (64 / (Position.dimen * Position.dimen)) - 1;
+		removePadding *= Position.dimen*Position.dimen;
 		
-		int newIndex = Long.numberOfLeadingZeros(newState);
-		int newY = (int) Math.floor(newIndex / Position.dimen);
-		int newX = Long.numberOfLeadingZeros(prevState << y*Position.dimen);
+		index = Long.numberOfLeadingZeros(prevState) - removePadding;
+		y = (int)(index/Position.dimen);
+		x = index - (y * Position.dimen);
 		
+		newIndex = Long.numberOfLeadingZeros(newState) - removePadding;
+		newY = (int) Math.floor(newIndex / Position.dimen);
+		newX = newIndex - (newY * Position.dimen);
+		/*
+		System.out.println(index);
+		System.out.println(x);
+		System.out.println(y);
+		System.out.println(newIndex);
+		System.out.println(newX);
+		System.out.println(newY);
+		*/
 		if((newX - x) == 1) {
 			d = Direction.RIGHT;
 		} else if((newX - x) == -1) {
@@ -53,8 +59,58 @@ public class AIPlayerAdapter {
 		} else if((newY - y) == -1) {
 			d = Direction.DOWN;
 		} else {
-			throw new Error("Move direction ERROR");
+			return null;
 		}
+		
+		System.out.printf("%s PLAYING: ",newP.sidePlaying);
+		System.out.printf("(%d, %d)",x, y);
+		System.out.println(d);
+		Move newMove = new Move(x, y, d);
+		return newMove;
+	}
+	
+	public static Move bbMove(String bestMove, Position curr) {
+		
+		int x, y, newX, newY;
+		Direction d;
+		
+		char[] chessMove = bestMove.toCharArray(); 
+		
+		if(chessMove[2] == '+') {
+			x = chessMove[0]-97;
+			y = chessMove[1]-49;
+			System.out.println(curr.sidePlaying);
+			if(curr.sidePlaying == Side.H){
+				d = Direction.RIGHT;
+				newX = x+1;
+				newY = y;
+			} else {
+				d = Direction.UP;
+				newX = x;
+				newY = y+1;
+			}
+			
+		} else {
+			y = chessMove[1]-49;
+			newY = chessMove[3]-49;
+			x = chessMove[0]-97;
+			newX = chessMove[2]-97;
+			
+			if((newX - x) == 1) {
+				d = Direction.RIGHT;
+			} else if((newX - x) == -1) {
+				d = Direction.LEFT;
+			} else if((newY - y) == 1) {
+				d = Direction.UP;
+			} else if((newY - y) == -1) {
+				d = Direction.DOWN;
+			} else {
+				return null;
+			}
+		}
+		
+		System.out.printf("x:%d, y:%d, nx:%d, ny:%d\n", x, y, newX, newY);
+		System.out.println(d);
 		
 		Move newMove = new Move(x, y, d);
 		return newMove;
@@ -71,10 +127,23 @@ public class AIPlayerAdapter {
 		if(move == null){
 			return curr;
 		}
-		long newMove = 0L;
-		System.out.println(move.i);
-		newMove = newMove ^ (1L << move.i);
-		newMove = newMove << (Position.dimen * move.j);
+		
+		System.out.printf("(%d, %d)",move.i, move.j);
+		System.out.println(move.d);
+		
+		Position updatedBoard = curr.copyPosition();
+		//curr.swapPlayers();
+		updatedBoard.swapPlayers();
+		
+		long newMove = Parse.pow(2, Position.dimen*Position.dimen - 1);
+		System.out.println(String.format("%16s", Long.toBinaryString(updatedBoard.getCurrPieces())).replace(' ', '0'));
+		
+		newMove = newMove >> move.i;
+		newMove = newMove >> (Position.dimen * move.j);
+		long original = newMove;
+		System.out.println("OG POSITION: ");
+		System.out.println(String.format("%16s", Long.toBinaryString(original)).replace(' ', '0'));
+		
 		if(move.d == Direction.RIGHT) {
 			newMove = newMove >>> 1;
 		} else if(move.d == Direction.LEFT) {
@@ -87,13 +156,18 @@ public class AIPlayerAdapter {
 			throw new Error("Move direction ERROR");
 		}
 		
-		if(curr.sidePlaying == Side.H) {
-			newMove = curr.getPieces()[1] | newMove;
-		} else {
-			newMove = curr.getPieces()[0] | newMove;
-		}
+		System.out.println("NEW MOVE: ");
+		System.out.println(String.format("%16s", Long.toBinaryString(newMove)).replace(' ', '0'));
 		
-		curr.setCurrPieces(newMove);
-		return curr;
+		newMove = (updatedBoard.getCurrPieces() | newMove) ^ original;
+		System.out.println("NEW MOVE WITH BOARD: ");
+		System.out.println(String.format("%16s", Long.toBinaryString(newMove)).replace(' ', '0'));
+		
+		//System.out.println(String.format("%16s", Long.toBinaryString(curr.getCurrPieces())).replace(' ', '0'));
+		updatedBoard.setCurrPieces(newMove);
+		updatedBoard.swapPlayers();
+		System.out.printf("%s UPDATING: \n", curr.sidePlaying);
+		updatedBoard.draw();
+		return updatedBoard;
 	}
 }

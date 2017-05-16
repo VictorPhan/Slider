@@ -7,7 +7,7 @@ import types.MutableInteger;
 
 public class GameHistory {
 	
-	static String moveHistory = "";
+	public static String moveHistory = "";
 	public HashMap<ArrayList<Long>, MutableInteger> positionCounter = 
 			new HashMap<ArrayList<Long>, MutableInteger>();
 	private static int threeFoldCase = 3;

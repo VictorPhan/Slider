@@ -16,11 +16,13 @@ public class AIPlayer extends Player {
 	
 	public int MAX_DEPTH = 6;
 	char illegalMove;
-	boolean printMove = true;
-	public Evaluation e = new Evaluation();
+	boolean printMove;
+	public Evaluation e;
 	public Position curr;
+	public String currentMove;
 	
 	public AIPlayer() {
+		this.printMove = true;
 	}
 	
 	public boolean checkPass(long[] ml) {
@@ -167,6 +169,7 @@ public class AIPlayer extends Player {
 		Action bestAction = alphaBeta(p);
 		Action.supplyAction(p, bestAction);
 		String move = bestAction.toString(p.sidePlaying);
+		currentMove = move;
 		
 		if(printMove == true) {
 			System.out.println(bestAction.score);
@@ -177,7 +180,6 @@ public class AIPlayer extends Player {
 				System.out.println("V player move: " + move);
 			}
 		}
-		curr = p;
 		GameHistory.addHistory(move);
 		return bestAction.score;
 	}
@@ -280,17 +282,25 @@ public class AIPlayer extends Player {
 	@Override
 	public void init(int dimension, String board, char player) {
 		curr = Parse.parseBoard(dimension, player, board);
+		e = new Evaluation();
 	}
 
 	@Override
 	public void update(Move move) {
-		curr = AIPlayerAdapter.moveToBitboard(move, curr);
+		Position updatePos = AIPlayerAdapter.moveToBitboard(move, curr).copyPosition();
+		curr = updatePos.copyPosition();
+		System.out.println("SUCCESS!");
+		curr.draw();
+		
+		curr.updateBoard(curr.sidePlaying);
 	}
 
 	@Override
 	public Move move() {
-		Position prevBoard = curr;
+		Position prevBoard = curr.copyPosition();
 		makeMove(curr);
+		curr.updateBoard(curr.sidePlaying);
 		return AIPlayerAdapter.bitboardToMove(curr, prevBoard);
+		//return AIPlayerAdapter.bbMove(currentMove, curr);
 	}
 }

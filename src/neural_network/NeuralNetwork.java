@@ -2,8 +2,6 @@ package neural_network;
 
 import java.util.ArrayList;
 
-import environment.Position;
-
 public class NeuralNetwork {
 	/* The modalities of the input to the first hidden layer—
 	 * global, piece-centric and square-centric features,

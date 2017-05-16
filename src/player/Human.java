@@ -16,6 +16,7 @@ public class Human extends Player {
 	int L = 2;
 	int O = 3;
 	char illegalMove;
+	public Position curr;
 	
 	public boolean checkPass(long[] ml) {
 		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
@@ -36,7 +37,7 @@ public class Human extends Player {
 				System.out.println("V player move: Pass");
 			}
 			p.swapPlayers();
-			GameHistory.addHistory("—");
+			GameHistory.addHistory("-");
 			return 0;
 		}
 		
@@ -99,19 +100,19 @@ public class Human extends Player {
 
 	@Override
 	public void init(int dimension, String board, char player) {
-		// TODO Auto-generated method stub
-		
+		Parse.initScan();
+		curr = Parse.parseBoard(dimension, player, board);
 	}
 
 	@Override
 	public void update(Move move) {
-		// TODO Auto-generated method stub
-		
+		AIPlayerAdapter.moveToBitboard(move, curr);
 	}
 
 	@Override
 	public Move move() {
-		// TODO Auto-generated method stub
-		return null;
+		Position prevBoard = curr;
+		makeMove(curr);
+		return AIPlayerAdapter.bitboardToMove(curr, prevBoard);
 	}
 }

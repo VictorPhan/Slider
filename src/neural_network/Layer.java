@@ -1,6 +1,8 @@
 package neural_network;
 
 import java.util.Arrays;
+
+import environment.Position;
 import jeigen.DenseMatrix;
 
 public class Layer {
