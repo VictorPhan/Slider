@@ -1,5 +1,7 @@
 package playerTBVP;
 
+import java.math.BigInteger;
+
 import environment.Parse;
 import environment.Position;
 import environment.Side;
@@ -104,39 +106,67 @@ public class AIPlayerAdapter {
 		Position updatedBoard = curr.copyPosition();
 		updatedBoard.swapPlayers();
 		
-		long newMove = Parse.pow(2, Position.dimen*Position.dimen - 1);
-		//System.out.println(String.format("%25s", Long.toBinaryString(updatedBoard.getCurrPieces())).replace(' ', '0'));
+		if(Position.dimen < Position.BIG_INT_CASE){
+			long newMove = Parse.pow(2, Position.dimen*Position.dimen - 1);
+			//System.out.println(String.format("%25s", Long.toBinaryString(updatedBoard.getCurrPieces())).replace(' ', '0'));
 		
-		newMove = newMove >> move.i;
-		newMove = newMove >> (Position.dimen * move.j);
-		long original = newMove;
-		//System.out.println("OG POSITION: ");
-		//System.out.println(String.format("%25s", Long.toBinaryString(original)).replace(' ', '0'));
+			newMove = newMove >> move.i;
+			newMove = newMove >> (Position.dimen * move.j);
+			long original = newMove;
+			//System.out.println("OG POSITION: ");
+			//System.out.println(String.format("%25s", Long.toBinaryString(original)).replace(' ', '0'));
 		
-		if(move.d == Direction.RIGHT) {
-			newMove = newMove >>> 1;
-		} else if(move.d == Direction.LEFT) {
-			newMove = newMove << 1;
-		} else if(move.d == Direction.UP) {
-			newMove = newMove >>> Position.dimen;
-		} else if(move.d == Direction.DOWN) {
-			newMove = newMove << Position.dimen;
+			if(move.d == Direction.RIGHT) {
+				newMove = newMove >>> 1;
+			} else if(move.d == Direction.LEFT) {
+				newMove = newMove << 1;
+			} else if(move.d == Direction.UP) {
+				newMove = newMove >>> Position.dimen;
+			} else if(move.d == Direction.DOWN) {
+				newMove = newMove << Position.dimen;
+			} else {
+				throw new Error("Move direction ERROR");
+			}
+		
+			//System.out.println("NEW MOVE: ");
+			//System.out.println(String.format("%25s", Long.toBinaryString(newMove)).replace(' ', '0'));
+		
+			newMove = (updatedBoard.getCurrPieces() | newMove) ^ original;
+			//System.out.println("NEW MOVE WITH BOARD: ");
+			//System.out.println(String.format("%25s", Long.toBinaryString(newMove)).replace(' ', '0'));
+		
+			//System.out.println(String.format("%16s", Long.toBinaryString(curr.getCurrPieces())).replace(' ', '0'));
+			updatedBoard.setCurrPieces(newMove);
+			updatedBoard.swapPlayers();
+			//System.out.printf("%s UPDATING: \n", curr.sidePlaying);
+			//updatedBoard.draw();
+			return updatedBoard;
 		} else {
-			throw new Error("Move direction ERROR");
+			
+			BigInteger newMove = Parse.bigPow(2, Position.dimen*Position.dimen - 1);
+			
+			newMove = newMove.shiftRight(move.i);
+			newMove = newMove.shiftRight(Position.dimen * move.j);
+			BigInteger original = newMove;
+			
+			if(move.d == Direction.RIGHT) {
+				newMove = newMove.shiftRight(1);
+			} else if(move.d == Direction.LEFT) {
+				newMove = newMove.shiftLeft(1);
+			} else if(move.d == Direction.UP) {
+				newMove = newMove.shiftRight(Position.dimen);
+			} else if(move.d == Direction.DOWN) {
+				newMove = newMove.shiftLeft(Position.dimen);
+			} else {
+				throw new Error("Move direction ERROR");
+			}
+			
+			newMove = (updatedBoard.getBigCurrPieces().or(newMove)).xor(original);
+			
+			updatedBoard.setCurrPieces(newMove);
+			updatedBoard.swapPlayers();
+			
+			return updatedBoard;
 		}
-		
-		//System.out.println("NEW MOVE: ");
-		//System.out.println(String.format("%25s", Long.toBinaryString(newMove)).replace(' ', '0'));
-		
-		newMove = (updatedBoard.getCurrPieces() | newMove) ^ original;
-		//System.out.println("NEW MOVE WITH BOARD: ");
-		//System.out.println(String.format("%25s", Long.toBinaryString(newMove)).replace(' ', '0'));
-		
-		//System.out.println(String.format("%16s", Long.toBinaryString(curr.getCurrPieces())).replace(' ', '0'));
-		updatedBoard.setCurrPieces(newMove);
-		updatedBoard.swapPlayers();
-		//System.out.printf("%s UPDATING: \n", curr.sidePlaying);
-		//updatedBoard.draw();
-		return updatedBoard;
 	}
 }

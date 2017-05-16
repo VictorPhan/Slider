@@ -442,4 +442,16 @@ public class Parse {
 		return result;
 	}
 	
+	/**
+	 * Integer power, more efficient than using Math.pow as it avoids
+	 * the double type operations
+	 */
+	public static BigInteger bigPow(int a, int b) {
+		BigInteger result = BigInteger.ONE;
+		for(int i = 0; i < b; i++) {
+			result = result.multiply(BigInteger.valueOf(a));
+		}
+		return result;
+	}
+	
 }
