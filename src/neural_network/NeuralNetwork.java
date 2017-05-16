@@ -13,7 +13,7 @@ public class NeuralNetwork {
 	public Layer H1;
 	public Layer H2;
 	public Layer OUT;
-	public boolean preset = false;
+	public static boolean preset;
 	
 	public NeuralNetwork(int s, int h1, int h2) {
 		if(preset) {
@@ -59,6 +59,10 @@ public class NeuralNetwork {
 		tensor.add(0, H2.output(concat(tensor.get(0), bias)));
 		tensor.add(0, OUT.outputTanh(concat(tensor.get(0), bias)));
 		return tensor;
+	}
+	
+	public static void setPreset(boolean p) {
+		preset = p;
 	}
 	
 }

@@ -160,7 +160,7 @@ public class AIPlayer extends Player {
 			return 0;
 		}
 		
-		// TODO: include transposition tables
+		// Otherwise run alpha beta algorithm
 		Action bestAction = alphaBeta(p);
 		Action.supplyAction(p, bestAction);
 		String move = bestAction.toString(p.sidePlaying);
@@ -200,6 +200,9 @@ public class AIPlayer extends Player {
 		return null; // will return error. this line shouldn't be reached.
 	}
 	
+	/*
+	 * Maximising choice in alpha beta search.
+	 */
 	public double maxValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
 			return e.evaluate(p);
@@ -232,6 +235,9 @@ public class AIPlayer extends Player {
 		return v;
 	}
 	
+	/*
+	 * Minimising choice in alpha beta
+	 */
 	public double minValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
 			return e.evaluate(p);
@@ -248,15 +254,18 @@ public class AIPlayer extends Player {
 				return v;
 			}
 		}
-		for(Action a : actions) {
-			Position newPos = Action.applyAction(p, a);
-			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
-			v = Math.min(v, maxValue(newPos, newActions, depth + 1, alpha, beta));
-			a.score = v;
-			beta = Math.min(beta, v);
-			if(beta <= alpha) {
+		else {
+		// for each possible action, apply maximising on those actions
+			for(Action a : actions) {
+				Position newPos = Action.applyAction(p, a);
+				ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+				v = Math.min(v, maxValue(newPos, newActions, depth + 1, alpha, beta));
 				a.score = v;
-				return v;
+				beta = Math.min(beta, v);
+				if(beta <= alpha) {
+					a.score = v;
+					return v;
+				}
 			}
 		}
 		return v;

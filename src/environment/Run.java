@@ -4,6 +4,9 @@ import player.AIPlayer;
 import player.Human;
 import player.Player;
 
+/*
+ * Run class to play a single game between chosen players
+ */
 public class Run {
 	
 	public static void main(String[] args) {
