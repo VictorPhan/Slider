@@ -16,6 +16,7 @@ public class AIPlayer extends Player {
 	
 	public static int MAX_DEPTH = 8;
 	char illegalMove;
+	/** The move made print */
 	boolean printMove = true;
 	public Evaluation e;
 	public Position curr;
@@ -42,6 +43,11 @@ public class AIPlayer extends Player {
 		MAX_DEPTH = depth;
 	}
 	
+	/**
+	 * Checks if the previous move is a pass
+	 * @param ml list of moves
+	 * @return whether it is true or not
+	 */
 	public boolean checkPass(long[] ml) {
 		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
 			if(Long.bitCount(ml[i])!=0) {
@@ -51,6 +57,12 @@ public class AIPlayer extends Player {
 		return true;
 	}
 	
+	/**
+	 * The machine learning version of alpha beta
+	 * @param p the current position
+	 * @param loud
+	 * @return the utility values for the network
+	 */
 	public ArrayList<double[]> makeMoveLearn(Position p, boolean loud) {
 		// Check if position is won
 		if(p.gs != GameState.PLAYING) {
@@ -74,6 +86,11 @@ public class AIPlayer extends Player {
 		return bestAction.nnTensor;
 	}
 	
+	/**
+	 * The machine learning version of alpha beta
+	 * @param p the current position
+	 * @return direction and the bitboard for the corresponding move
+	 */
 	private Action alphaBetaLearn(Position p) {
 		ArrayList<Action> actions = Action.generateActions(p.ml.moves);
 		double v;
@@ -96,6 +113,15 @@ public class AIPlayer extends Player {
 		return null; // will return error. this line shouldn't be reached.
 	}
 
+	/**
+	 * The machine learning version of max value
+	 * @param p the current position
+	 * @param actions list of possible actions
+	 * @param depth current depth
+	 * @param alpha 
+	 * @param beta
+	 * @return max value representing the opponent's best move
+	 */
 	public ArrayList<double[]> maxValueLearn(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
 			return e.evaluateLearn(p);
@@ -129,6 +155,15 @@ public class AIPlayer extends Player {
 		return v;
 	}
 	
+	/**
+	 * The machine learning version of min value
+	 * @param p the current position
+	 * @param actions list of possible actions
+	 * @param depth current depth
+	 * @param alpha 
+	 * @param beta
+	 * @return min value representing the opponent's best move
+	 */
 	public ArrayList<double[]> minValueLearn(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
 			return e.evaluateLearn(p);
@@ -206,9 +241,9 @@ public class AIPlayer extends Player {
 	}
 	
 	/**
-	 * Returns a long[] containing respectively the direction and the bitboard for the corresponding move
-	 * @param p
-	 * @return
+	 * Applies alpha beta on the search
+	 * @param p the current position
+	 * @return direction and the bitboard for the corresponding move
 	 */
 	public Action alphaBeta(Position p) {
 		ArrayList<Action> actions = Action.generateActions(p.ml.moves);
@@ -227,8 +262,14 @@ public class AIPlayer extends Player {
 		return null; // will return error. this line shouldn't be reached.
 	}
 	
-	/*
+	/**
 	 * Maximising choice in alpha beta search.
+	 * @param p the current position
+	 * @param actions list of possible actions
+	 * @param depth current depth
+	 * @param alpha
+	 * @param beta
+	 * @return max value representing the opponent's best move
 	 */
 	public double maxValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
@@ -262,8 +303,14 @@ public class AIPlayer extends Player {
 		return v;
 	}
 	
-	/*
-	 * Minimising choice in alpha beta
+	/**
+	 * Minimising choice in alpha beta search.
+	 * @param p the current position
+	 * @param actions list of possible actions
+	 * @param depth current depth
+	 * @param alpha 
+	 * @param beta
+	 * @return min value representing the opponent's best move
 	 */
 	public double minValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
@@ -298,6 +345,12 @@ public class AIPlayer extends Player {
 		return v;
 	}
 
+	/**
+	 * The cut off test for the search algorithm
+	 * @param p the current position
+	 * @param depth current depth
+	 * @return whether it should be cut off or not
+	 */
 	private boolean cutOffTest(Position p, int depth) {
 		if(p.gs != GameState.PLAYING || depth >= MAX_DEPTH) {
 			return true;

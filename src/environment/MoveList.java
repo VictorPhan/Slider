@@ -85,13 +85,41 @@ public class MoveList {
 	}
 	
 	/**
-	 * CHeck for a draw in the position
+	 * Updates the moveList attributes to the latest board position
+	 */
+	public void updateMoveList(BigInteger[] bigPieces, Side sidePlaying) {
+		if(sidePlaying == Side.H) {
+			bigMoves = generateHMoves(bigPieces);
+		}
+		else if (sidePlaying == Side.V) {
+			bigMoves = generateVMoves(bigPieces);
+		}
+	}
+	
+	/**
+	 * Check for a draw in the position
+	 * @param pieces the pieces on the board
 	 */
 	public static boolean checkDraw(long[] pieces) {
 		long[] hm = generateHMoves(pieces);
 		long[] vm = generateVMoves(pieces);
 		for(int i=0; i<MOVE_TYPES; i++) {
-			if(Long.bitCount(hm[i])!=0 || Long.bitCount(vm[i])!=0) {
+			if(Long.bitCount(hm[i]) != 0 || Long.bitCount(vm[i]) != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Check for a draw in the position for n > 8
+	 * @param bigPieces the pieces on the board (big int)
+	 */
+	public static boolean checkDraw(BigInteger[] bigPieces) {
+		BigInteger[] hm = generateHMoves(bigPieces);
+		BigInteger[] vm = generateVMoves(bigPieces);
+		for(int i=0; i<MOVE_TYPES; i++) {
+			if(hm[i].bitCount() != 0 || vm[i].bitCount() != 0) {
 				return false;
 			}
 		}
@@ -100,8 +128,8 @@ public class MoveList {
 	
 	/**
 	 * Generate all the possible moves for the V pieces.
-	 * @param pieces
-	 * @return
+	 * @param pieces the pieces on the board
+	 * @return all possible moves for V
 	 */
 	public static long [] generateVMoves(long[] pieces) {
 		long occupied = pieces[B] | pieces[V] | pieces[H];
@@ -113,6 +141,11 @@ public class MoveList {
 		return vm;
 	}
 	
+	/**
+	 * Generate all the possible moves for the V pieces for n > 8
+	 * @param pieces the pieces on the board (big int)
+	 * @return all possible moves for V
+	 */
 	public static BigInteger [] generateVMoves(BigInteger[] pieces) {
 		BigInteger bigOccupied = pieces[B].or(pieces[V]).or(pieces[H]);
 		BigInteger[] vm = new BigInteger[MOVE_TYPES];
@@ -128,8 +161,8 @@ public class MoveList {
 	
 	/**
 	 * Generate all the possible moves for the H pieces.
-	 * @param pieces
-	 * @return
+	 * @param pieces the pieces on the board
+	 * @return all possible moves for H
 	 */
 	public static long [] generateHMoves(long[] pieces) {
 		long occupied = pieces[B] | pieces[V] | pieces[H];
@@ -141,6 +174,11 @@ public class MoveList {
 		return hm;
 	}
 	
+	/**
+	 * Generate all the possible moves for the H pieces for n > 8
+	 * @param pieces the pieces on the board (big int)
+	 * @return all possible moves for H
+	 */
 	public static BigInteger [] generateHMoves(BigInteger[] pieces) {
 		BigInteger bigOccupied = pieces[B].or(pieces[V]).or(pieces[H]);
 		BigInteger[] hm = new BigInteger[MOVE_TYPES];
@@ -156,7 +194,7 @@ public class MoveList {
 	
 	/**
 	 * Generates leftCol, rightCol and topRow bitboards
-	 * @param dimen
+	 * @param dimen the dimension of the board
 	 */
 	private void generateUsefulBitboards(int dimen) {
 		/**

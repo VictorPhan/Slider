@@ -80,7 +80,7 @@ public class Parse {
 		/* Checks the dimension of the board and decides type */
 		if(dimen > Position.BIG_INT_CASE){
 			BigInteger[] bigPieces;
-			bigPieces = fromRawString2(line);	
+			bigPieces = fromRawStringBig(line);	
 			board = new Position(bigPieces, sidePlaying, dimen);
 		} else {
 			long[] pieces;
@@ -128,7 +128,7 @@ public class Parse {
 		/* Checks the dimension of the board and decides type */
 		if(dimen > Position.BIG_INT_CASE){
 			BigInteger[] bigPieces;
-			bigPieces = fromRawString2(reversedLine);	
+			bigPieces = fromRawStringBig(reversedLine);	
 			board = new Position(bigPieces, sidePlaying, dimen);
 		} else {
 			long[] pieces;
@@ -184,7 +184,7 @@ public class Parse {
 	 * @param line
 	 * @return
 	 */
-	public static BigInteger[] fromRawString2(String line) {
+	public static BigInteger[] fromRawStringBig(String line) {
 		BigInteger[] bigPieces = new BigInteger[Position.PIECE_TYPES];
 		String vPieces = "";
 		String hPieces = "";

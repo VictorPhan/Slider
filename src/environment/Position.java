@@ -22,6 +22,10 @@ public class Position {
 	private BigInteger[] bigPieces = new BigInteger[PIECE_TYPES];
 	public GameHistory gHistory = new GameHistory();
 	
+	/**
+	 * Clones the position attached to the method
+	 * @return the new instance of the position, devoid of reference
+	 */
 	public Position copyPosition() {
 		return new Position(pieces.clone(), sidePlaying, gHistory.clone());
 	}
@@ -68,6 +72,28 @@ public class Position {
 	 */
 	public Position(BigInteger[] bigPieces, Side sidePlaying, int dimen) {
 		Position.dimen = dimen;
+		this.bigPieces = bigPieces;
+		updateBoard(sidePlaying);
+	}
+	
+	/**
+	 * Constructor for when cloning and need to keep the state for n > 8
+	 * @param bigPieces the pieces at the beginning of the board (big int)
+	 * @param sidePlaying the side that this player is on
+	 * @param gh the history of the game played so far
+	 */
+	public Position(BigInteger [] bigPieces, Side sidePlaying, GameHistory gh) {
+		this.bigPieces = bigPieces;
+		this.gHistory = gh;
+		updateBoard(sidePlaying);
+	}
+	
+	/**
+	 * Constructor when playing the game for n > 8
+	 * @param bigPieces the pieces at the beginning of the board (big int)
+	 * @param sidePlaying the side that this player is on
+	 */
+	public Position(BigInteger [] bigPieces, Side sidePlaying) {
 		this.bigPieces = bigPieces;
 		updateBoard(sidePlaying);
 	}
@@ -154,6 +180,9 @@ public class Position {
 		this.bigPieces = bigPieces;
 	}
 	
+	/**
+	 * Draws the current position
+	 */
 	public void draw() {
 		System.out.println(Parse.boardToString(this));
 	}
@@ -184,6 +213,24 @@ public class Position {
 		}
 		else if(sidePlaying == Side.V) {
 			pieces[V] = newPieces;
+		}
+		else {
+			throw new Error("Game state not in playing!");
+		}
+		// TOGGLED OFF FOR REFEREE //
+		swapPlayers();
+	}
+	
+	/**
+	 * Sets the current player's pieces (big int)
+	 * @param newBigPieces the new pieces coming in
+	 */
+	public void setCurrPieces(BigInteger newBigPieces) {
+		if(sidePlaying == Side.H) {
+			bigPieces[H] = newBigPieces;
+		}
+		else if(sidePlaying == Side.V) {
+			bigPieces[V] = newBigPieces;
 		}
 		else {
 			throw new Error("Game state not in playing!");
