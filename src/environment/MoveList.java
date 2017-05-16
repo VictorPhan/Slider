@@ -14,14 +14,14 @@ public class MoveList {
 	static final int B = 2;
 	
 	static final int VU = 0;
-	static final int VR = 1;
+	static final int VO = 1;
 	static final int VL = 2;
-	static final int VO = 3;
+	static final int VR = 3;
 	
-	static final int HU = 0;
-	static final int HR = 1;
+	static final int HR = 0;
+	static final int HO = 1;
 	static final int HD = 2;
-	static final int HO = 3;
+	static final int HU = 3;
 	
 	public static final int MOVE_TYPES = 4;
 	
@@ -108,8 +108,8 @@ public class MoveList {
 		long[] vm = new long[MOVE_TYPES];
 		vm[VU] = ((pieces[V] >>> Position.dimen) & ~occupied) << Position.dimen;
 		vm[VL] = ((pieces[V] << 1) & ~occupied & ~rightCol) >>> 1;
-		vm[VR] = ((pieces[V] >>> 1) & ~occupied & ~leftCol) << 1;
-		vm[VO] = pieces[V] & topRow;
+		vm[VO] = ((pieces[V] >>> 1) & ~occupied & ~leftCol) << 1;
+		vm[VR] = pieces[V] & topRow;
 		return vm;
 	}
 	
@@ -120,9 +120,9 @@ public class MoveList {
 				and(bigOccupied.not())).shiftLeft(Position.dimen);
 		vm[VL] = (((pieces[V].shiftLeft(1)).and(bigOccupied.not())).
 				and(bigRightCol.not())).shiftRight(1);
-		vm[VR] = (((pieces[V].shiftRight(1)).and(bigOccupied.not())).
+		vm[VO] = (((pieces[V].shiftRight(1)).and(bigOccupied.not())).
 				and(bigLeftCol.not())).shiftLeft(1);
-		vm[VO] = pieces[V].and(bigTopRow);
+		vm[VR] = pieces[V].and(bigTopRow);
 		return vm;
 	}
 	
@@ -134,23 +134,23 @@ public class MoveList {
 	public static long [] generateHMoves(long[] pieces) {
 		long occupied = pieces[B] | pieces[V] | pieces[H];
 		long[] hm = new long[MOVE_TYPES];
-		hm[HR] = ((pieces[H] >>> 1) & ~occupied & ~leftCol) << 1;
-		hm[HU] = ((pieces[H] >>> Position.dimen) & ~occupied) << Position.dimen;
+		hm[HO] = ((pieces[H] >>> 1) & ~occupied & ~leftCol) << 1;
+		hm[HR] = ((pieces[H] >>> Position.dimen) & ~occupied) << Position.dimen;
 		hm[HD] = (((pieces[H] & ~bottomRow) << Position.dimen) & ~occupied) >>> Position.dimen;
-		hm[HO] = pieces[H] & rightCol;
+		hm[HU] = pieces[H] & rightCol;
 		return hm;
 	}
 	
 	public static BigInteger [] generateHMoves(BigInteger[] pieces) {
 		BigInteger bigOccupied = pieces[B].or(pieces[V]).or(pieces[H]);
 		BigInteger[] hm = new BigInteger[MOVE_TYPES];
-		hm[HR] = (((pieces[H].shiftRight(1)).and(bigOccupied.not())).
+		hm[HO] = (((pieces[H].shiftRight(1)).and(bigOccupied.not())).
 				and(bigLeftCol.not())).shiftLeft(1);
-		hm[HU] = ((pieces[H].shiftRight(Position.dimen)).
+		hm[HR] = ((pieces[H].shiftRight(Position.dimen)).
 				and(bigOccupied.not())).shiftLeft(Position.dimen);
 		hm[HD] = (((pieces[H].and(bigBottomRow.not())).shiftLeft(Position.dimen)).
 				and(bigOccupied.not())).shiftRight(Position.dimen);
-		hm[HO] = pieces[H].and(bigRightCol);
+		hm[HU] = pieces[H].and(bigRightCol);
 		return hm;
 	}
 	

@@ -14,15 +14,27 @@ import top_end.Move;
 
 public class AIPlayer extends Player {
 	
-	public int MAX_DEPTH = 6;
+	public static int MAX_DEPTH = 3;
 	char illegalMove;
-	boolean printMove;
+	boolean printMove = false;
 	public Evaluation e;
 	public Position curr;
 	public String currentMove;
 	
 	public AIPlayer() {
-		this.printMove = true;
+		if(Position.dimen == 5) {
+			setDepth(8);
+		}
+		if(Position.dimen == 6) {
+			setDepth(7);
+		}
+		if(Position.dimen == 7) {
+			setDepth(6);
+		}
+	}
+	
+	public static void setDepth(int depth) {
+		MAX_DEPTH = depth;
 	}
 	
 	public boolean checkPass(long[] ml) {
@@ -34,7 +46,7 @@ public class AIPlayer extends Player {
 		return true;
 	}
 	
-	public ArrayList<double[]> makeMoveLearn(Position p) {
+	public ArrayList<double[]> makeMoveLearn(Position p, boolean loud) {
 		// Check if position is won
 		if(p.gs != GameState.PLAYING) {
 			return e.evaluateLearn(p);
@@ -46,7 +58,9 @@ public class AIPlayer extends Player {
 		}
 		
 		Action bestAction = alphaBetaLearn(p);
-		Action.supplyAction(p, bestAction);
+		if(loud) {
+			Action.supplyAction(p, bestAction);
+		}
 		
 		if(bestAction.nnTensor.size()==1) {
 			throw new Error("makeMoveLearn tensor size == 1");
@@ -130,18 +144,20 @@ public class AIPlayer extends Player {
 				return v;
 			}
 		}
-		for(Action a : actions) {
-			Position newPos = Action.applyAction(p, a);
-			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
-			ArrayList<double[]> u = maxValueLearn(newPos, newActions, depth + 1, alpha, beta);
-			if(v.get(0)[0] >= u.get(0)[0]) {
-				v = u;
-			}
-			a.score = v.get(0)[0];
-			a.nnTensor = v;
-			beta = Math.min(beta, v.get(0)[0]);
-			if(beta <= alpha) {
-				return v;
+		else {
+			for(Action a : actions) {
+				Position newPos = Action.applyAction(p, a);
+				ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+				ArrayList<double[]> u = maxValueLearn(newPos, newActions, depth + 1, alpha, beta);
+				if(v.get(0)[0] >= u.get(0)[0]) {
+					v = u;
+				}
+				a.score = v.get(0)[0];
+				a.nnTensor = v;
+				beta = Math.min(beta, v.get(0)[0]);
+				if(beta <= alpha) {
+					return v;
+				}
 			}
 		}
 		return v;
@@ -165,7 +181,7 @@ public class AIPlayer extends Player {
 
 		}
 		
-		// TODO: include transposition tables
+		// Otherwise run alpha beta algorithm
 		Action bestAction = alphaBeta(p);
 		Action.supplyAction(p, bestAction);
 		String move = bestAction.toString(p.sidePlaying);
@@ -206,6 +222,9 @@ public class AIPlayer extends Player {
 		return null; // will return error. this line shouldn't be reached.
 	}
 	
+	/*
+	 * Maximising choice in alpha beta search.
+	 */
 	public double maxValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
 			return e.evaluate(p);
@@ -238,6 +257,9 @@ public class AIPlayer extends Player {
 		return v;
 	}
 	
+	/*
+	 * Minimising choice in alpha beta
+	 */
 	public double minValue(Position p, ArrayList<Action> actions, int depth, double alpha, double beta) {
 		if(cutOffTest(p, depth)) {
 			return e.evaluate(p);
@@ -254,15 +276,18 @@ public class AIPlayer extends Player {
 				return v;
 			}
 		}
-		for(Action a : actions) {
-			Position newPos = Action.applyAction(p, a);
-			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
-			v = Math.min(v, maxValue(newPos, newActions, depth + 1, alpha, beta));
-			a.score = v;
-			beta = Math.min(beta, v);
-			if(beta <= alpha) {
+		else {
+		// for each possible action, apply maximising on those actions
+			for(Action a : actions) {
+				Position newPos = Action.applyAction(p, a);
+				ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+				v = Math.min(v, maxValue(newPos, newActions, depth + 1, alpha, beta));
 				a.score = v;
-				return v;
+				beta = Math.min(beta, v);
+				if(beta <= alpha) {
+					a.score = v;
+					return v;
+				}
 			}
 		}
 		return v;

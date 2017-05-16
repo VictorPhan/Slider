@@ -13,11 +13,19 @@ public class NeuralNetwork {
 	public Layer H1;
 	public Layer H2;
 	public Layer OUT;
+	public static boolean preset = true;
 	
 	public NeuralNetwork(int s, int h1, int h2) {
-		H1	 = new Layer(s, s+1);
-		H2   = new Layer(h2, s+1);
-		OUT  = new Layer(1, h2+1);
+		if(preset) {
+			H1	= new Layer(NeuralNetwork_Params.H1);
+			H2	= new Layer(NeuralNetwork_Params.H2);
+			OUT = new Layer(NeuralNetwork_Params.OUT);
+		}
+		else {
+			H1	 = new Layer(s, s+1);
+			H2   = new Layer(h2, s+1);
+			OUT  = new Layer(1, h2+1);
+		}
 	}
 	
 	public double evaluate(double[] input) {
@@ -51,6 +59,10 @@ public class NeuralNetwork {
 		tensor.add(0, H2.output(concat(tensor.get(0), bias)));
 		tensor.add(0, OUT.outputTanh(concat(tensor.get(0), bias)));
 		return tensor;
+	}
+	
+	public static void setPreset(boolean p) {
+		preset = p;
 	}
 	
 }

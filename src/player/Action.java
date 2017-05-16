@@ -6,6 +6,9 @@ import environment.MoveList;
 import environment.Position;
 import environment.Side;
 
+/*
+ * Action represents a single posible action that can be applied to (quiet) or supplied to a position.
+ */
 public class Action {
 	
 	static final int U = 0;

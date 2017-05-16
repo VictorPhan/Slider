@@ -17,8 +17,7 @@ public class Layer {
 	 * @param cols
 	 */
 	public Layer(int rows, int cols) {
-		this.weightMatrix = DenseMatrix.rand(rows, cols);
-		weightMatrix = weightMatrix.sub(0.5);
+		this.weightMatrix = DenseMatrix.rand(rows, cols).sub(0.5).div(2);
 	}
 	
 	/**
@@ -42,7 +41,7 @@ public class Layer {
 	public double[] outputTanh(double[] input) {
 		DenseMatrix inputVector = new DenseMatrix(new double[][] {input});
 		return Arrays.stream(weightMatrix.mmul(inputVector.t()).getValues()).
-				map(x -> (Evaluation.H_WIN_SCORE-1)*Math.tanh(x)).toArray();
+				map(x -> Math.tanh(x)).toArray();
 	}
 	
 	/**

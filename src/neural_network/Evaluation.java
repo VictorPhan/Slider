@@ -30,17 +30,16 @@ public class Evaluation {
 	static final int HD = 2;
 	static final int HO = 3;
 	
-	public static final double H_WIN_SCORE = 10; //Double.POSITIVE_INFINITY;
-	public static final double V_WIN_SCORE = -10; //Double.NEGATIVE_INFINITY;
+	public static final double H_WIN_SCORE = 1; //Double.POSITIVE_INFINITY;
+	public static final double V_WIN_SCORE = -1; //Double.NEGATIVE_INFINITY;
 	
-	public static int s;
+	public static int s = 6;
 	public NeuralNetwork nn;
 	
 	public Evaluation() {
-		s = Position.dimen * Position.dimen + 1;
 		nn = new NeuralNetwork(s, s, s);
 	}
-		
+
 	public double evaluate(Position p) {
 		if (p.gs == GameState.DRAW) {
 			return 0;
@@ -71,16 +70,54 @@ public class Evaluation {
 	}
 	
 	public static double[] createInputLayer(Position p) {
-		/* Global has 4 features—SidePlaying, #H pieces, #V pieces, #B pieces
-		 * Piece centric is location of each piece, including directional mobility of each moving piece
-		 * Square centric includes the 'bled' board
-		 */
-		double[] inS = NeuralNetwork.concat(metaInfo(p), bleedBoard(p.getPieces(), p.sidePlaying));
-		return inS;
+		return metaInfo(p);
 	}
 	
 	public static double[] metaInfo(Position p) {
-		return new double[] {5*(Long.bitCount(p.getPieces(0))-Long.bitCount(p.getPieces(1)))};
+		long[] pieces = p.getPieces();
+		double[] numberPieces = {Long.bitCount(pieces[V])-Long.bitCount(pieces[H])};
+		
+		long[] hMoves = MoveList.generateHMoves(pieces);
+		long[] vMoves = MoveList.generateVMoves(pieces);
+		
+		double[] moves = new double[MoveList.MOVE_TYPES];
+		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
+			moves[i] = Long.bitCount(hMoves[i])-Long.bitCount(vMoves[i]);
+		}
+		
+		// Distance of all the pieces from the end
+		double[] hDist = {getDistanceV(pieces[V])-getDistanceH(pieces[H])};
+		return concat(concat(numberPieces, moves), hDist);
+	}
+	
+	public static int getDistanceH(long h) {
+		int distance = 0;
+		while(h != 0) {
+			long singular = Long.highestOneBit(h);
+			h -= singular;
+			int i=0;
+			while(singular % 2 == 0) {
+				singular /= 2;
+				i++;
+			}
+			distance += i%Position.dimen;
+		}
+		return distance;
+	}
+	
+	public static int getDistanceV(long v) {
+		int distance = 0;
+		while(v != 0) {
+			long singular = Long.highestOneBit(v);
+			v -= singular;
+			int i=0;
+			while(singular % 2 == 0) {
+				singular /= 2;
+				i++;
+			}
+			distance += i/Position.dimen;
+		}
+		return distance;
 	}
 	
 	public static double[] bleedBoard(long[] pieces, Side s) {
@@ -114,5 +151,14 @@ public class Evaluation {
 			returnPieces[i] = vBytes.charAt(i) - hBytes.charAt(i);
 		}
 		return returnPieces;
+	}
+	
+	public static double[] concat(double[] a, double[] b) {
+	   int aLen = a.length;
+	   int bLen = b.length;
+	   double[] c = new double[aLen+bLen];
+	   System.arraycopy(a, 0, c, 0, aLen);
+	   System.arraycopy(b, 0, c, aLen, bLen);
+	   return c;
 	}
 }
