@@ -63,7 +63,7 @@ public class Referee {
 		 * now, play the game!
 		 */
 
-		int turn = Player.V;
+		int turn = Player.H;
 		Move previousMove = null;
 		String message = null;
 		

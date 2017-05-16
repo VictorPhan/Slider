@@ -17,6 +17,7 @@ public class Human extends Player {
 	int O = 3;
 	char illegalMove;
 	public Position curr;
+	public String currentMove;
 	
 	public boolean checkPass(long[] ml) {
 		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
@@ -113,6 +114,6 @@ public class Human extends Player {
 	public Move move() {
 		Position prevBoard = curr;
 		makeMove(curr);
-		return AIPlayerAdapter.bitboardToMove(curr, prevBoard);
+		return AIPlayerAdapter.bitboardToMove(curr, prevBoard, currentMove);
 	}
 }

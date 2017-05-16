@@ -314,9 +314,6 @@ public class AIPlayer extends Player {
 	public void update(Move move) {
 		Position updatePos = AIPlayerAdapter.moveToBitboard(move, curr).copyPosition();
 		curr = updatePos.copyPosition();
-		System.out.println("SUCCESS!");
-		curr.draw();
-		
 		curr.updateBoard(curr.sidePlaying);
 	}
 
@@ -325,7 +322,7 @@ public class AIPlayer extends Player {
 		Position prevBoard = curr.copyPosition();
 		makeMove(curr);
 		curr.updateBoard(curr.sidePlaying);
-		return AIPlayerAdapter.bitboardToMove(curr, prevBoard);
+		return AIPlayerAdapter.bitboardToMove(curr, prevBoard, currentMove);
 		//return AIPlayerAdapter.bbMove(currentMove, curr);
 	}
 }
