@@ -28,8 +28,9 @@ public class Position {
 	
 	/**
 	 * Constructor initializing dimension and initial position
-	 * @param dimen
-	 * @param pieces
+	 * @param pieces the pieces at the beginning of the board
+	 * @param sidePlaying the side that this player is on
+	 * @param dimen dimension of the board
 	 */
 	public Position(long[] pieces, Side sidePlaying, int dimen) {
 		Position.dimen = dimen;
@@ -38,8 +39,10 @@ public class Position {
 	}
 	
 	/**
-	 * Constructor for position
-	 * @param pieces 
+	 * Constructor for when cloning and need to keep the state
+	 * @param pieces the pieces at the beginning of the board
+	 * @param sidePlaying the side that this player is on
+	 * @param gh the history of the game played so far
 	 */
 	public Position(long [] pieces, Side sidePlaying, GameHistory gh) {
 		this.pieces = pieces;
@@ -48,8 +51,9 @@ public class Position {
 	}
 	
 	/**
-	 * Constructor for position
-	 * @param pieces 
+	 * Constructor when playing the game
+	 * @param pieces the pieces at the beginning of the board
+	 * @param sidePlaying the side that this player is on
 	 */
 	public Position(long [] pieces, Side sidePlaying) {
 		this.pieces = pieces;
@@ -58,8 +62,9 @@ public class Position {
 	
 	/**
 	 * Constructor for n > 8 case
-	 * @param dimension 
-	 * @param bigPieces
+	 * @param bigPieces their pieces in bitboard (big int)
+	 * @param sidePlaying the side that this player is on
+	 * @param dimen dimension of the board
 	 */
 	public Position(BigInteger[] bigPieces, Side sidePlaying, int dimen) {
 		Position.dimen = dimen;
@@ -67,12 +72,19 @@ public class Position {
 		updateBoard(sidePlaying);
 	}
 	
+	/**
+	 * Updates the board for the current side
+	 * @param playing the side that is playing
+	 */
 	public void updateBoard(Side playing) {
 		sidePlaying = playing;
 		updateMoveList();
 		checkGameState();
 	}
 	
+	/**
+	 * Checks if the game has been won yet or not
+	 */
 	public void checkGameState() {
 		if(Long.bitCount(pieces[H])==0) {
 			gs = GameState.H_WON;
@@ -88,6 +100,9 @@ public class Position {
 		}
 	}
 	
+	/**
+	 * Updates the possible move list
+	 */
 	public void updateMoveList() {
 		if(ml==null) {
 			if(Position.dimen <= Position.BIG_INT_CASE) {
@@ -143,6 +158,10 @@ public class Position {
 		System.out.println(Parse.boardToString(this));
 	}
 	
+	/**
+	 * Gets the current specified player's own pieces
+	 * @return their pieces in long notation
+	 */
 	public long getCurrPieces() {
 		if(sidePlaying == Side.H) {
 			return pieces[H];
@@ -155,6 +174,10 @@ public class Position {
 		}
 	}
 	
+	/**
+	 * Sets the current player's pieces
+	 * @param newPieces the new pieces coming in
+	 */
 	public void setCurrPieces(long newPieces) {
 		if(sidePlaying == Side.H) {
 			pieces[H] = newPieces;
@@ -169,6 +192,9 @@ public class Position {
 		swapPlayers();
 	}
 	
+	/**
+	 * Swaps the players around for updating moves
+	 */
 	public void swapPlayers() {
 		if(sidePlaying == Side.H) {
 			sidePlaying = Side.V;
@@ -176,6 +202,7 @@ public class Position {
 		else {
 			sidePlaying = Side.H;
 		}
+		// TOGGLED OFF FOR REFEREE //
 		updateBoard(sidePlaying);
 	}
 }

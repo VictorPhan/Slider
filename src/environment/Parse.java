@@ -23,10 +23,16 @@ public class Parse {
 	
 	static Scanner s = null;
 	
+	/**
+	 * Initializes the scanner
+	 */
 	public static void initScan() {
 		s = new Scanner(System.in);
 	}
 	
+	/**
+	 * Closes the scanner
+	 */
 	public static void closeScan() {
 		s.close();
 	}
@@ -34,7 +40,7 @@ public class Parse {
 	/**
 	 * Reads board dimensionality, which side is immediately playing,
 	 * and an input position to return an initialized Position object
-	 * @return
+	 * @return the initial position of the board
 	 */
 	public static Position parseBoard() {
 		
@@ -85,10 +91,11 @@ public class Parse {
 	}
 	
 	/**
-	 * Constructor with new referee class
-	 * @param dimen
-	 * @param side
-	 * @return
+	 * Initializes the board for the spec Referee 
+	 * @param dimen dimension of the board
+	 * @param side which player
+	 * @param initPos the whole board 
+	 * @return the initial position of the board
 	 */
 	public static Position parseBoard(int dimen, char side, String initPos) {
 		
@@ -133,7 +140,7 @@ public class Parse {
 	
 	/**
 	 * Converts a raw input string into the long [] bitboards
-	 * @param line
+	 * @param line 
 	 * @return
 	 */
 	public static long[] fromRawString(String line) {

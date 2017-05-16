@@ -23,7 +23,7 @@ public class AIPlayer extends Player {
 	
 	public AIPlayer() {
 		if(Position.dimen == 4) {
-			setDepth(11);
+			setDepth(8);
 		}
 		else if(Position.dimen == 5) {
 			setDepth(8);
@@ -34,6 +34,7 @@ public class AIPlayer extends Player {
 		else if(Position.dimen == 7) {
 			setDepth(6);
 		}
+		// TOGGLED OFF FOR REFEREE //
 		e = new Evaluation();
 	}
 	
