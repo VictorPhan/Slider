@@ -208,6 +208,22 @@ public class Position {
 	}
 	
 	/**
+	 * Gets the current specified player's own pieces
+	 * @return their pieces in long notation (big int)
+	 */
+	public BigInteger getBigCurrPieces() {
+		if(sidePlaying == Side.H) {
+			return bigPieces[H];
+		}
+		else if(sidePlaying == Side.V) {
+			return bigPieces[V];
+		}
+		else {
+			throw new Error("Game state not in playing!");
+		}
+	}
+	
+	/**
 	 * Sets the current player's pieces
 	 * @param newPieces the new pieces coming in
 	 */

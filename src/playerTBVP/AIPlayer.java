@@ -24,7 +24,7 @@ public class AIPlayer extends Player {
 	
 	public AIPlayer() {
 		if(Position.dimen == 4) {
-			setDepth(8);
+			setDepth(9);
 		}
 		else if(Position.dimen == 5) {
 			setDepth(8);
@@ -246,7 +246,12 @@ public class AIPlayer extends Player {
 	 * @return direction and the bitboard for the corresponding move
 	 */
 	public Action alphaBeta(Position p) {
-		ArrayList<Action> actions = Action.generateActions(p.ml.moves);
+		ArrayList<Action> actions;
+		if(Position.dimen < Position.BIG_INT_CASE){
+			actions = Action.generateActions(p.ml.moves);
+		} else {
+			actions = Action.generateActions(p.ml.bigMoves);
+		}
 		double v = 0;
 		if(p.sidePlaying == Side.H) {
 			v = maxValue(p, actions, 0, Evaluation.V_WIN_SCORE, Evaluation.H_WIN_SCORE);
@@ -280,7 +285,12 @@ public class AIPlayer extends Player {
 		// passing move
 		if(actions.size() == 0) {
 			Position newPos = Action.applyAction(p, null);
-			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+			ArrayList<Action> newActions;
+			if(Position.dimen < Position.BIG_INT_CASE){
+				newActions = Action.generateActions(newPos.ml.moves);
+			} else {
+				newActions = Action.generateActions(newPos.ml.bigMoves);
+			}
 			v = Math.max(v, minValue(newPos, newActions, depth + 1, alpha, beta));
 			alpha = Math.max(alpha, v);
 			if(alpha >= beta) {
@@ -290,7 +300,12 @@ public class AIPlayer extends Player {
 		else {
 			for(Action a : actions) {
 				Position newPos = Action.applyAction(p, a);
-				ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+				ArrayList<Action> newActions;
+				if(Position.dimen < Position.BIG_INT_CASE){
+					newActions = Action.generateActions(newPos.ml.moves);
+				} else {
+					newActions = Action.generateActions(newPos.ml.bigMoves);
+				}
 				v = Math.max(v, minValue(newPos, newActions, depth + 1, alpha, beta));
 				a.score = v;
 				alpha = Math.max(alpha, v);
@@ -321,7 +336,12 @@ public class AIPlayer extends Player {
 		// passing move
 		if(actions.size() == 0) {
 			Position newPos = Action.applyAction(p, null);
-			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+			ArrayList<Action> newActions;
+			if(Position.dimen < Position.BIG_INT_CASE){
+				newActions = Action.generateActions(newPos.ml.moves);
+			} else {
+				newActions = Action.generateActions(newPos.ml.bigMoves);
+			}
 			v = Math.min(v, maxValue(newPos, newActions, depth + 1, alpha, beta));
 			beta = Math.min(beta, v);
 			if(beta <= alpha) {
@@ -332,7 +352,12 @@ public class AIPlayer extends Player {
 		// for each possible action, apply maximising on those actions
 			for(Action a : actions) {
 				Position newPos = Action.applyAction(p, a);
-				ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+				ArrayList<Action> newActions;
+				if(Position.dimen < Position.BIG_INT_CASE){
+					newActions = Action.generateActions(newPos.ml.moves);
+				} else {
+					newActions = Action.generateActions(newPos.ml.bigMoves);
+				}
 				v = Math.min(v, maxValue(newPos, newActions, depth + 1, alpha, beta));
 				a.score = v;
 				beta = Math.min(beta, v);
@@ -370,9 +395,7 @@ public class AIPlayer extends Player {
 
 	@Override
 	public void update(Move move) {
-		Position updatePos = 
-				(AIPlayerAdapter.moveToBitboard(move, curr)).copyPosition();
-		curr = updatePos.copyPosition();
+		curr = (AIPlayerAdapter.moveToBitboard(move, curr)).copyPosition();
 		curr.updateBoard(curr.sidePlaying);
 	}
 

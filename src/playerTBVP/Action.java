@@ -1,5 +1,6 @@
 package playerTBVP;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 import environment.MoveList;
@@ -18,14 +19,28 @@ public class Action {
 	public double score;
 	public int direction;
 	public long bitboard;
+	public BigInteger bigBitboard;
 	public ArrayList<double[]> nnTensor;
 	
 	public Action(int direction, long bitboard) {
 		this.direction = direction;
 		this.bitboard = bitboard;
 	}
+	
+	public Action(int direction, BigInteger bigBitboard) {
+		this.direction = direction;
+		this.bigBitboard = bigBitboard;
+	}
 
 	public static ArrayList<Action> generateActions(long[] moves) {
+		ArrayList<Action> actions = new ArrayList<Action>();
+		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
+			generateSubActions(actions, moves[i], i);
+		}
+		return actions;
+	}
+	
+	public static ArrayList<Action> generateActions(BigInteger[] moves) {
 		ArrayList<Action> actions = new ArrayList<Action>();
 		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
 			generateSubActions(actions, moves[i], i);
@@ -40,18 +55,33 @@ public class Action {
 			fullMoves -= singularMove;
 		}
 	}
+	
+	private static void generateSubActions(ArrayList<Action> actions, BigInteger fullMoves, int direction) {
+		while(!fullMoves.equals(0)) {
+			BigInteger singularMove = fullMoves.shiftRight(fullMoves.bitLength() - 1);
+			actions.add(new Action(direction, singularMove));
+			fullMoves = fullMoves.subtract(singularMove);
+		}
+	}
 
 	public static Position applyAction(Position p, Action a) {
-		Position nextP = new Position(p.getPieces().clone(), p.sidePlaying, p.gHistory.clone());
+		Position nextP;
+		if(Position.dimen < Position.BIG_INT_CASE) {
+			nextP = new Position(p.getPieces().clone(), p.sidePlaying, p.gHistory.clone());
+		} else {
+			nextP = new Position(p.getBigPieces().clone(), p.sidePlaying, p.gHistory.clone());
+		}
+		
 		if(a == null) {
 			nextP.swapPlayers();
 			return nextP;
 		}
 		
-		long legalBB = a.bitboard;
-		long newBB = 0;
-		
-		switch(a.direction) {
+		if(Position.dimen < Position.BIG_INT_CASE){
+			long legalBB = a.bitboard;
+			long newBB = 0;
+			
+			switch(a.direction) {
 			case R:
 				newBB = legalBB >>> 1;
 				break;
@@ -68,16 +98,45 @@ public class Action {
 				break;
 			case O:
 				break;
+			}
+			nextP.setCurrPieces(nextP.getCurrPieces() & ~legalBB | newBB);
+			return nextP;
+		} else {
+		
+			BigInteger bigLegalBB = a.bigBitboard;
+			BigInteger bigNewBB = BigInteger.ZERO;
+			
+			switch(a.direction) {
+			case R:
+				bigNewBB = bigLegalBB.shiftRight(1);
+				break;
+			case U:
+				bigNewBB = bigLegalBB.shiftRight(Position.dimen);
+				break;
+			case DL:
+				if(p.sidePlaying == Side.H) {
+					bigNewBB = bigLegalBB.shiftLeft(Position.dimen);
+				}
+				else {
+					bigNewBB = bigLegalBB.shiftLeft(1);
+				}
+				break;
+			case O:
+				break;
+			}
+			nextP.setCurrPieces(nextP.getBigCurrPieces().and(bigLegalBB.not()).or(bigNewBB));
+			return nextP;
 		}
-		nextP.setCurrPieces(nextP.getCurrPieces() & ~legalBB | newBB);
-		return nextP;
+		
+		
 	}
 
 	public static void supplyAction(Position p, Action bestAction) {
-		long legalBB = bestAction.bitboard;
-		long newBB = 0;
-		
-		switch(bestAction.direction) {
+		if(Position.dimen < Position.BIG_INT_CASE) {
+			long legalBB = bestAction.bitboard;
+			long newBB = 0;
+			
+			switch(bestAction.direction) {
 			case R:
 				newBB = legalBB >>> 1;
 				break;
@@ -94,8 +153,33 @@ public class Action {
 				break;
 			case O:
 				break;
+			}
+			p.setCurrPieces((p.getCurrPieces() & (~legalBB)) | newBB);
+			
+		} else {
+			BigInteger bigLegalBB = bestAction.bigBitboard;
+			BigInteger bigNewBB = BigInteger.ZERO;
+			
+			switch(bestAction.direction) {
+			case R:
+				bigNewBB = bigLegalBB.shiftRight(1);
+				break;
+			case U:
+				bigNewBB = bigLegalBB.shiftRight(Position.dimen);
+				break;
+			case DL:
+				if(p.sidePlaying == Side.H) {
+					bigNewBB = bigLegalBB.shiftLeft(Position.dimen);
+				}
+				else {
+					bigNewBB = bigLegalBB.shiftLeft(1);
+				}
+				break;
+			case O:
+				break;
+			}
+			p.setCurrPieces((p.getBigCurrPieces().and(bigLegalBB.not()).or(bigNewBB)));
 		}
-		p.setCurrPieces((p.getCurrPieces() & (~legalBB)) | newBB);
 	}
 	
 	/**
