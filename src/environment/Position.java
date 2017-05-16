@@ -166,7 +166,7 @@ public class Position {
 			throw new Error("Game state not in playing!");
 		}
 		// TOGGLED OFF FOR REFEREE //
-		//swapPlayers();
+		swapPlayers();
 	}
 	
 	public void swapPlayers() {
@@ -176,6 +176,6 @@ public class Position {
 		else {
 			sidePlaying = Side.H;
 		}
-		//updateBoard(sidePlaying);
+		updateBoard(sidePlaying);
 	}
 }

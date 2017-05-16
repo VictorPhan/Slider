@@ -14,7 +14,7 @@ import top_end.Move;
 
 public class AIPlayer extends Player {
 	
-	public static int MAX_DEPTH = 3;
+	public static int MAX_DEPTH = 8;
 	char illegalMove;
 	boolean printMove = true;
 	public Evaluation e;
@@ -34,6 +34,7 @@ public class AIPlayer extends Player {
 		else if(Position.dimen == 7) {
 			setDepth(6);
 		}
+		e = new Evaluation();
 	}
 	
 	public static void setDepth(int depth) {
