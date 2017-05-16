@@ -1,0 +1,60 @@
+Project Part B — Playing the Game
+
+Victor Phan (victorp1 760559) & Tin Bao (tinb 760391)
+
+Keywords:
+Neural Network
+TD-Leaf(lambda)
+Backpropagation
+Alpha-Beta Search
+Bitboard
+
+Library used: 
+Jiegen (https://github.com/hughperkins/jeigen) [Linear Algebra Functionalities]
+
+Board Representation:
+Bitboard from Part A. We chose this one because of its fast move generation and efficient implementation using the long datatype, as opposed to piece-centric move generation (two for loops).
+
+Program Flow:
+Once we have the position represented as a 'Position' object, the object creates a 'MoveList' object that contains all the move bitboards (possible moves for the player making a move in the current position). The AIPlayer will then make a move from that position by doing an alpha-beta search. To generate the prospective positions, it converts the 'MoveList' object into a list of individual moves, each move represented by an 'Action' object. These actions are "applied" onto the position to generate all the possible future position trees, and alpha-beta will recursively apply this process until the depth limit is reached for the AIPlayer. At the leaf positions of the search tree, 'Evaluation' will apply its evaluation function to assign a minimax value to these nodes. These values are propagated upwards to the root node (current position), and hence alpha-beta will choose accordingly the maximising (H player) or minimising (V player) action.
+
+The Evaluation Function:
+The Evaluation.evaluate(leaf node position) will check whether the leaf node has already reached and terminal state, DRAW, H_WON or V_WON. DRAW is included in in our implementation by considering three-fold repetition. Although three-fold repetition is not officially in the game rules, it is a really good indication to when the game is entering an infinite loop.
+If the leaf node is in none of those states, it will bring out the big boys (neural network).
+
+The Input Layer:
+The Evaluation class will treat the Position and create the input layer to feed into the neural network. This input layer consists of global and piece-centric information (for square-centric information, check the "Really cool ideas that didn't work well" section). Currently, these features are the difference in the number of pieces between the two players, the difference in the number of moves in a particular direction. So for instance, H's RIGHT move has equal and opposite value with V's UP move in that they both get the players closer to the end of the board. Likewise, H's DOWN to V's LEFT and H's UP to V's RIGHT. This encapsulates mobility information. The final feature is how far off the board all the pieces are. We sum the the Manhattan distance of each piece from the end of the board, a further punishment may be applied for further pieces, but we found that this didn't beat our unpunished distance AI during the training. The great thing about the feature representation we chose now is that it is dimension independent, so we can now apply the same neural network for different board sizes!
+
+The Neural Network Topology:
+The Network is board size independent, so the same network is being used for different board sizes. It consists of two hidden layers, of each of size 7 accounting for the bias neuron, and the output layer is a single neuron (the returned minimax value). The weight matrices are therefore 6x7. The hidden layers use the ReLU (rectified linear unit) activation function. We didn't include an activation function for the output layer to allow the minimax value take on negatives, but then after a bit of training, we found this would blow up to NaN values (not good), so we chucked on the tanh function at the end to range the output between -1 (V_WON) and +1 (H_WON). The neural network is implemented using DenseMatrix from the Jeigen library.
+
+The Training:
+I had emailed Matthew Lai (creator of the Giraffe chess program, and working in DeepMind!) to clarify how he trained Giraffe using TD and backpropagation, and read a bunch of other papers (efficient backprop, KnightCap) and created my own implementation of the learning algorithm.
+Training is done in the 'Learner' class. The learning was done using the TD-Leaf(\lambda) algorithm, inspired from the KnightCap paper. A whole game is played either between the AI and the human, the AI and itself, or a human and a human. For each state of the game, the layers of the evaluation network applied on the leaf node of alpha-beta is saved to a tensor array. Once the game is finished, the temporal differences and the gradient of the L2 error function with respect to the weight matrices are calculated by standard neural network backpropagation (Note: the 'truth' value is simply the output value at 12 moves later, since the AI's search depth was at 12 during the learning). The weightMatrices of the neural network is updated accordingly by the temporal difference update weight equations. The weight matrices are then stored in 'NeuralNetwork_Params'.
+Training with human was done over several hours of Skype calls with chess hobbyist Vishwa S. (~2200 Elo on Chess.com).
+
+In order to train with Vishwa, we had to develop a chess-like notation system so that Vishwa could hear the moves. Using the chess-algebraic notation allowed Vishwa to visualise the board in his head and play the move verbally at ease. An example game between me (Victor playing V) and the AI (playing H) in chess notation is as follows:
+
+1. a2b2 c1c2 2. a3b3 d1d2 3. b3b4 c2c3 4. b4c4 d2d3 5. b2c2 d3d4 6. c2d2 d4+ 7. d2+ c3c2 8. c4c3 c2d2 9. c3d3 d2c2 10. a4b4 c2c3 11. b4c4 b2b3 b1b2 12. c4d4 b2b3 13. d3d2 b3b4 14. d2d3 b4+ 15. d3+ c3c4 16. d4+ #H 
+
+Notice that we indicate off the board moves by a '+' sign. A passing move will be indicated by the '—' sign.
+
+The Results:
+Training was the most difficult part of the project, as finding a suitable learning rate, lambda, search depth, look ahead, and the random initial matrix were the most difficult, in most cases the matrix weights would diverge rather than converge! This caused the output value to be clipping constantly at -1 or 1 depending on which board state I trained it on. Once finished though, we got an AI that could play tactically sound, however lacked position knowledge due to lack of square centric features and search depth. By "positional knowledge" as described by Vishwa, it would lose against his long term plans of trapping a piece close to the edge of the board. The network may find it winning, but after 10+ moves of rearranging the board, Vish would end up with a won game.
+
+Really cool ideas that didn't work well:
+We fed in this concept of a 'bled board' or a 'flooded board' in which all the possible moves of the current player is generated and then those squares are added to the player's pieces, and do the same for the other player. Repeat until the board doesn't change (stable). This board establishes all the squares that each player controls. So for instance, if I flood the following board:
+V to move:
++ V + V 
++ H + H 
++ V H + 
++ + + + 
+I would get:
+V V V V 
+V H H H 
+V V H H 
++ + H H 
+This encapsulates almost all square centric features I could think of, and seemed to be a great idea for the input layer. The main problem was that it would cause the NeuralNetwork to size by the square of the dimension of the board, and the amount of weights is just too crazy to train without a powerful processor running on a couple of days.
+
+Still on our plan:
+A transposition table to save the results of previous search trees on each possible move to aid the move ordering heuristic for alpha-beta.
