@@ -13,7 +13,7 @@ public class NeuralNetwork {
 	public Layer H1;
 	public Layer H2;
 	public Layer OUT;
-	public static boolean preset;
+	public static boolean preset = true;
 	
 	public NeuralNetwork(int s, int h1, int h2) {
 		if(preset) {

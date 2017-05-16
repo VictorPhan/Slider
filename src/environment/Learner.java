@@ -36,7 +36,7 @@ public class Learner {
 			double score = 0;
 			Position p2 = p.copyPosition();
 			ArrayList<ArrayList<double[]>> outerTensors = new ArrayList<ArrayList<double[]>>();
-			while(/*score != 10. && score != -10. && */p2.gs == GameState.PLAYING) {
+			while(p2.gs == GameState.PLAYING) {
 				if(p2.sidePlaying==Side.V) {
 					ArrayList<double[]> tt = ai.makeMoveLearn(p2, true);
 					outerTensors.add(tt);

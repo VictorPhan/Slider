@@ -98,7 +98,7 @@ public class Evaluation {
 				singular /= 2;
 				i++;
 			}
-			distance += 2 * i%Position.dimen;
+			distance += i%Position.dimen;
 		}
 		return distance;
 	}
@@ -113,7 +113,7 @@ public class Evaluation {
 				singular /= 2;
 				i++;
 			}
-			distance += 2 * i/Position.dimen;
+			distance += i/Position.dimen;
 		}
 		return distance;
 	}

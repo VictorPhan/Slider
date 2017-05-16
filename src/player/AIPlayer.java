@@ -16,6 +16,18 @@ public class AIPlayer extends Player {
 	boolean printMove = true;
 	public Evaluation e = new Evaluation();
 	
+	public AIPlayer() {
+		if(Position.dimen == 5) {
+			setDepth(8);
+		}
+		if(Position.dimen == 6) {
+			setDepth(7);
+		}
+		if(Position.dimen == 7) {
+			setDepth(6);
+		}
+	}
+	
 	public static void setDepth(int depth) {
 		MAX_DEPTH = depth;
 	}
