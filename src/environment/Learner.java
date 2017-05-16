@@ -11,19 +11,20 @@ import player.Human;
 // aim is for each position encountered, play lookAhead moves and then update by TD leaf algo
 public class Learner {
 	
-	static final double tdLambda = 0.7;
-	static final double learningRate = 1;
-	static final int lookAhead = 8;
-	static final int numGames = 2;
+	static final double tdLambda = 0.01;
+	static final double learningRate = 0.01;
+	static final int lookAhead = 12;
+	static final int numGames = 5;
 	static int xOut = 0;
 	static int xH2 = 1;
 	static int xH1 = 2;
 	static int x0 = 3;
-	static boolean humanTraining = false;
-	static boolean presettedMatrix = false;
+	static boolean humanTraining = true;
+	static boolean presettedMatrix = true;
 	
 	public static void main(String[] args) {
 		NeuralNetwork.setPreset(presettedMatrix);
+		AIPlayer.setDepth(lookAhead);
 		Parse.initScan();
 		Position p = Parse.parseBoard();
 		
@@ -42,7 +43,8 @@ public class Learner {
 					score = tt.get(0)[0];
 				}
 				else {
-					ArrayList<double[]> tt = ai.makeMoveLearn(p2, false); // quiet move, allows AI to consider but not make the move
+					// quiet move, allows AI to consider but not make the move
+					ArrayList<double[]> tt = ai.makeMoveLearn(p2, false);
 					h.makeMove(p2);
 					outerTensors.add(tt);
 					score = tt.get(0)[0];
@@ -90,17 +92,20 @@ public class Learner {
 				for(int j=t; j<Math.min(n+lookAhead, tensors.size()-1); j++) {
 					lambdaSum+=Math.pow(tdLambda, j-t)*d[t];
 				}
+				
 				// dels for backpropagation
 				double delOut = (tensors.get(t).get(xOut)[0] - 
 						tensors.get(Math.min(n+lookAhead, tensors.size()-1)).get(xOut)[0]) * 
-							recipSech2(nn.OUT.weightMatrix.mul(new DenseMatrix(new double[][] 
-									{concat(tensors.get(t).get(xH2), bias)})).getValues()[0]);
+							(1-Math.pow(tensors.get(t).get(0)[0], 2));
+				
 				DenseMatrix delH2 = (nn.OUT.weightMatrix.cols(0, nn.OUT.weightMatrix.cols-1).t().mul(delOut)).
 						mul(nn.H2.weightMatrix.mmul(new DenseMatrix(new double[][] 
 								{concat(tensors.get(t).get(xH1), bias)}).t()).gt(0));
+				
 				DenseMatrix delH1 = (nn.H2.weightMatrix.cols(0, nn.H2.weightMatrix.cols-1).t().mmul(delH2)).
 						mul(nn.H1.weightMatrix.mmul(new DenseMatrix(new double[][] 
 								{concat(tensors.get(t).get(x0), bias)}).t()).gt(0));
+				
 				// update the grads
 				DenseMatrix x2 = new DenseMatrix(new double[][] {concat(tensors.get(t).get(xH2), bias)});
 				DenseMatrix x1 = new DenseMatrix(new double[][] {concat(tensors.get(t).get(xH1), bias)});

@@ -15,7 +15,7 @@ public class Layer {
 	 * @param cols
 	 */
 	public Layer(int rows, int cols) {
-		this.weightMatrix = DenseMatrix.rand(rows, cols).sub(0.5);
+		this.weightMatrix = DenseMatrix.rand(rows, cols).sub(0.5).div(2);
 	}
 	
 	/**

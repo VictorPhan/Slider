@@ -11,12 +11,13 @@ import neural_network.Evaluation;
 
 public class AIPlayer extends Player {
 	
-	public int MAX_DEPTH = 8;
+	public static int MAX_DEPTH = 3;
 	char illegalMove;
 	boolean printMove = true;
 	public Evaluation e = new Evaluation();
 	
-	public AIPlayer() {
+	public static void setDepth(int depth) {
+		MAX_DEPTH = depth;
 	}
 	
 	public boolean checkPass(long[] ml) {
@@ -126,18 +127,20 @@ public class AIPlayer extends Player {
 				return v;
 			}
 		}
-		for(Action a : actions) {
-			Position newPos = Action.applyAction(p, a);
-			ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
-			ArrayList<double[]> u = maxValueLearn(newPos, newActions, depth + 1, alpha, beta);
-			if(v.get(0)[0] >= u.get(0)[0]) {
-				v = u;
-			}
-			a.score = v.get(0)[0];
-			a.nnTensor = v;
-			beta = Math.min(beta, v.get(0)[0]);
-			if(beta <= alpha) {
-				return v;
+		else {
+			for(Action a : actions) {
+				Position newPos = Action.applyAction(p, a);
+				ArrayList<Action> newActions = Action.generateActions(newPos.ml.moves);
+				ArrayList<double[]> u = maxValueLearn(newPos, newActions, depth + 1, alpha, beta);
+				if(v.get(0)[0] >= u.get(0)[0]) {
+					v = u;
+				}
+				a.score = v.get(0)[0];
+				a.nnTensor = v;
+				beta = Math.min(beta, v.get(0)[0]);
+				if(beta <= alpha) {
+					return v;
+				}
 			}
 		}
 		return v;

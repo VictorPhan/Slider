@@ -33,6 +33,7 @@ public class Evaluation {
 	public static final double H_WIN_SCORE = 1; //Double.POSITIVE_INFINITY;
 	public static final double V_WIN_SCORE = -1; //Double.NEGATIVE_INFINITY;
 	
+	// input size
 	static int s = 6;
 	
 	public NeuralNetwork nn = new NeuralNetwork(s, s, s);
@@ -78,7 +79,7 @@ public class Evaluation {
 		long[] vMoves = MoveList.generateVMoves(pieces);
 		
 		double[] moves = new double[MoveList.MOVE_TYPES];
-		for(int i=0; i<MoveList.MOVE_TYPES; i+=2) {
+		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
 			moves[i] = Long.bitCount(hMoves[i])-Long.bitCount(vMoves[i]);
 		}
 		
