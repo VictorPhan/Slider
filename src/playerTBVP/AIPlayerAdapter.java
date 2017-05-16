@@ -1,4 +1,4 @@
-package player;
+package playerTBVP;
 
 import environment.Parse;
 import environment.Position;
@@ -62,6 +62,7 @@ public class AIPlayerAdapter {
 			return null;
 		}
 		
+		// Special case for H moving off the board
 		if((chessMove[2] == PLUS) && (prev.sidePlaying == Side.H)) {
 			d = Direction.RIGHT;
 		} else {

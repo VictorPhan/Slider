@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import jeigen.DenseMatrix;
 import neural_network.Evaluation;
 import neural_network.NeuralNetwork;
-import player.AIPlayer;
-import player.Human;
+import playerTBVP.AIPlayer;
+import playerTBVP.Human;
 
 // aim is for each position encountered, play lookAhead moves and then update by TD leaf algo
 public class Learner {

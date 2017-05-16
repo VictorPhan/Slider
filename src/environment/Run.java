@@ -1,8 +1,8 @@
 package environment;
 
-import player.AIPlayer;
-import player.Human;
-import player.Player;
+import playerTBVP.AIPlayer;
+import playerTBVP.Human;
+import playerTBVP.Player;
 
 /*
  * Run class to play a single game between chosen players

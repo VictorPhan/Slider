@@ -1,4 +1,4 @@
-package player;
+package playerTBVP;
 
 import java.util.ArrayList;
 
@@ -9,7 +9,7 @@ import environment.Position;
 import environment.Side;
 import environment.Parse;
 import neural_network.Evaluation;
-import player.AIPlayerAdapter;
+import playerTBVP.AIPlayerAdapter;
 import top_end.Move;
 
 public class AIPlayer extends Player {

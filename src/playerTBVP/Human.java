@@ -1,4 +1,4 @@
-package player;
+package playerTBVP;
 
 import environment.GameHistory;
 import environment.MoveList;
