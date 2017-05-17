@@ -1,5 +1,6 @@
 package playerTBVP;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 import environment.GameHistory;
@@ -19,7 +20,7 @@ public class AIPlayer extends Player {
 	/** The move made print */
 	boolean printMove = false;
 	public Evaluation e;
-	public Position curr;
+	public Position curr = null;
 	public String currentMove;
 	
 	public AIPlayer() {
@@ -51,6 +52,20 @@ public class AIPlayer extends Player {
 	public boolean checkPass(long[] ml) {
 		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
 			if(Long.bitCount(ml[i])!=0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Checks if the previous move is a pass
+	 * @param ml list of moves
+	 * @return whether it is true or not
+	 */
+	public boolean checkPass(BigInteger[] ml) {
+		for(int i=0; i<MoveList.MOVE_TYPES; i++) {
+			if(ml[i].bitCount() == 0) {
 				return false;
 			}
 		}
@@ -205,21 +220,39 @@ public class AIPlayer extends Player {
 
 	@Override
 	public double makeMove(Position p) {
-		// Check for passing move
-		if(checkPass(p.ml.moves)) {
-			if(printMove == true) {
-				if(p.sidePlaying == Side.H) {
-					System.out.println("H player move: Pass");
+		if(Position.dimen < Position.BIG_INT_CASE){
+			// Check for passing move
+			if(checkPass(p.ml.moves)) {
+				if(printMove == true) {
+					if(p.sidePlaying == Side.H) {
+						System.out.println("H player move: Pass");
+					}
+					else {
+						System.out.println("V player move: Pass");
+					}		
 				}
-				else {
-					System.out.println("V player move: Pass");
-				}
-			}
-			p.setCurrPieces(p.getCurrPieces());
-			GameHistory.addHistory("-");
-			return 0;
+				p.setCurrPieces(p.getCurrPieces());
+				GameHistory.addHistory("-");
+				return 0;
 
+			}
+		} else {
+			// Check for passing move
+			if(checkPass(p.ml.bigMoves)) {
+				if(printMove == true) {
+					if(p.sidePlaying == Side.H) {
+						System.out.println("H player move: Pass");
+					}
+					else {
+						System.out.println("V player move: Pass");
+					}		
+				}
+				p.setCurrPieces(p.getBigCurrPieces());
+				GameHistory.addHistory("-");
+				return 0;
+			}
 		}
+		
 		
 		// Otherwise run alpha beta algorithm
 		Action bestAction = alphaBeta(p);
@@ -390,6 +423,7 @@ public class AIPlayer extends Player {
 	@Override
 	public void init(int dimension, String board, char player) {
 		curr = Parse.parseBoard(dimension, player, board);
+		curr.checkGameState();
 		e = new Evaluation();
 	}
 

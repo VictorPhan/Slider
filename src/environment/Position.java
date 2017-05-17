@@ -113,20 +113,35 @@ public class Position {
 	}
 	
 	/**
-	 * Checks if the game has been won yet or not
+	 * Predicts if the game has been won yet or not
 	 */
 	public void checkGameState() {
-		if(Long.bitCount(pieces[H])==0) {
-			gs = GameState.H_WON;
-		}
-		else if(Long.bitCount(pieces[V])==0) {
-			gs = GameState.V_WON;
-		}
-		else if(MoveList.checkDraw(pieces) || gHistory.threeFoldRepitition(pieces)) {
-//			gs = GameState.DRAW;
-		}
-		else {
-			gs = GameState.PLAYING;
+		if(Position.dimen < Position.BIG_INT_CASE){
+			if(Long.bitCount(pieces[H])==0) {
+				gs = GameState.H_WON;
+			}
+			else if(Long.bitCount(pieces[V])==0) {
+				gs = GameState.V_WON;
+			}
+			/*else if(MoveList.checkDraw(pieces) || gHistory.threeFoldRepitition(pieces)) {
+				gs = GameState.DRAW;
+			}*/
+			else {
+				gs = GameState.PLAYING;
+			}
+		} else {
+			if(bigPieces[H].bitCount() == 0) {
+				gs = GameState.H_WON;
+			}
+			else if(bigPieces[V].bitCount() == 0) {
+				gs = GameState.V_WON;
+			}
+			/*else if(MoveList.checkDraw(bigPieces) || gHistory.threeFoldRepitition(bigPieces)) {
+				gs = GameState.DRAW;
+			}*/
+			else {
+				gs = GameState.PLAYING;
+			}		
 		}
 	}
 	
@@ -143,7 +158,12 @@ public class Position {
 			}
 		}
 		else {
-			ml.updateMoveList(pieces, sidePlaying);
+			if(Position.dimen < Position.BIG_INT_CASE) {
+				ml = new MoveList(pieces, sidePlaying);
+			}
+			else {
+				ml = new MoveList(bigPieces, sidePlaying);
+			}
 		}
 	}
 	
