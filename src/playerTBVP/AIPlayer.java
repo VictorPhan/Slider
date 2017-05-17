@@ -17,7 +17,7 @@ public class AIPlayer extends Player {
 	public static int MAX_DEPTH = 8;
 	char illegalMove;
 	/** The move made print */
-	boolean printMove = true;
+	boolean printMove = false;
 	public Evaluation e;
 	public Position curr;
 	public String currentMove;
@@ -27,13 +27,13 @@ public class AIPlayer extends Player {
 			setDepth(9);
 		}
 		else if(Position.dimen == 5) {
-			setDepth(8);
+			setDepth(12);
 		}
 		else if(Position.dimen == 6) {
-			setDepth(7);
+			setDepth(5);
 		}
 		else if(Position.dimen == 7) {
-			setDepth(6);
+			setDepth(4);
 		}
 		// TOGGLED OFF FOR REFEREE //
 		//e = new Evaluation();

@@ -123,7 +123,7 @@ public class Position {
 			gs = GameState.V_WON;
 		}
 		else if(MoveList.checkDraw(pieces) || gHistory.threeFoldRepitition(pieces)) {
-			gs = GameState.DRAW;
+//			gs = GameState.DRAW;
 		}
 		else {
 			gs = GameState.PLAYING;
