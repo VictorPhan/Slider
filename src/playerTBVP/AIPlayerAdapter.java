@@ -64,9 +64,13 @@ public class AIPlayerAdapter {
 			return null;
 		}
 		
-		// Special case for H moving off the board
+		// Special case for H and V moving off the board
 		if((chessMove[2] == PLUS) && (prev.sidePlaying == Side.H)) {
 			d = Direction.RIGHT;
+		} else if ((chessMove[2] == PLUS) && (prev.sidePlaying == Side.V)) { 
+			d = Direction.UP;
+		} else if (move.equals("Pass")) {
+			return null;
 		} else {
 			if((newX - x) == 1) {
 				d = Direction.RIGHT;

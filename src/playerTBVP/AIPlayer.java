@@ -20,7 +20,7 @@ public class AIPlayer extends Player {
 	/** The move made print */
 	boolean printMove = true;
 	public Evaluation e;
-	public Position curr;
+	public Position curr = null;
 	public String currentMove;
 	
 	public AIPlayer() {
@@ -253,6 +253,7 @@ public class AIPlayer extends Player {
 			}
 		}
 		
+		
 		// Otherwise run alpha beta algorithm
 		Action bestAction = alphaBeta(p);
 		Action.supplyAction(p, bestAction);
@@ -422,6 +423,7 @@ public class AIPlayer extends Player {
 	@Override
 	public void init(int dimension, String board, char player) {
 		curr = Parse.parseBoard(dimension, player, board);
+		curr.checkGameState();
 		e = new Evaluation();
 	}
 
